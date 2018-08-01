@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #codeBox{
+          width: 300px;
+          height: 300px;
+          margin-top: 20px;
+      }
+      #individual{
+        width: 300px;
+        height: 300px;
+        margin-top: 20px;
+      }
+      .sizer{
+        width: 300px;
+        /* height: 300px; */
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    
+   
+    <script src="angular.min.js"></script>
+    <script src="popup.js"></script>
+
+
+    <div ng-app="myApp" ng-controller="myCtrl">
+       
+          <!-- <input type="checkbox" ng-value="a" ng-model="checks[0]" > a
+          <input type="checkbox" ng-value="'button'" ng-model="checks[1]" ng-checked> button
+          <input type="checkbox" ng-value="'input'" ng-model="checks[2]" ng-checked > input
+          <input type="checkbox" ng-value="'textarea'" ng-model="checks[3]" ng-checked > textarea
+          <input type="checkbox" ng-value="'select'" ng-model="checks[4]" ng-checked > select
+        <hr>
+        {{checks}} -->
+        <button ng-click="generateCode()">Generate Code</button>
+
+        <div ng-if="!!currentInstruction">
+          <h3>{{currentInstruction.type}} </h3>
+          
+          <div ng-if="!!currentInstruction.param.locator.id">
+            <label for="id">id</label> <input type="radio" id='id'name='loc' value='id' ng-model="locator"  ng-click="changeLocator('id');">
+            <label for="xpath">xpath</label><input type="radio" id="xpath" name='loc'value='xpath' ng-model="locator" ng-click="changeLocator('xpath');">
+          </div>
+         
+          <textarea id="codeBox" ng-model="currentInstructionString"></textarea>
+          <template instruction="currentInstructionString"></template>
+          <button ng-disabled="!currentInstructionCount>0" ng-click="previous()">back</button>
+          <button ng-disabled="!(response.length>(currentInstructionCount+1))" ng-click="next()">Next </button>
+        </div>
+        
+    </div>
+
+  </body>
+</html>
