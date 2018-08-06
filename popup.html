@@ -1,57 +1,365 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <style>
-      #codeBox{
-          width: 300px;
-          height: 300px;
-          margin-top: 20px;
+
+<head>
+  <link rel="stylesheet" href="libs/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="libs/jsonFormater/json-formatter.css">
+  </div>
+  <style>
+    /* Spinner CSS -Starts*/
+
+    .lds-roller {
+      display: inline-block;
+      position: relative;
+      width: 64px;
+      height: 64px;
+    }
+
+    .lds-roller div {
+      animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+      transform-origin: 32px 32px;
+    }
+
+    .lds-roller div:after {
+      content: " ";
+      display: block;
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #fff;
+      margin: -3px 0 0 -3px;
+    }
+
+    .lds-roller div:nth-child(1) {
+      animation-delay: -0.036s;
+    }
+
+    .lds-roller div:nth-child(1):after {
+      top: 50px;
+      left: 50px;
+    }
+
+    .lds-roller div:nth-child(2) {
+      animation-delay: -0.072s;
+    }
+
+    .lds-roller div:nth-child(2):after {
+      top: 54px;
+      left: 45px;
+    }
+
+    .lds-roller div:nth-child(3) {
+      animation-delay: -0.108s;
+    }
+
+    .lds-roller div:nth-child(3):after {
+      top: 57px;
+      left: 39px;
+    }
+
+    .lds-roller div:nth-child(4) {
+      animation-delay: -0.144s;
+    }
+
+    .lds-roller div:nth-child(4):after {
+      top: 58px;
+      left: 32px;
+    }
+
+    .lds-roller div:nth-child(5) {
+      animation-delay: -0.18s;
+    }
+
+    .lds-roller div:nth-child(5):after {
+      top: 57px;
+      left: 25px;
+    }
+
+    .lds-roller div:nth-child(6) {
+      animation-delay: -0.216s;
+    }
+
+    .lds-roller div:nth-child(6):after {
+      top: 54px;
+      left: 19px;
+    }
+
+    .lds-roller div:nth-child(7) {
+      animation-delay: -0.252s;
+    }
+
+    .lds-roller div:nth-child(7):after {
+      top: 50px;
+      left: 14px;
+    }
+
+    .lds-roller div:nth-child(8) {
+      animation-delay: -0.288s;
+    }
+
+    .lds-roller div:nth-child(8):after {
+      top: 45px;
+      left: 10px;
+    }
+
+    @keyframes lds-roller {
+      0% {
+        transform: rotate(0deg);
       }
-      #individual{
-        width: 300px;
-        height: 300px;
-        margin-top: 20px;
+      100% {
+        transform: rotate(360deg);
       }
-      .sizer{
-        width: 300px;
-        /* height: 300px; */
-        margin-top: 20px;
-      }
-    </style>
-  </head>
-  <body>
-    
-   
-    <script src="angular.min.js"></script>
-    <script src="popup.js"></script>
+    }
 
 
-    <div ng-app="myApp" ng-controller="myCtrl">
-       
-          <!-- <input type="checkbox" ng-value="a" ng-model="checks[0]" > a
+    /* Spinner CSS - Ends */
+
+    .toggler ::after {
+      background-image: url('images/get_started16.png') !important;
+    }
+
+    .container-table {
+      height: 100%;
+    }
+
+    .container-table {
+      display: table;
+    }
+
+    .vertical-center-row {
+      display: table-cell;
+      vertical-align: middle;
+    }
+
+    #codeBox {
+      width: 300px;
+      margin-top: 5px;
+    }
+
+    .codeBoxActive {
+      box-shadow: 0 0 5px 1px green;
+      background-color: #c8e8c8
+    }
+
+    .codeBoxNotActive {
+      box-shadow: 0 0 5px 1px #464646;
+      background-color: #adadad;
+    }
+
+    #individual {
+      width: 300px;
+      height: 300px;
+      margin-top: 20px;
+    }
+
+    .sizer {
+      padding: 5px;
+      width: 300px;
+      border: 1px solid #999;
+
+    }
+
+    .custom-container {
+      padding: 5px;
+      background: #ddd;
+    }
+
+    .activeHeader {
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+
+<body style=" background: #ddd;">
+
+
+  <script src="libs/angular/angular.min.js"></script>
+
+  <script src="popup.js"></script>
+
+
+  <div ng-app="myApp" class="custom-container" ng-controller="myCtrl">
+
+    <!-- <input type="checkbox" ng-value="a" ng-model="checks[0]" > a
           <input type="checkbox" ng-value="'button'" ng-model="checks[1]" ng-checked> button
           <input type="checkbox" ng-value="'input'" ng-model="checks[2]" ng-checked > input
           <input type="checkbox" ng-value="'textarea'" ng-model="checks[3]" ng-checked > textarea
           <input type="checkbox" ng-value="'select'" ng-model="checks[4]" ng-checked > select
         <hr>
         {{checks}} -->
-        <button ng-click="generateCode()">Generate Code</button>
 
-        <div ng-if="!!currentInstruction">
-          <h3>{{currentInstruction.type}} </h3>
-          
-          <div ng-if="!!currentInstruction.param.locator.id">
-            <label for="id">id</label> <input type="radio" id='id'name='loc' value='id' ng-model="locator"  ng-click="changeLocator('id');">
-            <label for="xpath">xpath</label><input type="radio" id="xpath" name='loc'value='xpath' ng-model="locator" ng-click="changeLocator('xpath');">
-          </div>
-         
-          <textarea id="codeBox" ng-model="currentInstructionString"></textarea>
-          <template instruction="currentInstructionString"></template>
-          <button ng-disabled="!currentInstructionCount>0" ng-click="previous()">back</button>
-          <button ng-disabled="!(response.length>(currentInstructionCount+1))" ng-click="next()">Next </button>
+    <div class="sizer" ng-if="!currentInstruction || generatePageFlag">
+
+      <div class="container container-table">
+        <div class="row vertical-center-row">
+          <label for="order">Order#</label>
+          <input type="text" class="form-control" id="order" ng-model="generator.order" ng-init="generator.order='2180731409'">
+          <label for="state">State</label>
+          <select class="form-control" id="state" ng-model="generator.state" ng-init="generator.state='OR'">
+            <option value="Select State">Select State</option>
+            <option value="AL">AL</option>
+            <option value="AK">AK</option>
+            <option value="AZ">AZ</option>
+            <option value="AR">AR</option>
+            <option value="CA">CA</option>
+            <option value="CO">CO</option>
+            <option value="CT">CT</option>
+            <option value="DE">DE</option>
+            <option value="DC">DC</option>
+            <option value="FL">FL</option>
+            <option value="GA">GA</option>
+            <option value="HI">HI</option>
+            <option value="ID">ID</option>
+            <option value="IL">IL</option>
+            <option value="IN">IN</option>
+            <option value="IA">IA</option>
+            <option value="KS">KS</option>
+            <option value="KY">KY</option>
+            <option value="LA">LA</option>
+            <option value="ME">ME</option>
+            <option value="MD">MD</option>
+            <option value="MA">MA</option>
+            <option value="MI">MI</option>
+            <option value="MN">MN</option>
+            <option value="MS">MS</option>
+            <option value="MO">MO</option>
+            <option value="MT">MT</option>
+            <option value="NE">NE</option>
+            <option value="NV">NV</option>
+            <option value="NH">NH</option>
+            <option value="NJ">NJ</option>
+            <option value="NM">NM</option>
+            <option value="NY">NY</option>
+            <option value="NC">NC</option>
+            <option value="ND">ND</option>
+            <option value="OH">OH</option>
+            <option value="OK">OK</option>
+            <option value="OR">OR</option>
+            <option value="PA">PA</option>
+            <option value="RI">RI</option>
+            <option value="SC">SC</option>
+            <option value="SD">SD</option>
+            <option value="TN">TN</option>
+            <option value="TX">TX</option>
+            <option value="UT">UT</option>
+            <option value="VT">VT</option>
+            <option value="VA">VA</option>
+            <option value="WA">WA</option>
+            <option value="WV">WV</option>
+            <option value="WI">WI</option>
+            <option value="WY">WY</option>
+          </select>
         </div>
-        
+      </div>
+      <div class="container container-table" style="margin-top: 10px">
+        <div class="row vertical-center-row">
+          <button class="btn btn-success center" ng-click="fetchApi()">Fetch API</button>
+        </div>
+      </div>
+      <div ng-if="loading" class="container container-table" style="margin-top: 10px">
+        <div class="row vertical-center-row">
+          <div class="lds-roller">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="checkbox">
+        <label>
+          <input type="checkbox" value="">&lt;a></label>
+      </div> -->
+      <br>
     </div>
 
-  </body>
+    <div ng-if="(!(!currentInstruction || generatePageFlag)) && !generation.instructionsGenerated">
+      <!-- <button class="btn btn-success" ng-click="goBack();">&lt; Back</button> -->
+      <div class="row">
+        <div class="col-xs-3">
+          <button type="button" class="btn btn-default btn-sm" ng-click="goBack();">Back</button>
+        </div>
+        <div class="col-xs-6">
+          <p style="text-align: center;">{{currentInstructionCount+1}} out of {{response.length}}</p>
+        </div>
+        <div class="col-xs-3" style="margin-left: -8px;">
+          <button type="button" class="btn btn-sm" ng-class="{'btn-success':!currentInstruction.enabled,'btn-danger':currentInstruction.enabled}"
+            ng-click="currentInstruction.enabled=!currentInstruction.enabled">{{currentInstruction.enabled?'Disable':'Enable '}} </button>
+        </div>
+      </div>
+
+      <h4 ng-class="{'activeHeader':currentInstruction.enabled}">{{currentInstruction.type|uppercase}} {{currentInstruction.enabled?'':'(Disabled)'}} </h4>
+      <div style="padding: 2px;border: 1px dashed #aba8a8;">
+      <button class="btn btn-default" ng-disabled="!currentInstructionCount>0" ng-click="previous()">Prev</button>
+      <button class="btn btn-default" ng-disabled="!(response.length>(currentInstructionCount+1))" ng-click="next()">Next </button>
+
+
+      <span ng-if="!!currentInstruction.locator.id || !!currentInstruction.locator.name">
+        <span ng-if="!!currentInstruction.locator.id">
+          <label class="radio-inline">
+            <input type="radio" name="optradio" value="id" ng-model="currentInstruction.selectedLocator" ng-click="changeLocator(currentInstruction,'id');">ID</label>
+        </span>
+        <span ng-if="!!currentInstruction.locator.xpath">
+          <label class="radio-inline">
+            <input type="radio" name="optradio" value="xpath" ng-model="currentInstruction.selectedLocator" ng-click="changeLocator(currentInstruction,'xpath');">XPATH</label>
+        </span>
+        <span ng-if="!!currentInstruction.locator.name">
+          <label class="radio-inline">
+            <input type="radio" name="optradio" value="name" ng-model="currentInstruction.selectedLocator" ng-click="changeLocator(currentInstruction,'name');">NAME</label>
+        </span>
+      </span>
+      </div>
+      <div ng-if="currentInstruction.value!=undefined" style="width: 98%;margin-left: 1%;margin-top: 5px;">
+        <input type="text" style="width:50%;float:left" placeholder="API Value" ng-model="api.apiValue" ng-change="setApiValue()" list="testList" class="form-control">
+        <input type="text" style="width:50%;float:left" placeholder="String Value" ng-model="api.apiString" ng-change="currentInstruction.value = {'value':api.apiString};api.apiValue=''" class="form-control">
+        <datalist id="testList">
+          <option ng-repeat="apis in apiKeys" value="{{apis}}">
+        </datalist>
+        <div class="clearfix"></div>
+      </div>
+      <!-- <textarea id="codeBox" ng-model="currentInstructionString"></textarea> -->
+      <!-- <template instruction="currentInstructionString"></template> -->
+
+      <json-formatter ng-class="{'codeBoxNotActive':!currentInstruction.enabled,'codeBoxActive':currentInstruction.enabled}" class="sizer"
+        id="codeBox" json="currentInstruction" open="1"></json-formatter>
+      <div class="container container-table" style="margin-top: 10px">
+        <div class="row vertical-center-row">
+          <button class="btn btn-success center" ng-click="generateInstructions()">Generate Code</button>
+        </div>
+      </div>
+    </div>
+
+    <div ng-if="generation.instructionsGenerated">
+        <div class="row">
+            <div class="col-xs-3">
+              <button type="button" class="btn btn-default btn-sm" ng-click="generation.instructionsGenerated=false;generation.copied=false;">Back</button>
+            </div>
+            <div class="col-xs-6">
+              <!-- <p style="text-align: center;">{{currentInstructionCount+1}} out of {{response.length}}</p> -->
+            </div>
+            <div class="col-xs-3" style="margin-left: -8px;">
+                <!-- <button class="btn btn-success btn-sm" ng-click="copyToClipBoard()">{{generation.copied?'Copied':'Copy Code'}}</button> -->
+              <!-- <button type="button" class="btn btn-sm" ng-class="{'btn-success':!currentInstruction.enabled,'btn-danger':currentInstruction.enabled}"
+                ng-click="currentInstruction.enabled=!currentInstruction.enabled">{{currentInstruction.enabled?'Disable':'Enable '}} </button> -->
+            </div>
+          </div>
+        <json-formatter style="margin-top: 10px" class="sizer" json="instructions" open="2"></json-formatter>
+        <div class="container container-table" style="margin-top: 10px">
+            <div class="row vertical-center-row">
+              <button class="btn btn-success center" ng-click="copyToClipBoard()">{{generation.copied?'Copied':'Copy Code'}}</button>
+            </div>
+          </div>
+    </div>
+
+  </div>
+  <script src="libs/jsonFormater/json-formatter.js"></script>
+</body>
+
 </html>
