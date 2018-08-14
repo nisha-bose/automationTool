@@ -1,6 +1,6 @@
-var configObj={
-    tags:["input","button","select","textarea"]
-  }
+var configObj = {
+    tags: ["input", "button", "select", "textarea"]
+}
 
 
 
@@ -58,13 +58,17 @@ function getElementByXpath(path) {
 //     console.log(getLocator(element));
 //     return '\n{\n\t"type" : "elementClick",\n\t"optional" : false,\n\t"param" : \n\t\t\t{\n\t\t\t\t"locator" :{ '+getLocator(element)+'}},\n\t"auto" : '+auto+'\n}';
 // }
-function textInput(element, value, auto) {
+function textInput(element, value) {
     console.log(getLocator(element));
-    return JSON.parse('{"type":"textInput",\n"locator":{' + getLocator(element) + '},\n"auto":' + auto + ',"enabled":true,"value":""}');
+    return JSON.parse('{"type":"textInput",\n"locator":{' + getLocator(element) + '},\n"auto":' + true + ',"enabled":true,"value":""}');
 }
-function elementClick(element, auto) {
+function elementClick(element) {
     console.log(getLocator(element));
-    return JSON.parse('{"type":"elementClick",\n"locator":{ ' + getLocator(element) + '},\n"auto":' + auto + ',"enabled":true}');
+    return JSON.parse('{"type":"elementClick",\n"locator":{ ' + getLocator(element) + '},\n"auto":' + true + ',"enabled":true}');
+}
+function dropDownClick(element) {
+    console.log(getLocator(element));
+    return JSON.parse('{"type":"dropDownClick",\n"locator":{ ' + getLocator(element) + '},\n"auto":' + true + ',"enabled":true,"value":""}');
 }
 
 
@@ -105,10 +109,12 @@ function generateInstructions() {
 
                     case 'radio':
                     case 'submit':
-                    case 'select':
                     case 'file':
                     case 'checkbox': instructions.push(elementClick(inputs[i], true));
                         break;
+                    case 'select': instructions.push(dropDownClick(inputs[i]));
+                        break;
+
                 }
             }
         }
@@ -142,8 +148,9 @@ function generateInstructions() {
                 case 'textarea': instructions.push(textInput(inputs[i], 'Ebin', true));
                     break;
                 case 'button':
-                case 'select':
                 case 'a': instructions.push(elementClick(inputs[i], true));
+                    break;
+                case 'select':instructions.push(dropDownClick(inputs[i]));
                     break;
             }
         }
@@ -191,7 +198,7 @@ function drawBorder(setFlag, locator) {
 }
 
 chrome.runtime.onMessage.addListener(
-    function(message, sender, sendResponse) {
+    function (message, sender, sendResponse) {
         switch (message.type) {
             case "getText":
                 sendResponse(generateInstructions());

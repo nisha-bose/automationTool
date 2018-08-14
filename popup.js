@@ -30,7 +30,6 @@ app.controller("myCtrl", function ($scope, $http) {
     $http.get("https://atomic.incfile.com/api/webauto/misc-order/" + $scope.generator.state + "/llc?id=" + $scope.generator.order)
       .then(function (response) {
         $scope.loading = false;
-        debugger;
         $scope.api = response.data;
         $scope.apiKeys = getNestedJsonKeys(response.data);
 
@@ -61,7 +60,7 @@ app.controller("myCtrl", function ($scope, $http) {
     var ops = [];
     function iterate(obj, parents = "") {
       if (typeof obj != "object") {
-        ops.push(parents);
+        ops.push({ key: parents, val: obj });
         return;
       }
       for (var key in obj) {
@@ -115,8 +114,7 @@ app.controller("myCtrl", function ($scope, $http) {
 
 
   $scope.generateInstructions = function () {
-    $scope.generation={};
-
+    $scope.generation = {};
     $scope.instructions = $scope.response.filter(currentInstruction => currentInstruction.enabled)
       .map(currentInstruction => {
         switch (currentInstruction.type) {
@@ -145,6 +143,22 @@ app.controller("myCtrl", function ($scope, $http) {
             elementClick.auto = currentInstruction.auto;
             elementClick.param[currentInstruction.selectedLocator] = currentInstruction.locator[currentInstruction.selectedLocator];
             return elementClick;
+          case 'dropDownClick':
+
+            dropDownClick = {
+              "type": "dropDownClick",
+              "optional": false,
+              "param": {
+                "locator": {},
+                "value": {}, 
+                // "text": { "value": "Audi" }
+              },
+              "auto": true
+            }
+            dropDownClick.auto = currentInstruction.auto;
+            dropDownClick.param.locator[currentInstruction.selectedLocator] = currentInstruction.locator[currentInstruction.selectedLocator];
+            dropDownClick.param.value = currentInstruction.value;
+            return dropDownClick;
         }
       })
 
@@ -161,7 +175,19 @@ app.controller("myCtrl", function ($scope, $http) {
     var copyText = document.getElementById("jsonText");
     copyText.select();
     document.execCommand("copy");
-    $scope.generation.copied=true;
+    $scope.generation.copied = true;
+  }
+
+  $scope.displayApiValue = function () {
+    var currentApiValue;
+    if ($scope.apiKeys.some(e => {
+      if (e.key == $scope.api.apiValue) {
+        currentApiValue = e.val;
+        return true;
+      }
+    }))
+      $scope.api.currentApiValue = currentApiValue;
+    else $scope.api.currentApiValue = false;
   }
 
 })
