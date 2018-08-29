@@ -169,6 +169,10 @@
       font-weight: bold;
       color: green;
     }
+
+    .strikeThrough {
+      text-decoration: line-through;
+    }
   </style>
 </head>
 
@@ -190,7 +194,7 @@
         <hr>
         {{checks}} -->
 
-    <div class="sizer" ng-if="!currentInstruction || generatePageFlag">
+    <div class="sizer" ng-if="!currentInstruction || generatePageFlag" style="width: 320px;">
 
       <div class="container container-table">
         <div class="row vertical-center-row">
@@ -253,6 +257,15 @@
           </select>
         </div>
       </div>
+      <label class="checkbox-inline">
+        <input type="checkbox" ng-model="inputs.a"  value="">&lt;a&gt; </label>
+      <label class="checkbox-inline">
+        <input type="checkbox" ng-model="inputs.button" ng-init="inputs.button=true" ng-checked="true" value="true">&lt;button&gt;</label>
+      <label class="checkbox-inline">
+        <input type="checkbox" ng-model="inputs.select" ng-init="inputs.select=true"  ng-checked="true"  value="true">&lt;select&gt;</label>
+      <label class="checkbox-inline">
+        <input type="checkbox" ng-model="inputs.input" ng-init="inputs.input=true"  ng-checked="true"  value="true">&lt;input&gt;</label>
+
       <div class="container container-table" style="margin-top: 10px">
         <div class="row vertical-center-row">
           <button class="btn btn-success center" ng-click="fetchApi()">Fetch API</button>
@@ -295,38 +308,53 @@
         </div>
       </div>
 
-      <h4 ng-class="{'activeHeader':currentInstruction.enabled}">{{currentInstruction.type|uppercase}} {{currentInstruction.enabled?'':'(Disabled)'}} </h4>
+      <h4 ng-class="{'activeHeader':currentInstruction.enabled,strikeThrough:!currentInstruction.enabled}">
+        <span>
+          {{currentInstruction.type|uppercase}}
+        </span>
+        <span style="font-size: 10px;float: right;margin-top: 3px;" ng-if="currentInstruction.type=='dropDownClick'">
+          <label class="radio-inline">
+            <input type="radio" style="bottom: 0%" name="dropDownOptradio" value="text" ng-model="currentInstruction.dropdownMethod"
+              ng-click="changeDropdownMethod(currentInstruction,'text');">TEXT</label>
+
+          <label class="radio-inline">
+            <input type="radio" style="bottom: 0%" name="dropDownOptradio" value="value" ng-model="currentInstruction.dropdownMethod"
+              ng-click="changeDropdownMethod(currentInstruction,'value');">VALUE</label>
+        </span>
+      </h4>
       <div style="padding: 2px;border: 1px dashed #aba8a8;">
-      <button class="btn btn-default" ng-disabled="!currentInstructionCount>0" ng-click="previous()">Prev</button>
-      <button class="btn btn-default" ng-disabled="!(response.length>(currentInstructionCount+1))" ng-click="next()">Next </button>
+        <button class="btn btn-default" ng-disabled="!currentInstructionCount>0" ng-click="previous()">Prev</button>
+        <button class="btn btn-default" ng-disabled="!(response.length>(currentInstructionCount+1))" ng-click="next()">Next </button>
 
 
-      <span ng-if="!!currentInstruction.locator.id || !!currentInstruction.locator.name">
-        <span ng-if="!!currentInstruction.locator.id">
-          <label class="radio-inline">
-            <input type="radio" name="optradio" value="id" ng-model="currentInstruction.selectedLocator" ng-click="changeLocator(currentInstruction,'id');">ID</label>
+        <span ng-if="!!currentInstruction.locator.id || !!currentInstruction.locator.name">
+          <span ng-if="!!currentInstruction.locator.id">
+            <label class="radio-inline">
+              <input type="radio" name="optradio" value="id" ng-model="currentInstruction.selectedLocator" ng-click="changeLocator(currentInstruction,'id');">ID</label>
+          </span>
+          <span ng-if="!!currentInstruction.locator.xpath">
+            <label class="radio-inline">
+              <input type="radio" name="optradio" value="xpath" ng-model="currentInstruction.selectedLocator" ng-click="changeLocator(currentInstruction,'xpath');">XPATH</label>
+          </span>
+          <span ng-if="!!currentInstruction.locator.name">
+            <label class="radio-inline">
+              <input type="radio" name="optradio" value="name" ng-model="currentInstruction.selectedLocator" ng-click="changeLocator(currentInstruction,'name');">NAME</label>
+          </span>
         </span>
-        <span ng-if="!!currentInstruction.locator.xpath">
-          <label class="radio-inline">
-            <input type="radio" name="optradio" value="xpath" ng-model="currentInstruction.selectedLocator" ng-click="changeLocator(currentInstruction,'xpath');">XPATH</label>
-        </span>
-        <span ng-if="!!currentInstruction.locator.name">
-          <label class="radio-inline">
-            <input type="radio" name="optradio" value="name" ng-model="currentInstruction.selectedLocator" ng-click="changeLocator(currentInstruction,'name');">NAME</label>
-        </span>
-      </span>
       </div>
       <div ng-if="currentInstruction.value!=undefined" style="width: 98%;margin-left: 1%;margin-top: 5px;">
-        <input type="text" style="width:50%;float:left" placeholder="API Value" ng-model="api.apiValue" ng-change="setApiValue();displayApiValue();" list="testList" class="form-control">
-        <input type="text" style="width:50%;float:left" placeholder="String Value" ng-model="api.apiString" ng-change="currentInstruction.value = {'value':api.apiString};api.apiValue='';api.currentApiValue=false" class="form-control">
+        <input type="text" style="width:50%;float:left" placeholder="API Value" ng-model="api.apiValue" ng-change="setApiValue();displayApiValue();"
+          list="testList" class="form-control">
+        <input type="text" style="width:50%;float:left" placeholder="String Value" ng-model="api.apiString" ng-change="currentInstruction.value = {'value':api.apiString};api.apiValue='';api.currentApiValue=false"
+          class="form-control">
         <datalist id="testList" ng-init="apiIndex=false">
-          <option ng-repeat="apis in apiKeys" value="{{apis.key}}" >
+          <option ng-repeat="apis in apiKeys" value="{{apis.key}}">
         </datalist>
         <div class="clearfix"></div>
       </div>
       <div ng-if="api.currentApiValue" style=" border: 1px dashed #aba8a8;margin: 2px 0;max-width: 300px;overflow: hidden;">
         <p style="margin: 5px;text-align: center;color: darkred;">{{api.currentApiValue}}</p>
-      <!-- <input type="text" ng-model="api.currentApiValue" disabled> -->
+        <!-- <input type="text" ng-model="api.currentApiValue" disabled> -->
       </div>
       <!-- <textarea id="codeBox" ng-model="currentInstructionString"></textarea> -->
       <!-- <template instruction="currentInstructionString"></template> -->
@@ -341,25 +369,25 @@
     </div>
 
     <div ng-if="generation.instructionsGenerated">
-        <div class="row">
-            <div class="col-xs-3">
-              <button type="button" class="btn btn-default btn-sm" ng-click="generation.instructionsGenerated=false;generation.copied=false;">Back</button>
-            </div>
-            <div class="col-xs-6">
-              <!-- <p style="text-align: center;">{{currentInstructionCount+1}} out of {{response.length}}</p> -->
-            </div>
-            <div class="col-xs-3" style="margin-left: -8px;">
-                <!-- <button class="btn btn-success btn-sm" ng-click="copyToClipBoard()">{{generation.copied?'Copied':'Copy Code'}}</button> -->
-              <!-- <button type="button" class="btn btn-sm" ng-class="{'btn-success':!currentInstruction.enabled,'btn-danger':currentInstruction.enabled}"
+      <div class="row">
+        <div class="col-xs-3">
+          <button type="button" class="btn btn-default btn-sm" ng-click="generation.instructionsGenerated=false;generation.copied=false;">Back</button>
+        </div>
+        <div class="col-xs-6">
+          <!-- <p style="text-align: center;">{{currentInstructionCount+1}} out of {{response.length}}</p> -->
+        </div>
+        <div class="col-xs-3" style="margin-left: -8px;">
+          <!-- <button class="btn btn-success btn-sm" ng-click="copyToClipBoard()">{{generation.copied?'Copied':'Copy Code'}}</button> -->
+          <!-- <button type="button" class="btn btn-sm" ng-class="{'btn-success':!currentInstruction.enabled,'btn-danger':currentInstruction.enabled}"
                 ng-click="currentInstruction.enabled=!currentInstruction.enabled">{{currentInstruction.enabled?'Disable':'Enable '}} </button> -->
-            </div>
-          </div>
-        <json-formatter style="margin-top: 10px" class="sizer" json="instructions" open="2"></json-formatter>
-        <div class="container container-table" style="margin-top: 10px">
-            <div class="row vertical-center-row">
-              <button class="btn btn-success center" ng-click="copyToClipBoard()">{{generation.copied?'Copied':'Copy Code'}}</button>
-            </div>
-          </div>
+        </div>
+      </div>
+      <json-formatter style="margin-top: 10px" class="sizer" json="instructions" open="2"></json-formatter>
+      <div class="container container-table" style="margin-top: 10px">
+        <div class="row vertical-center-row">
+          <button class="btn btn-success center" ng-click="copyToClipBoard()">{{generation.copied?'Copied':'Copy Code'}}</button>
+        </div>
+      </div>
     </div>
 
   </div>

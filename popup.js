@@ -19,6 +19,7 @@ app.controller("myCtrl", function ($scope, $http) {
   $scope.currentInstructionCount = 0;
   $scope.locator = 'id';
   $scope.generator = {};
+  $scope.inputs={};
   $scope.generatePageFlag = true;
   $scope.changeLocator = function (currentInstruction, locator) {
     $scope.response[$scope.currentInstructionCount] = angular.copy($scope.currentInstruction);
@@ -26,6 +27,7 @@ app.controller("myCtrl", function ($scope, $http) {
   }
 
   $scope.fetchApi = function () {
+    // console.log($scope.inputs);
     $scope.loading = true;
     $http.get("https://atomic.incfile.com/api/webauto/misc-order/" + $scope.generator.state + "/llc?id=" + $scope.generator.order)
       .then(function (response) {
@@ -36,7 +38,7 @@ app.controller("myCtrl", function ($scope, $http) {
         $scope.generatePageFlag = false;
 
         chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-          chrome.tabs.sendMessage(tabs[0].id, { type: "getText" }, function (resp) {
+          chrome.tabs.sendMessage(tabs[0].id, { type: "getText", elements:$scope.inputs }, function (resp) {
 
             $scope.response = resp;
             console.log("response from Page: ", resp);
@@ -47,6 +49,7 @@ app.controller("myCtrl", function ($scope, $http) {
             else {
               $scope.currentInstruction = $scope.response[$scope.currentInstructionCount];
               makeDefaultLocator($scope.currentInstruction);
+              if ($scope.currentInstruction.type=='dropDownClick' && !$scope.currentInstruction.dropdownMethod) $scope.currentInstruction.dropdownMethod = "value";
               makeBorder(true, getLocator($scope.currentInstruction));
               $scope.$apply();
             }
@@ -100,13 +103,18 @@ app.controller("myCtrl", function ($scope, $http) {
     }
   }
   $scope.next = function () {
+    $scope.api.apiValue="";
+    $scope.api.currentApiValue=null;
     makeBorder(false, getLocator($scope.currentInstruction));
     $scope.currentInstruction = $scope.response[++$scope.currentInstructionCount];
     makeDefaultLocator($scope.currentInstruction);
+    if ($scope.currentInstruction.type=='dropDownClick' && !$scope.currentInstruction.dropdownMethod) $scope.currentInstruction.dropdownMethod = "value";    
     // alert($scope.currentInstruction.type);
     makeBorder(true, getLocator($scope.currentInstruction));
   }
   $scope.previous = function () {
+    $scope.api.apiValue="";
+    $scope.api.currentApiValue=null;
     makeBorder(false, getLocator($scope.currentInstruction));
     $scope.currentInstruction = $scope.response[--$scope.currentInstructionCount];
     makeBorder(true, getLocator($scope.currentInstruction));
@@ -150,14 +158,15 @@ app.controller("myCtrl", function ($scope, $http) {
               "optional": false,
               "param": {
                 "locator": {},
-                "value": {}, 
-                // "text": { "value": "Audi" }
               },
               "auto": true
             }
             dropDownClick.auto = currentInstruction.auto;
             dropDownClick.param.locator[currentInstruction.selectedLocator] = currentInstruction.locator[currentInstruction.selectedLocator];
-            dropDownClick.param.value = currentInstruction.value;
+            if (currentInstruction.dropdownMethod == 'value')
+              dropDownClick.param.value = currentInstruction.value;
+            else
+              dropDownClick.param.text = currentInstruction.value;
             return dropDownClick;
         }
       })

@@ -1,5 +1,5 @@
 var configObj = {
-    tags: ["input", "button", "select", "textarea"]
+    tags: []
 }
 
 
@@ -77,8 +77,14 @@ function dropDownClick(element) {
 
 
 
-function generateInstructions() {
+function generateInstructions(elements) {
     var instructions = [];
+    configObj.tags=[];
+    elements.button?configObj.tags.push("button"):'';
+    elements.select?configObj.tags.push("select"):'';
+    elements.input?(configObj.tags.push("input")&&configObj.tags.push("textarea")):'';
+    elements.a?configObj.tags.push("a"):'';
+    debugger;
 
     // from iFrames
 
@@ -167,6 +173,7 @@ function generateInstructions() {
                     break;
 
                 case 'radio':
+                case 'reset':
                 case 'submit':
                 case 'file':
                 case 'checkbox': instructions.push(elementClick(inputs[i], true));
@@ -195,13 +202,15 @@ function drawBorder(setFlag, locator) {
             el.style["outline"] = "";
     }
     el.scrollIntoView(false);
+    debugger;
+    window.scrollBy(0, 250);
 }
 
 chrome.runtime.onMessage.addListener(
     function (message, sender, sendResponse) {
         switch (message.type) {
             case "getText":
-                sendResponse(generateInstructions());
+                sendResponse(generateInstructions(message.elements));
                 break;
             case "changeDom":
                 drawBorder(message.set, message.locator);
