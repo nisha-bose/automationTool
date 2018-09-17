@@ -1,3 +1,6 @@
+
+
+
 var configObj = {
     tags: []
 }
@@ -60,15 +63,15 @@ function getElementByXpath(path) {
 // }
 function textInput(element, value) {
     console.log(getLocator(element));
-    return JSON.parse('{"type":"textInput",\n"locator":{' + getLocator(element) + '},\n"auto":' + true + ',"enabled":true,"value":""}');
+    return JSON.parse('{"type":"textInput",\n"locator":{' + getLocator(element) + '},\n"auto":' + true + ',"enabled":false,"value":""}');
 }
 function elementClick(element) {
     console.log(getLocator(element));
-    return JSON.parse('{"type":"elementClick",\n"locator":{ ' + getLocator(element) + '},\n"auto":' + true + ',"enabled":true}');
+    return JSON.parse('{"type":"elementClick",\n"locator":{ ' + getLocator(element) + '},\n"auto":' + true + ',"enabled":false}');
 }
 function dropDownClick(element) {
     console.log(getLocator(element));
-    return JSON.parse('{"type":"dropDownClick",\n"locator":{ ' + getLocator(element) + '},\n"auto":' + true + ',"enabled":true,"value":""}');
+    return JSON.parse('{"type":"dropDownClick",\n"locator":{ ' + getLocator(element) + '},\n"auto":' + true + ',"enabled":false,"value":""}');
 }
 
 
@@ -79,11 +82,11 @@ function dropDownClick(element) {
 
 function generateInstructions(elements) {
     var instructions = [];
-    configObj.tags=[];
-    elements.button?configObj.tags.push("button"):'';
-    elements.select?configObj.tags.push("select"):'';
-    elements.input?(configObj.tags.push("input")&&configObj.tags.push("textarea")):'';
-    elements.a?configObj.tags.push("a"):'';
+    configObj.tags = [];
+    elements.button ? configObj.tags.push("button") : '';
+    elements.select ? configObj.tags.push("select") : '';
+    elements.input ? (configObj.tags.push("input") && configObj.tags.push("textarea")) : '';
+    elements.a ? configObj.tags.push("a") : '';
     debugger;
 
     // from iFrames
@@ -156,7 +159,7 @@ function generateInstructions(elements) {
                 case 'button':
                 case 'a': instructions.push(elementClick(inputs[i], true));
                     break;
-                case 'select':instructions.push(dropDownClick(inputs[i]));
+                case 'select': instructions.push(dropDownClick(inputs[i]));
                     break;
             }
         }
@@ -202,8 +205,28 @@ function drawBorder(setFlag, locator) {
             el.style["outline"] = "";
     }
     el.scrollIntoView(false);
-    debugger;
     window.scrollBy(0, 250);
+}
+
+function setValue(value, locator, dropdownAsText) {
+    var el;
+    if (locator.id) {
+        el = document.getElementById(locator.id);
+    } else {
+        el = getElementByXpath(locator.xpath);
+    }
+    if (el.tagName == 'SELECT' && dropdownAsText) {
+        debugger;
+        var arr = [].slice.call(el.children);
+        option = arr.filter(e => {
+            if (e.innerText == value)
+                return true;
+        })[0];
+        value=!!option? option.value:'';
+    }
+    el.value = value;
+
+
 }
 
 chrome.runtime.onMessage.addListener(
@@ -212,9 +235,16 @@ chrome.runtime.onMessage.addListener(
             case "getText":
                 sendResponse(generateInstructions(message.elements));
                 break;
-            case "changeDom":
+            case "closed":
+                console.log('popup closed.');
+                break;
+            case "makeBox":
                 drawBorder(message.set, message.locator);
                 break;
+            case "setValue":
+                setValue(message.value, message.locator,message.dropdownAsText);
+                break;
+
         }
     }
 );
