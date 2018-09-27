@@ -29,7 +29,7 @@ app.controller("myCtrl", function ($scope, $http) {
     console.log(locator);
   }
 
-  $scope.fetchApi = function (resume) {
+  $scope.fetchApi = function (resume) {    
     // console.log($scope.inputs);
     $scope.localState = JSON.parse(localStorage.getItem('automationToolState'));
     $scope.loading = true;
@@ -190,6 +190,43 @@ app.controller("myCtrl", function ($scope, $http) {
     $scope.getConditionStatus();
   }, true)
 
+  /**
+   **
+   * Method to get instruction of condition
+   *
+   * @param void
+   *
+   * @return object
+   */
+  $scope.getInstructionOfCondition = function() {
+
+      let condition = {
+                          "type"  : "condition",
+                          "auto"  : true,
+                          "param" : { "switchValue" : "_args.ordernum",
+                                      "branches"    : [ 
+                                      { "caseValue"    : { "value" : null },
+                                      "instructions" : [
+                                      { "type"      : "operatorInput",
+                                        "optional"  : false,
+                                        "namespace" : "opsInput",
+                                        "param"     : [{ "name" : "ordernum",
+                                                        "type" : "text" } ],
+                                        "auto"      : true } ] },
+                                      { "defaultCase"  : true,
+                                          "instructions" : [
+                                          { "type"     : "setVariable",
+                                              "optional" : false,
+                                              "param"    : {"variable" : "opsInput.ordernum",
+                                                          "value"    : "_args.ordernum" },
+                                              "auto"     : true } ]
+                                      } ] 
+                                    }                         
+                      };
+
+      return condition;
+  };
+
   $scope.generateInstructions = function () {
     $scope.generation = {};
     $scope.instructions = $scope.response.filter(currentInstruction => currentInstruction.enabled)
@@ -237,6 +274,11 @@ app.controller("myCtrl", function ($scope, $http) {
             else
               dropDownClick.param.text = currentInstruction.value;
             return dropDownClick;
+
+          case "condition" :            
+
+            return $scope.getInstructionOfCondition();
+
         }
       })
 
@@ -271,13 +313,53 @@ app.controller("myCtrl", function ($scope, $http) {
 
   // Condition functions here...
 
+  /**
+   * Method to start conditional operation
+   *
+   * @param void
+   *
+   * @return object
+   *
+   */
   $scope.conditionStarts = function () {
-    $scope.currentInstruction.conditionStarts = !$scope.currentInstruction.conditionStarts;
+    
+    $scope.currentInstruction.conditionStarts = !$scope.currentInstruction.conditionStarts;   
+    /*$scope.currentInstruction.contitionVariable = "test"; 
+    $scope.currentInstruction.case = "LLC"; */
+
     $scope.conditionArray[$scope.currentInstructionCount] = {
-      conditionStarts: !$scope.currentInstruction.conditionStarts,
+      conditionStarts: !$scope.currentInstruction.conditionStarts,      
       case: $scope.condition.caseString
-    }
-  }
+    };    
+
+  };
+
+  /**
+   * Method to set conditional variable
+   *
+   * @param void
+   *
+   * @return object
+   *
+   */
+  $scope.setConditionalVariable = function() {
+    
+      $scope.currentInstruction.contitionVariable = $scope.condition.apiValue;
+  };
+
+  /**
+   * Method to set case string
+   *
+   * @param void
+   *
+   * @return object
+   *
+   */
+  $scope.setCaseString = function() {
+      $scope.currentInstruction.caseValue = $scope.condition.caseString;
+  };
+
+
   $scope.getConditionStatus = function () {
     currentCondition = [];
     console.log(
