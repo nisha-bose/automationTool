@@ -227,6 +227,14 @@ app.controller("myCtrl", function ($scope, $http) {
       return condition;
   };
 
+  /**
+   *
+   * Method to generate instrunctions
+   *
+   * @param void
+   *
+   * @return object
+   */
   $scope.generateInstructions = function () {
     $scope.generation = {};
     $scope.instructions = $scope.response.filter(currentInstruction => currentInstruction.enabled)
@@ -323,10 +331,7 @@ app.controller("myCtrl", function ($scope, $http) {
    */
   $scope.conditionStarts = function () {
     
-    $scope.currentInstruction.conditionStarts = !$scope.currentInstruction.conditionStarts;   
-    /*$scope.currentInstruction.contitionVariable = "test"; 
-    $scope.currentInstruction.case = "LLC"; */
-
+    $scope.currentInstruction.conditionStarts = !$scope.currentInstruction.conditionStarts;       
     $scope.conditionArray[$scope.currentInstructionCount] = {
       conditionStarts: !$scope.currentInstruction.conditionStarts,      
       case: $scope.condition.caseString
@@ -343,7 +348,7 @@ app.controller("myCtrl", function ($scope, $http) {
    *
    */
   $scope.setConditionalVariable = function() {
-    
+
       $scope.currentInstruction.contitionVariable = $scope.condition.apiValue;
   };
 
@@ -359,7 +364,14 @@ app.controller("myCtrl", function ($scope, $http) {
       $scope.currentInstruction.caseValue = $scope.condition.caseString;
   };
 
-
+  /**
+   * Method to get condition status
+   *
+   * @param void
+   *
+   * @return object
+   *
+   */
   $scope.getConditionStatus = function () {
     currentCondition = [];
     console.log(
@@ -370,7 +382,7 @@ app.controller("myCtrl", function ($scope, $http) {
         return (currentInstruction == i && !!currentCondition.length)
       })
     );
-  }
+  };
 
 })
 
