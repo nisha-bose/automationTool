@@ -198,14 +198,14 @@ app.controller("myCtrl", function ($scope, $http) {
    *
    * @return object
    */
-  $scope.getInstructionOfCondition = function() {
+  $scope.getInstructionOfCondition = function(attr) {
 
       let condition = {
                           "type"  : "condition",
                           "auto"  : true,
-                          "param" : { "switchValue" : "_args.ordernum",
+                          "param" : { "switchValue" : attr.contitionVariable,
                                       "branches"    : [ 
-                                      { "caseValue"    : { "value" : null },
+                                      { "caseValue"    : { "value" : attr.caseValue },
                                       "instructions" : [
                                       { "type"      : "operatorInput",
                                         "optional"  : false,
@@ -236,6 +236,89 @@ app.controller("myCtrl", function ($scope, $http) {
    * @return object
    */
   $scope.generateInstructions = function () {
+
+    //$scope.currentInstruction.conditionStarts
+    $scope.generation = {};
+
+
+
+    $scope.instructions = $scope.response.filter(currentInstruction => currentInstruction.enabled)
+      .map(currentInstruction => {
+
+        if (currentInstruction.conditionStarts) {            
+
+            return $scope.getInstructionOfCondition(currentInstruction);
+
+        }
+
+
+
+        switch (currentInstruction.type) {
+          case 'textInput':
+            let textEntry = {
+              "type": "textEntry",
+              "optional": false,
+              "param": {
+                "locator": {},
+                "value": {}
+              },
+              "auto": true
+            }
+
+            textEntry.auto = currentInstruction.auto;
+            textEntry.param.locator[currentInstruction.selectedLocator] = currentInstruction.locator[currentInstruction.selectedLocator];
+            textEntry.param.value = currentInstruction.value;
+            return textEntry;
+          case 'elementClick':
+            elementClick = {
+              "type": "elementClick",
+              "optional": false,
+              "param": {},
+              "auto": false
+            }
+            elementClick.auto = currentInstruction.auto;
+            elementClick.param[currentInstruction.selectedLocator] = currentInstruction.locator[currentInstruction.selectedLocator];
+            return elementClick;
+          case 'dropDownClick':
+
+            dropDownClick = {
+              "type": "dropDownClick",
+              "optional": false,
+              "param": {
+                "locator": {},
+              },
+              "auto": true
+            }
+            dropDownClick.auto = currentInstruction.auto;
+            dropDownClick.param.locator[currentInstruction.selectedLocator] = currentInstruction.locator[currentInstruction.selectedLocator];
+            if (currentInstruction.dropdownMethod == 'value')
+              dropDownClick.param.value = currentInstruction.value;
+            else
+              dropDownClick.param.text = currentInstruction.value;
+            return dropDownClick;
+
+          case "condition" :            
+
+            return $scope.getInstructionOfCondition();
+
+        }
+      })
+
+    console.log($scope.instructions)
+    $scope.generation.instructionsGenerated = true;
+
+  }
+
+  /**
+   *
+   * Method to generate instrunctions
+   *
+   * @param void
+   *
+   * @return object
+   */
+  $scope.generateInstructions_bkp = function () {    
+
     $scope.generation = {};
     $scope.instructions = $scope.response.filter(currentInstruction => currentInstruction.enabled)
       .map(currentInstruction => {
@@ -293,7 +376,7 @@ app.controller("myCtrl", function ($scope, $http) {
     console.log($scope.instructions)
     $scope.generation.instructionsGenerated = true;
 
-  }
+  }  
   $scope.copyToClipBoard = function () {
     var input = document.createElement("textarea");
     input.setAttribute("style", "width: 0;height: 0;opacity: 0;position: absolute;");
