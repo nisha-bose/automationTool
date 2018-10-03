@@ -134,6 +134,7 @@ app.controller("myCtrl", function ($scope, $http) {
         currentInstruction.selectedLocator = "xpath";
     }
   }
+
   $scope.next = function () {
 
     makeBorder(false, getLocator($scope.currentInstruction));
@@ -152,7 +153,7 @@ app.controller("myCtrl", function ($scope, $http) {
     }
     $scope.api.currentApiValue = null;
     // $scope.displayApiValue();
-  }
+  };
 
   $scope.previous = function () {
     makeBorder(false, getLocator($scope.currentInstruction));
@@ -167,7 +168,8 @@ app.controller("myCtrl", function ($scope, $http) {
     }
     $scope.api.currentApiValue = null;
     // $scope.displayApiValue();
-  }
+  };
+
   $scope.$watch('currentInstruction', (newVal, oldVal) => {
     if ($scope.generator.state) {
       console.log('state saved:', oldVal);
@@ -191,10 +193,10 @@ app.controller("myCtrl", function ($scope, $http) {
   }, true);
 
   /**
-   **
+   *
    * Method to get instruction element
    *
-   * @param object attr
+   * @param object currentInstruction
    *
    * @return object
    */
@@ -332,12 +334,8 @@ app.controller("myCtrl", function ($scope, $http) {
       .map(currentInstruction => {
 
         if (currentInstruction.conditionStarts) {             
-
             return $scope.getInstructionOfCondition(currentInstruction);
-
         }
-
-
 
         switch (currentInstruction.type) {
           case 'textInput':
@@ -487,6 +485,48 @@ app.controller("myCtrl", function ($scope, $http) {
   // Condition functions here...
 
   /**
+   *
+   * Method to get condition based response
+   *
+   * @param void
+   *
+   * @return object
+   */
+  $scope.getConditionBasedResponse = function(attr) {
+
+    $scope.counter = 0;
+
+    /*var instruction = {
+      "conditionStarts"   : true,
+      "conditionVariable" : "",
+      "conditionArr"      : [{
+        "caseValue" : "",
+        //"instructions" : [],
+        "type": "textInput", "locator": { "id": "firstname", "name": "firstname", "xpath": "//*[@id='firstname']" }, 
+        "auto": true, "enabled": false, "value": "orderdata.name", "selectedLocator": "id"
+      }]
+    };*/
+
+    var instruction = {
+      "conditionStarts"   : true,
+      "conditionVariable" : "",
+      "conditionArr"      : [{
+        "caseValue" : "",
+        "instructions" : []        
+      }]
+    };
+
+    instruction.conditionArr[$scope.counter].instructions.push($scope.response[$scope.currentInstructionCount]);
+
+    return instruction;
+
+    //$scope.currentInstruction = unitInstruction;
+
+    //$scope.response = [{ "type": "textInput", "locator": { "id": "firstname", "name": "firstname", "xpath": "//*[@id='firstname']" }, "auto": true, "enabled": false, "value": "orderdata.name", "selectedLocator": "id" }];
+
+  };
+
+  /**
    * Method to start conditional operation
    *
    * @param void
@@ -495,12 +535,15 @@ app.controller("myCtrl", function ($scope, $http) {
    *
    */
   $scope.conditionStarts = function () {
+
+    var attr = {};
+    $scope.currentInstruction = $scope.getConditionBasedResponse(attr);
     
-    $scope.currentInstruction.conditionStarts = !$scope.currentInstruction.conditionStarts;       
+    /*$scope.currentInstruction.conditionStarts = !$scope.currentInstruction.conditionStarts;       
     $scope.conditionArray[$scope.currentInstructionCount] = {
       conditionStarts: !$scope.currentInstruction.conditionStarts,      
       case: $scope.condition.caseString
-    };    
+    };*/    
 
   };
 
@@ -513,7 +556,7 @@ app.controller("myCtrl", function ($scope, $http) {
    *
    */
   $scope.setConditionalVariable = function() {
-      $scope.currentInstruction.contitionVariable = 'orderdata.' + $scope.condition.apiValue;
+      $scope.currentInstruction.conditionVariable = 'orderdata.' + $scope.condition.apiValue;
   };
 
   /**
@@ -525,8 +568,99 @@ app.controller("myCtrl", function ($scope, $http) {
    *
    */
   $scope.setCaseString = function() {
-      $scope.currentInstruction.caseValue = $scope.condition.caseString;
+      $scope.currentInstruction.conditionArr[$scope.counter].caseValue = $scope.condition.caseString;
   };
+
+  /**
+   * Method to set conditional api value
+   *
+   * @param void
+   *
+   * @return object
+   *
+   */
+  $scope.setConditionalApiValue = function () {
+
+    $scope.currentInstruction.conditionArr[$scope.counter].instructions[$scope.currentInstructionCount].value = 'orderdata.' 
+    + $scope.api.apiValue.split(" ").join("");    
+  }
+
+  /**
+   * Method to set conditional string value
+   *
+   * @param void
+   *
+   * @return object
+   *
+   */
+  $scope.setConditionalStringValue = function () {
+
+    //currentInstruction.value = {'value':api.apiString};api.apiValue='';api.currentApiValue=false
+
+    $scope.currentInstruction.conditionArr[$scope.counter].instructions[$scope.currentInstructionCount].value = {
+      "value" : $scope.api.apiString
+    };
+    $scope.api.apiValue = "";
+    $scope.api.currentApiValue = false;
+
+  };
+
+  /**
+   *
+   * Method to handle condition based next operations
+   *
+   * @param void
+   *
+   * @return object
+   */
+  $scope.conditionalNext = function () {
+
+    $scope.counter++;
+    makeBorder(false, getLocator($scope.currentInstruction));
+    //$scope.currentInstruction.conditionArr[$scope.counter] = {""};
+
+    //alert("Response : " + JSON.stringify($scope.response[++$scope.currentInstructionCount]));
+
+
+    /*$scope.currentInstruction = $scope.response[++$scope.currentInstructionCount];
+    makeDefaultLocator($scope.currentInstruction);
+    if ($scope.currentInstruction.type == 'dropDownClick' && !$scope.currentInstruction.dropdownMethod) $scope.currentInstruction.dropdownMethod = "value";    
+    makeBorder(true, getLocator($scope.currentInstruction));
+    debugger;
+    if (typeof ($scope.currentInstruction.value) !== 'object') {
+      $scope.api.apiValue = $scope.currentInstruction.value.split('orderdata.')[1];
+      $scope.api.apiString = '';
+    } else {
+      $scope.api.apiString = $scope.currentInstruction.value.value;
+      $scope.api.apiValue = '';
+    }
+    $scope.api.currentApiValue = null;*/
+    
+  };
+
+  /**
+   *
+   * Method to handle conditon based previous operations
+   *
+   * @param void
+   *
+   * @return object
+   */
+  $scope.conditionalPrevious = function () {
+    makeBorder(false, getLocator($scope.currentInstruction));
+    $scope.currentInstruction = $scope.response[--$scope.currentInstructionCount];
+    makeBorder(true, getLocator($scope.currentInstruction));
+    if (typeof ($scope.currentInstruction.value) !== 'object') {
+      $scope.api.apiValue = $scope.currentInstruction.value.split('orderdata.')[1];
+      $scope.api.apiString = '';
+    } else {
+      $scope.api.apiString = $scope.currentInstruction.value.value;
+      $scope.api.apiValue = '';
+    }
+    $scope.api.currentApiValue = null;
+    // $scope.displayApiValue();
+  };
+ 
 
   /**
    * Method to get condition status

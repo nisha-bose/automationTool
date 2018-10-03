@@ -337,9 +337,46 @@
               ng-click="changeDropdownMethod(currentInstruction,'value');">VALUE</label>
         </span>
       </h4>
+
+      <!--Iteration is based on condition-->      
+      <div ng-if="currentInstruction.conditionStarts" style="padding: 2px;border: 1px dashed #aba8a8;">
+        <button class="btn btn-default" ng-disabled="!currentInstructionCount>0" ng-click="conditionalPrevious()">Prev</button>
+        <button class="btn btn-default" ng-disabled="!(response.length>(currentInstructionCount+1))" ng-click="conditionalNext()">Next</button>
+        <span ng-if="!!currentInstruction.locator.id || !!currentInstruction.locator.name">
+          <span ng-if="!!currentInstruction.locator.id">
+            <label class="radio-inline">
+              <input type="radio" name="optradio" value="id" ng-model="currentInstruction.selectedLocator" ng-click="changeLocator(currentInstruction,'id');">ID</label>
+          </span>
+          <span ng-if="!!currentInstruction.locator.xpath">
+            <label class="radio-inline">
+              <input type="radio" name="optradio" value="xpath" ng-model="currentInstruction.selectedLocator" ng-click="changeLocator(currentInstruction,'xpath');">XPATH</label>
+          </span>
+          <span ng-if="!!currentInstruction.locator.name">
+            <label class="radio-inline">
+              <input type="radio" name="optradio" value="name" ng-model="currentInstruction.selectedLocator" ng-click="changeLocator(currentInstruction,'name');">NAME</label>
+          </span>
+        </span>
+      </div>
+
+      <div ng-if="currentInstruction.conditionStarts" style="width: 98%;margin-left: 1%;margin-top: 5px;">
+        <input type="text" style="width:50%;float:left" placeholder="API Value" ng-model="api.apiValue" 
+        ng-change="setConditionalApiValue();displayApiValue();"
+          list="testList" class="form-control">
+        <!-- <input type="text" style="width:50%;float:left" placeholder="String Value" ng-model="api.apiString" ng-change="currentInstruction.value = {'value':api.apiString};api.apiValue='';api.currentApiValue=false"
+          class="form-control"> -->
+          <input type="text" style="width:50%;float:left" placeholder="String Value" ng-model="api.apiString" ng-change="setConditionalStringValue();" class="form-control">
+        <datalist id="testList" ng-init="apiIndex=false">
+          <option ng-repeat="apis in apiKeys" value="{{apis.key}}">
+        </datalist>
+        <div class="clearfix"></div>
+      </div>
+      <!--Iteration is based on condition-->            
+
+
+      <!--Iteration is not based on condition-->      
       <div ng-if="!currentInstruction.conditionStarts || (!!condition.apiValue && !!condition.caseString)" style="padding: 2px;border: 1px dashed #aba8a8;">
         <button class="btn btn-default" ng-disabled="!currentInstructionCount>0" ng-click="previous()">Prev</button>
-        <button class="btn btn-default" ng-disabled="!(response.length>(currentInstructionCount+1))" ng-click="next()">Next </button>
+        <button class="btn btn-default" ng-disabled="!(response.length>(currentInstructionCount+1))" ng-click="next()">Next</button>
 
 
         <span ng-if="!!currentInstruction.locator.id || !!currentInstruction.locator.name">
@@ -357,6 +394,8 @@
           </span>
         </span>
       </div>
+
+
       <div ng-if="currentInstruction.value!=undefined" style="width: 98%;margin-left: 1%;margin-top: 5px;">
         <input type="text" style="width:50%;float:left" placeholder="API Value" ng-model="api.apiValue" ng-change="setApiValue();displayApiValue();"
           list="testList" class="form-control">
@@ -367,6 +406,10 @@
         </datalist>
         <div class="clearfix"></div>
       </div>
+
+      <!--Iteration is not based on condition--> 
+
+      
       <div ng-if="api.currentApiValue" style=" border: 1px dashed #aba8a8;margin: 2px 0;max-width: 300px;overflow: hidden;">
         <p style="margin: 5px;text-align: center;color: darkred;">{{api.currentApiValue}}</p>
         <!-- <input type="text" ng-model="api.currentApiValue" disabled> -->
