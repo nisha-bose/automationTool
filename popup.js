@@ -593,9 +593,7 @@ app.controller("myCtrl", function ($scope, $http) {
    * @return object
    *
    */
-  $scope.setConditionalStringValue = function () {
-
-    //currentInstruction.value = {'value':api.apiString};api.apiValue='';api.currentApiValue=false
+  $scope.setConditionalStringValue = function () {    
 
     $scope.currentInstruction.conditionArr[$scope.counter].instructions[$scope.currentInstructionCount].value = {
       "value" : $scope.api.apiString
@@ -615,11 +613,36 @@ app.controller("myCtrl", function ($scope, $http) {
    */
   $scope.conditionalNext = function () {
 
-    $scope.counter++;
-    makeBorder(false, getLocator($scope.currentInstruction));
-    //$scope.currentInstruction.conditionArr[$scope.counter] = {""};
+    var obj = {};
+    $scope.counter++; 
+    $scope.currentInstructionCount++;    
+    $scope.currentInstruction.conditionArr[$scope.counter] = {"caseValue": $scope.condition.caseString};    
+    $scope.currentInstruction.conditionArr[$scope.counter].instructions = [];
+    $scope.currentInstruction.conditionArr[$scope.counter].instructions.push($scope.response[$scope.currentInstructionCount]);
 
-    //alert("Response : " + JSON.stringify($scope.response[++$scope.currentInstructionCount]));
+    obj = $scope.currentInstruction.conditionArr[$scope.counter].instructions[0];
+    
+
+    //alert("Obj " + JSON.stringify(obj));
+
+    makeBorder(false, getLocator(obj));
+    makeDefaultLocator(obj);
+    if (obj.type == 'dropDownClick' && !obj.dropdownMethod) obj.dropdownMethod = "value";    
+    makeBorder(true, getLocator(obj));
+    debugger;
+    if (typeof (obj.value) !== 'object') {
+      $scope.api.apiValue = obj.value.split('orderdata.')[1];
+      $scope.api.apiString = '';
+    } else {
+      $scope.api.apiString = obj.value.value;
+      $scope.api.apiValue = '';
+    }
+    $scope.api.currentApiValue = null;
+
+    //makeBorder(false, getLocator($scope.currentInstruction));
+
+
+        
 
 
     /*$scope.currentInstruction = $scope.response[++$scope.currentInstructionCount];

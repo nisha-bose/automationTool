@@ -374,7 +374,8 @@
 
 
       <!--Iteration is not based on condition-->      
-      <div ng-if="!currentInstruction.conditionStarts || (!!condition.apiValue && !!condition.caseString)" style="padding: 2px;border: 1px dashed #aba8a8;">
+      <!-- <div ng-if="!currentInstruction.conditionStarts || (!!condition.apiValue && !!condition.caseString)" style="padding: 2px;border: 1px dashed #aba8a8;"> -->
+      <div ng-if="!currentInstruction.conditionStarts" style="padding: 2px;border: 1px dashed #aba8a8;">
         <button class="btn btn-default" ng-disabled="!currentInstructionCount>0" ng-click="previous()">Prev</button>
         <button class="btn btn-default" ng-disabled="!(response.length>(currentInstructionCount+1))" ng-click="next()">Next</button>
 
