@@ -613,20 +613,15 @@ app.controller("myCtrl", function ($scope, $http) {
    */
   $scope.conditionalNext = function () {
 
-    var obj = {};
+    var obj = $scope.currentInstruction.conditionArr[$scope.counter].instructions[0];
+    makeBorder(false, getLocator(obj));
     $scope.counter++; 
     $scope.currentInstructionCount++;    
     $scope.currentInstruction.conditionArr[$scope.counter] = {"caseValue": $scope.condition.caseString};    
     $scope.currentInstruction.conditionArr[$scope.counter].instructions = [];
-    $scope.currentInstruction.conditionArr[$scope.counter].instructions.push($scope.response[$scope.currentInstructionCount]);
-
-    obj = $scope.currentInstruction.conditionArr[$scope.counter].instructions[0];
-    
-
-    //alert("Obj " + JSON.stringify(obj));
-
-    makeBorder(false, getLocator(obj));
+    $scope.currentInstruction.conditionArr[$scope.counter].instructions.push($scope.response[$scope.currentInstructionCount]);        
     makeDefaultLocator(obj);
+    obj = $scope.currentInstruction.conditionArr[$scope.counter].instructions[0];
     if (obj.type == 'dropDownClick' && !obj.dropdownMethod) obj.dropdownMethod = "value";    
     makeBorder(true, getLocator(obj));
     debugger;
@@ -637,27 +632,7 @@ app.controller("myCtrl", function ($scope, $http) {
       $scope.api.apiString = obj.value.value;
       $scope.api.apiValue = '';
     }
-    $scope.api.currentApiValue = null;
-
-    //makeBorder(false, getLocator($scope.currentInstruction));
-
-
-        
-
-
-    /*$scope.currentInstruction = $scope.response[++$scope.currentInstructionCount];
-    makeDefaultLocator($scope.currentInstruction);
-    if ($scope.currentInstruction.type == 'dropDownClick' && !$scope.currentInstruction.dropdownMethod) $scope.currentInstruction.dropdownMethod = "value";    
-    makeBorder(true, getLocator($scope.currentInstruction));
-    debugger;
-    if (typeof ($scope.currentInstruction.value) !== 'object') {
-      $scope.api.apiValue = $scope.currentInstruction.value.split('orderdata.')[1];
-      $scope.api.apiString = '';
-    } else {
-      $scope.api.apiString = $scope.currentInstruction.value.value;
-      $scope.api.apiValue = '';
-    }
-    $scope.api.currentApiValue = null;*/
+    $scope.api.currentApiValue = null;    
     
   };
 

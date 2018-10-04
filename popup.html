@@ -338,7 +338,7 @@
         </span>
       </h4>
 
-      <!--Iteration is based on condition-->      
+      <!--Iteration is based on condition - START -->      
       <div ng-if="currentInstruction.conditionStarts" style="padding: 2px;border: 1px dashed #aba8a8;">
         <button class="btn btn-default" ng-disabled="!currentInstructionCount>0" ng-click="conditionalPrevious()">Prev</button>
         <button class="btn btn-default" ng-disabled="!(response.length>(currentInstructionCount+1))" ng-click="conditionalNext()">Next</button>
@@ -360,21 +360,18 @@
 
       <div ng-if="currentInstruction.conditionStarts" style="width: 98%;margin-left: 1%;margin-top: 5px;">
         <input type="text" style="width:50%;float:left" placeholder="API Value" ng-model="api.apiValue" 
-        ng-change="setConditionalApiValue();displayApiValue();"
-          list="testList" class="form-control">
-        <!-- <input type="text" style="width:50%;float:left" placeholder="String Value" ng-model="api.apiString" ng-change="currentInstruction.value = {'value':api.apiString};api.apiValue='';api.currentApiValue=false"
-          class="form-control"> -->
+        ng-change="setConditionalApiValue();displayConditionalApiValue();"
+          list="testList" class="form-control">        
           <input type="text" style="width:50%;float:left" placeholder="String Value" ng-model="api.apiString" ng-change="setConditionalStringValue();" class="form-control">
         <datalist id="testList" ng-init="apiIndex=false">
           <option ng-repeat="apis in apiKeys" value="{{apis.key}}">
         </datalist>
         <div class="clearfix"></div>
       </div>
-      <!--Iteration is based on condition-->            
+      <!--Iteration is based on condition - End -->            
 
 
-      <!--Iteration is not based on condition-->      
-      <!-- <div ng-if="!currentInstruction.conditionStarts || (!!condition.apiValue && !!condition.caseString)" style="padding: 2px;border: 1px dashed #aba8a8;"> -->
+      <!--Iteration is not based on condition - START -->            
       <div ng-if="!currentInstruction.conditionStarts" style="padding: 2px;border: 1px dashed #aba8a8;">
         <button class="btn btn-default" ng-disabled="!currentInstructionCount>0" ng-click="previous()">Prev</button>
         <button class="btn btn-default" ng-disabled="!(response.length>(currentInstructionCount+1))" ng-click="next()">Next</button>
@@ -408,7 +405,7 @@
         <div class="clearfix"></div>
       </div>
 
-      <!--Iteration is not based on condition--> 
+      <!--Iteration is not based on condition - END --> 
 
       
       <div ng-if="api.currentApiValue" style=" border: 1px dashed #aba8a8;margin: 2px 0;max-width: 300px;overflow: hidden;">
