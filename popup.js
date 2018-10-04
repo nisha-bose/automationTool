@@ -477,7 +477,7 @@ app.controller("myCtrl", function ($scope, $http) {
     $scope.generation.instructionsGenerated = true;
 
   };
-    
+
   $scope.copyToClipBoard = function () {
     var input = document.createElement("textarea");
     input.setAttribute("style", "width: 0;height: 0;opacity: 0;position: absolute;");
@@ -488,7 +488,7 @@ app.controller("myCtrl", function ($scope, $http) {
     copyText.select();
     document.execCommand("copy");
     $scope.generation.copied = true;
-  }
+  };
 
   $scope.displayApiValue = function () {
     var currentApiValue;
