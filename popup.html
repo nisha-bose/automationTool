@@ -342,18 +342,18 @@
       <div ng-if="currentInstruction.conditionStarts" style="padding: 2px;border: 1px dashed #aba8a8;">
         <button class="btn btn-default" ng-disabled="!currentInstructionCount>0" ng-click="conditionalPrevious()">Prev</button>
         <button class="btn btn-default" ng-disabled="!(response.length>(currentInstructionCount+1))" ng-click="conditionalNext()">Next</button>
-        <span ng-if="!!currentInstruction.locator.id || !!currentInstruction.locator.name">
-          <span ng-if="!!currentInstruction.locator.id">
+        <span ng-if="!!currentInstruction.conditionArr[counter].instructions[0].locator.id || !!currentInstruction.conditionArr[counter].instructions[0].locator.name">
+          <span ng-if="!!currentInstruction.conditionArr[counter].instructions[0].locator.id">
             <label class="radio-inline">
-              <input type="radio" name="optradio" value="id" ng-model="currentInstruction.selectedLocator" ng-click="changeLocator(currentInstruction,'id');">ID</label>
+              <input type="radio" name="optradio" value="id" ng-model="currentInstruction.conditionArr[counter].instructions[0].selectedLocator" ng-click="changeLocator(currentInstruction,'id');">ID</label>
           </span>
-          <span ng-if="!!currentInstruction.locator.xpath">
+          <span ng-if="!!currentInstruction.conditionArr[counter].instructions[0].locator.xpath">
             <label class="radio-inline">
-              <input type="radio" name="optradio" value="xpath" ng-model="currentInstruction.selectedLocator" ng-click="changeLocator(currentInstruction,'xpath');">XPATH</label>
+              <input type="radio" name="optradio" value="xpath" ng-model="currentInstruction.conditionArr[counter].instructions[0].selectedLocator" ng-click="changeLocator(currentInstruction,'xpath');">XPATH</label>
           </span>
-          <span ng-if="!!currentInstruction.locator.name">
+          <span ng-if="!!currentInstruction.conditionArr[counter].instructions[0].locator.name">
             <label class="radio-inline">
-              <input type="radio" name="optradio" value="name" ng-model="currentInstruction.selectedLocator" ng-click="changeLocator(currentInstruction,'name');">NAME</label>
+              <input type="radio" name="optradio" value="name" ng-model="currentInstruction.conditionArr[counter].instructions[0].selectedLocator" ng-click="changeLocator(currentInstruction,'name');">NAME</label>
           </span>
         </span>
       </div>
