@@ -175,9 +175,29 @@ app.controller("myCtrl", function ($scope, $http) {
       console.log('state saved:', oldVal);
       $scope.displayApiValue();
       let value = ($scope.api.currentApiValue ? $scope.api.currentApiValue : $scope.currentInstruction.value.value || '');
+
+      // obj = $scope.currentInstruction.conditionArr[$scope.counter].instructions[0];
+
+      if ($scope.currentInstruction.conditionStarts) {
+          let obj = $scope.currentInstruction.conditionArr[$scope.counter].instructions[0];
+          value = ($scope.api.currentApiValue ? $scope.api.currentApiValue : obj.value.value || '');
+      }
+
       debugger;
-      setValueToDom(value, getLocator($scope.currentInstruction));
-      // $scope.localState[$scope.generator.state]
+
+      //setValueToDom(value, getLocator($scope.currentInstruction));            
+
+      //alert("watch obj INS: " + JSON.stringify($scope.currentInstruction) + " counter : " + $scope.counter);      
+
+      if ($scope.currentInstruction.conditionStarts) {
+        obj = $scope.currentInstruction.conditionArr[$scope.counter].instructions[0];
+        //alert("watch obj : " + JSON.stringify(obj));
+        setValueToDom(value, getLocator(obj));
+      } else {
+        //alert("watch obj : " + JSON.stringify($scope.currentInstruction));
+        setValueToDom(value, getLocator($scope.currentInstruction));
+      }
+
       $scope.localState[$scope.generator.state] = {
         annualReport: {
           instructions: $scope.response,
@@ -456,7 +476,8 @@ app.controller("myCtrl", function ($scope, $http) {
     console.log($scope.instructions)
     $scope.generation.instructionsGenerated = true;
 
-  }  
+  };
+    
   $scope.copyToClipBoard = function () {
     var input = document.createElement("textarea");
     input.setAttribute("style", "width: 0;height: 0;opacity: 0;position: absolute;");
@@ -494,19 +515,7 @@ app.controller("myCtrl", function ($scope, $http) {
    */
   $scope.getConditionBasedResponse = function(attr) {
 
-    $scope.counter = 0;
-
-    /*var instruction = {
-      "conditionStarts"   : true,
-      "conditionVariable" : "",
-      "conditionArr"      : [{
-        "caseValue" : "",
-        //"instructions" : [],
-        "type": "textInput", "locator": { "id": "firstname", "name": "firstname", "xpath": "//*[@id='firstname']" }, 
-        "auto": true, "enabled": false, "value": "orderdata.name", "selectedLocator": "id"
-      }]
-    };*/
-
+    $scope.counter = 0;    
     var instruction = {
       "conditionStarts"   : true,
       "conditionVariable" : "",
@@ -515,14 +524,8 @@ app.controller("myCtrl", function ($scope, $http) {
         "instructions" : []        
       }]
     };
-
     instruction.conditionArr[$scope.counter].instructions.push($scope.response[$scope.currentInstructionCount]);
-
-    return instruction;
-
-    //$scope.currentInstruction = unitInstruction;
-
-    //$scope.response = [{ "type": "textInput", "locator": { "id": "firstname", "name": "firstname", "xpath": "//*[@id='firstname']" }, "auto": true, "enabled": false, "value": "orderdata.name", "selectedLocator": "id" }];
+    return instruction;    
 
   };
 
@@ -579,10 +582,9 @@ app.controller("myCtrl", function ($scope, $http) {
    * @return object
    *
    */
-  $scope.setConditionalApiValue = function () {
-
-    $scope.currentInstruction.conditionArr[$scope.counter].instructions[$scope.currentInstructionCount].value = 'orderdata.' 
-    + $scope.api.apiValue.split(" ").join("");    
+  $scope.setConditionalApiValue = function () {   
+    $scope.currentInstruction.conditionArr[$scope.counter].instructions[0].value = 'orderdata.' 
+    + $scope.api.apiValue.split(" ").join("");        
   }
 
   /**

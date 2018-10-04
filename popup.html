@@ -360,7 +360,7 @@
 
       <div ng-if="currentInstruction.conditionStarts" style="width: 98%;margin-left: 1%;margin-top: 5px;">
         <input type="text" style="width:50%;float:left" placeholder="API Value" ng-model="api.apiValue" 
-        ng-change="setConditionalApiValue();displayConditionalApiValue();"
+        ng-change="setConditionalApiValue();displayApiValue();"
           list="testList" class="form-control">        
           <input type="text" style="width:50%;float:left" placeholder="String Value" ng-model="api.apiString" ng-change="setConditionalStringValue();" class="form-control">
         <datalist id="testList" ng-init="apiIndex=false">
