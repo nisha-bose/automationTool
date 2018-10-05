@@ -288,7 +288,7 @@ app.controller("myCtrl", function ($scope, $http) {
    */
   $scope.getInstructionOfCondition = function(currentInstruction) {
 
-    $scope.generation = {};
+    //$scope.generation = {};
 
       //var element = $scope.getInstrunctionElement(currentInstruction);
       
@@ -345,9 +345,14 @@ app.controller("myCtrl", function ($scope, $http) {
       }
 
       //alert("CONDITIONAL INSTRUCTION : " + JSON.stringify(condition));
+      
+      //$scope.currentInstruction = condition;
 
-      $scope.generation.instructionsGenerated = true;
       return condition;
+
+
+      /*console.log($scope.instructions);
+      $scope.generation.instructionsGenerated = true;*/
 
       
   };
@@ -365,13 +370,18 @@ app.controller("myCtrl", function ($scope, $http) {
 
     /*if ($scope.currentInstruction.conditionStarts) {             
             return $scope.getInstructionOfCondition($scope.currentInstruction);
-    }*/
+    }    
+    alert("response : " + JSON.stringify($scope.response));*/
+
+    //$scope.instructions = $scope.response.filter(currentInstruction => currentInstruction.enabled);
+
+    //alert("DATA : " + JSON.stringify($scope.instructions));
     
     $scope.generation = {};
     $scope.instructions = $scope.response.filter(currentInstruction => currentInstruction.enabled)
       .map(currentInstruction => {        
 
-        alert("CND : " + JSON.stringify(currentInstruction));
+        //alert("CND : " + JSON.stringify(currentInstruction));
 
         /*if (currentInstruction.conditionStarts) {             
             return $scope.getInstructionOfCondition(currentInstruction);
@@ -424,7 +434,7 @@ app.controller("myCtrl", function ($scope, $http) {
         }
       })
 
-    console.log($scope.instructions)
+    console.log($scope.instructions);
     $scope.generation.instructionsGenerated = true;
 
   }
@@ -485,10 +495,7 @@ app.controller("myCtrl", function ($scope, $http) {
             else
               dropDownClick.param.text = currentInstruction.value;
             return dropDownClick;
-
-          case "condition" :            
-
-            return $scope.getInstructionOfCondition();
+          
 
         }
       })
@@ -559,14 +566,14 @@ app.controller("myCtrl", function ($scope, $http) {
    */
   $scope.conditionStarts = function () {
 
-    var attr = {};
-    $scope.currentInstruction = $scope.getConditionBasedResponse(attr);
+    /*var attr = {};
+    $scope.currentInstruction = $scope.getConditionBasedResponse(attr);*/
     
-    /*$scope.currentInstruction.conditionStarts = !$scope.currentInstruction.conditionStarts;       
+    $scope.currentInstruction.conditionStarts = !$scope.currentInstruction.conditionStarts;       
     $scope.conditionArray[$scope.currentInstructionCount] = {
       conditionStarts: !$scope.currentInstruction.conditionStarts,      
       case: $scope.condition.caseString
-    };*/    
+    };    
 
   };
 
@@ -591,7 +598,8 @@ app.controller("myCtrl", function ($scope, $http) {
    *
    */
   $scope.setCaseString = function() {
-      $scope.currentInstruction.conditionArr[$scope.counter].caseValue = $scope.condition.caseString;
+      //$scope.currentInstruction.conditionArr[$scope.counter].caseValue = $scope.condition.caseString;
+      $scope.currentInstruction.caseValue = $scope.condition.caseString;
   };
 
   /**
