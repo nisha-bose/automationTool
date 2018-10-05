@@ -170,34 +170,30 @@ app.controller("myCtrl", function ($scope, $http) {
     // $scope.displayApiValue();
   };
 
+  /**
+   * Method to watch current instruction
+   *
+   * @param void
+   *
+   * @return object
+   *
+   */
   $scope.$watch('currentInstruction', (newVal, oldVal) => {
     if ($scope.generator.state) {
       console.log('state saved:', oldVal);
       $scope.displayApiValue();
-      let value = ($scope.api.currentApiValue ? $scope.api.currentApiValue : $scope.currentInstruction.value.value || '');
-
-      // obj = $scope.currentInstruction.conditionArr[$scope.counter].instructions[0];
-
+      let value = ($scope.api.currentApiValue ? $scope.api.currentApiValue : $scope.currentInstruction.value.value || '');      
       if ($scope.currentInstruction.conditionStarts) {
           let obj = $scope.currentInstruction.conditionArr[$scope.counter].instructions[0];
           value = ($scope.api.currentApiValue ? $scope.api.currentApiValue : obj.value.value || '');
       }
-
-      debugger;
-
-      //setValueToDom(value, getLocator($scope.currentInstruction));            
-
-      //alert("watch obj INS: " + JSON.stringify($scope.currentInstruction) + " counter : " + $scope.counter);      
-
+      debugger;            
       if ($scope.currentInstruction.conditionStarts) {
-        obj = $scope.currentInstruction.conditionArr[$scope.counter].instructions[0];
-        //alert("watch obj : " + JSON.stringify(obj));
+        obj = $scope.currentInstruction.conditionArr[$scope.counter].instructions[0];        
         setValueToDom(value, getLocator(obj));
-      } else {
-        //alert("watch obj : " + JSON.stringify($scope.currentInstruction));
+      } else {        
         setValueToDom(value, getLocator($scope.currentInstruction));
       }
-
       $scope.localState[$scope.generator.state] = {
         annualReport: {
           instructions: $scope.response,
@@ -220,11 +216,11 @@ app.controller("myCtrl", function ($scope, $http) {
    *
    * @return object
    */
-  $scope.getInstrunctionElement = function(currentInstruction) {          
+  $scope.getInstrunctionElement = function(attr) {          
 
         var element = {};
 
-        switch (currentInstruction.type) {
+        switch (attr.type) {
           
           case 'textInput':
             
@@ -238,9 +234,9 @@ app.controller("myCtrl", function ($scope, $http) {
               "auto": true
             };
 
-            element.auto = currentInstruction.auto;
-            element.param.locator[currentInstruction.selectedLocator] = currentInstruction.locator[currentInstruction.selectedLocator];
-            element.param.value = currentInstruction.value;
+            element.auto = attr.auto;
+            element.param.locator[attr.selectedLocator] = attr.locator[attr.selectedLocator];
+            element.param.value = attr.value;
             break;
 
           case 'elementClick':
@@ -252,8 +248,8 @@ app.controller("myCtrl", function ($scope, $http) {
               "auto": false
             };
 
-            element.auto = currentInstruction.auto;
-            element.param[currentInstruction.selectedLocator] = currentInstruction.locator[currentInstruction.selectedLocator];
+            element.auto = attr.auto;
+            element.param[attr.selectedLocator] = attr.locator[attr.selectedLocator];
             break;
 
           case 'dropDownClick':
@@ -267,12 +263,12 @@ app.controller("myCtrl", function ($scope, $http) {
               "auto": true
             };
 
-            element.auto = currentInstruction.auto;
-            element.param.locator[currentInstruction.selectedLocator] = currentInstruction.locator[currentInstruction.selectedLocator];
-            if (currentInstruction.dropdownMethod == 'value')
-              element.param.value = currentInstruction.value;
+            element.auto = attr.auto;
+            element.param.locator[attr.selectedLocator] = attr.locator[attr.selectedLocator];
+            if (attr.dropdownMethod == 'value')
+              element.param.value = attr.value;
             else
-              element.param.text = currentInstruction.value;
+              element.param.text = attr.value;
             
             break;
 
@@ -292,51 +288,68 @@ app.controller("myCtrl", function ($scope, $http) {
    */
   $scope.getInstructionOfCondition = function(currentInstruction) {
 
-      var element = $scope.getInstrunctionElement(currentInstruction);
+    $scope.generation = {};
+
+      //var element = $scope.getInstrunctionElement(currentInstruction);
       
-      /*let condition = {
-                          "type"  : "condition",
-                          "auto"  : true,
-                          "param" : { "switchValue" : currentInstruction.contitionVariable,
-                                      "branches"    : [ 
-                                      { "caseValue"    : { "value" : currentInstruction.caseValue },
+      /*let condition = { "type"  : "condition",
+                                "auto"  : true,
+                                "param" : { "switchValue" : "runtime.companyType",
+                                  "branches"    : [
+                                    { "caseValue"    : { "value" : "LLC" },
                                       "instructions" : [
-                                      { "type"      : "operatorInput",
-                                        "optional"  : false,
-                                        "namespace" : "opsInput",
-                                        "param"     : [{ "name" : "ordernum",
-                                                        "type" : "text" } ],
-                                        "auto"      : true } ] },
-                                      { "defaultCase"  : true,
-                                          "instructions" : [
-                                          { "type"     : "setVariable",
-                                              "optional" : false,
-                                              "param"    : {"variable" : "opsInput.ordernum",
-                                                          "value"    : "_args.ordernum" },
-                                              "auto"     : true } ]
-                                      } ] 
-                                    }                         
-                      };*/
+                                        { "type"     : "dropDownClick",
+                                            "optional" : false,
+                                            "param"    : { "locator" : { "id" : "ddlPrinciple" },
+                                                "text"   : {"value" : "Member" }},
+                                            "auto"     : true }
+                                    ]},
+                                    { "caseValue"    : { "value" : "CORP" },
+                                      "instructions" : [
+                                        { "type"     : "dropDownClick",
+                                            "optional" : false,
+                                            "param"    : { "locator" : { "id" : "ddlPrinciple" },
+                                                "text"   : {"value" : "President" }},
+                                            "auto"     : true }
+                                    ] },
+                                    { "defaultCase"  : true,
+                                      "instructions" : [
+                                        { "type"    : "script",
+                                        "comment" : "no op",
+                                        "param"   : "resolve();",
+                                        "auto"    : true }
+                                    ] } 
+                                ]}  
+                            };*/
 
-       let condition = {
+      var condition = {
                           "type"  : "condition",
                           "auto"  : true,
-                          "param" : { "switchValue" : currentInstruction.contitionVariable,
-                                      "branches"    : [ 
-                                      { "caseValue"    : { "value" : currentInstruction.caseValue },
-                                      "instructions" : [ element ] },
-                                      { "defaultCase"  : true,
-                                          "instructions" : [
-                                          { "type"     : "setVariable",
-                                              "optional" : false,
-                                              "param"    : {"variable" : "opsInput.ordernum",
-                                                          "value"    : "_args.ordernum" },
-                                              "auto"     : true } ]
-                                      } ] 
+                          "param" : { "switchValue" : currentInstruction.conditionVariable,
+                                      "branches"    : [] 
                                     }                         
-                      };               
+                      },  
+      conditionArr = currentInstruction.conditionArr, 
+      element,
+      caseObj = {};           
+      for (var count = 0; count < conditionArr.length; count++) {        
+        caseObj = {
+          "caseValue" : "",
+          "instructions" : []
+        };
 
+        caseObj.caseValue = { "value" : conditionArr[count].caseValue };  
+        element = $scope.getInstrunctionElement(conditionArr[count].instructions[0])
+        caseObj.instructions.push(element);                
+        condition.param.branches.push(caseObj);
+      }
+
+      //alert("CONDITIONAL INSTRUCTION : " + JSON.stringify(condition));
+
+      $scope.generation.instructionsGenerated = true;
       return condition;
+
+      
   };
 
   /**
@@ -349,13 +362,20 @@ app.controller("myCtrl", function ($scope, $http) {
    */
   $scope.generateInstructions = function () {
     
+
+    /*if ($scope.currentInstruction.conditionStarts) {             
+            return $scope.getInstructionOfCondition($scope.currentInstruction);
+    }*/
+    
     $scope.generation = {};
     $scope.instructions = $scope.response.filter(currentInstruction => currentInstruction.enabled)
-      .map(currentInstruction => {
+      .map(currentInstruction => {        
 
-        if (currentInstruction.conditionStarts) {             
+        alert("CND : " + JSON.stringify(currentInstruction));
+
+        /*if (currentInstruction.conditionStarts) {             
             return $scope.getInstructionOfCondition(currentInstruction);
-        }
+        }*/
 
         switch (currentInstruction.type) {
           case 'textInput':
