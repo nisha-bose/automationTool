@@ -276,7 +276,7 @@
         </div>
       </div>
       <div>        
-        <div ng-if="conditionFlag" style="width: 98%;margin-left: 1%;margin-top: 5px;" cn="{{currentInstructionCount}}">
+        <div ng-if="conditionFlag" style="width: 98%;margin-left: 1%;margin-top: 5px;">
           <div ng-if="currentInstructionCount == 0">
           <input type="text" placeholder="Condition Variable" ng-model="condition.apiValue" ng-change="setConditionalVariable();"
             list="testList" class="form-control">
@@ -344,9 +344,11 @@
       <json-formatter ng-class="{'codeBoxNotActive':!currentInstruction.enabled,'codeBoxActive':currentInstruction.enabled}" class="sizer"
         id="codeBox" json="currentInstruction" open="1"></json-formatter>
       <div class="container container-table" style="margin-top: 10px">
-        <div class="row vertical-center-row">
-            <button type="button" class="btn" ng-class="{'btn-success':!currentInstruction.enabled,'btn-danger':currentInstruction.enabled}"
-            ng-click="currentInstruction.enabled=!currentInstruction.enabled">{{currentInstruction.enabled?'Disable':'Enable '}} </button>
+        <div class="row vertical-center-row">            
+            <button type="button" class="btn" ng-class="{'btn-success':!currentInstruction.enabled,'btn-danger':currentInstruction.enabled}" ng-click="currentInstruction.enabled=!currentInstruction.enabled" 
+            ng-style="(conditionFlag && currentInstructionCount == 0) ? {'display':'none'} : {'display':'inline-block'}">
+              {{currentInstruction.enabled?'Disable':'Enable '}}
+            </button>
           <button class="btn btn-success center" ng-click="generateInstructions()">Generate Code</button>
         </div>
       </div>

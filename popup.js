@@ -12,7 +12,7 @@ var port = chrome.runtime.connect()
 
 var app = angular.module("myApp", ['jsonFormatter']);
 
-app.controller("myCtrl", function ($scope, $http) {
+app.controller("myCtrl", function ($scope, $http, $timeout) {
 
   $scope.response = [{ "type": "textInput", "locator": { "id": "firstname", "name": "firstname", "xpath": "//*[@id='firstname']" }, "auto": true, "enabled": false, "value": "orderdata.name", "selectedLocator": "id" }];
   $scope.checks = [];
@@ -136,13 +136,18 @@ app.controller("myCtrl", function ($scope, $http) {
     }
   }
 
-  $scope.next = function () {
+  $scope.next = function () { 
+
+    $timeout(function(callback){
+        if ($scope.conditionFlag) {      
+          $scope.currentInstruction.enabled = true;      
+        }        
+    });
 
     makeBorder(false, getLocator($scope.currentInstruction));
     $scope.currentInstruction = $scope.response[++$scope.currentInstructionCount];
     makeDefaultLocator($scope.currentInstruction);
-    if ($scope.currentInstruction.type == 'dropDownClick' && !$scope.currentInstruction.dropdownMethod) $scope.currentInstruction.dropdownMethod = "value";
-    // alert($scope.currentInstruction.type);
+    if ($scope.currentInstruction.type == 'dropDownClick' && !$scope.currentInstruction.dropdownMethod) $scope.currentInstruction.dropdownMethod = "value";    
     makeBorder(true, getLocator($scope.currentInstruction));
     debugger;
     if (typeof ($scope.currentInstruction.value) !== 'object') {
@@ -153,7 +158,11 @@ app.controller("myCtrl", function ($scope, $http) {
       $scope.api.apiValue = '';
     }
     $scope.api.currentApiValue = null;
-    // $scope.displayApiValue();
+
+    if ($scope.conditionFlag) {      
+      $scope.currentInstruction.enabled = true;      
+    }
+
   };
 
   $scope.previous = function () {
@@ -168,7 +177,7 @@ app.controller("myCtrl", function ($scope, $http) {
       $scope.api.apiValue = '';
     }
     $scope.api.currentApiValue = null;
-    // $scope.displayApiValue();
+    
   };
 
   /**
@@ -578,6 +587,7 @@ app.controller("myCtrl", function ($scope, $http) {
   $scope.conditionStarts = function () {
 
     $scope.conditionFlag = true;
+    $scope.currentInstruction.enabled = true;
     
     $scope.currentInstruction.conditionStarts = !$scope.currentInstruction.conditionStarts;       
     $scope.conditionArray[$scope.currentInstructionCount] = {
