@@ -30,8 +30,7 @@ app.controller("myCtrl", function ($scope, $http, $timeout) {
     console.log(locator);
   }
 
-  $scope.fetchApi = function (resume) {    
-    // console.log($scope.inputs);
+  $scope.fetchApi = function (resume) {        
     $scope.localState = JSON.parse(localStorage.getItem('automationToolState'));
     $scope.loading = true;
     $http.get("https://atomic.incfile.com/api/webauto/misc-order/" + $scope.generator.state + "/llc?id=" + $scope.generator.order)
@@ -288,43 +287,6 @@ app.controller("myCtrl", function ($scope, $http, $timeout) {
    * @return object
    */
   $scope.getInstructionOfCondition = function() {
-    
-
-           
-      /*var condition = { "type"  : "condition",
-                                "auto"  : true,
-                                "param" : { "switchValue" : "runtime.companyType",
-                                  "branches"    : [
-                                    { "caseValue"    : { "value" : "LLC" },
-                                      "instructions" : [
-                                        { "type"     : "dropDownClick",
-                                            "optional" : false,
-                                            "param"    : { "locator" : { "id" : "ddlPrinciple" },
-                                                "text"   : {"value" : "Member" }},
-                                            "auto"     : true },
-                                        { "type"     : "dropDownClick",
-                                            "optional" : false,
-                                            "param"    : { "locator" : { "id" : "ddlPrinciple" },
-                                                "text"   : {"value" : "Member" }},
-                                            "auto"     : true },    
-                                    ]},
-                                    { "caseValue"    : { "value" : "CORP" },
-                                      "instructions" : [
-                                        { "type"     : "dropDownClick",
-                                            "optional" : false,
-                                            "param"    : { "locator" : { "id" : "ddlPrinciple" },
-                                                "text"   : {"value" : "President" }},
-                                            "auto"     : true }
-                                    ] },
-                                    { "defaultCase"  : true,
-                                      "instructions" : [
-                                        { "type"    : "script",
-                                        "comment" : "no op",
-                                        "param"   : "resolve();",
-                                        "auto"    : true }
-                                    ] } 
-                                ]}  
-                            };*/
 
       var condition = { 
                           "type"  : "condition",
@@ -374,15 +336,12 @@ app.controller("myCtrl", function ($scope, $http, $timeout) {
           } else {
               current = count - 1;
               condition.param.branches[current].instructions.push(element);
-          }                    
-          
+          }                              
         
       });
-
     $scope.instructions = condition;    
     console.log($scope.instructions);
-    $scope.generation.instructionsGenerated = true;
-    
+    $scope.generation.instructionsGenerated = true;    
       
   };
   

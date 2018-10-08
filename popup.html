@@ -270,7 +270,7 @@
         <div class="col-xs-6">
           <p style="text-align: center;">{{currentInstructionCount+1}} out of {{response.length}}</p>
         </div>
-        <div class="col-xs-3" style="margin-left: -42px;">
+        <div class="col-xs-3" style="margin-left: -42px;" ng-if="(currentInstructionCount == 0)">
           <button type="button" class="btn btn-sm" ng-class="{'btn-success':!currentInstruction.conditionStarts,'btn-danger':currentInstruction.conditionStarts}"
             ng-click="conditionStarts()">{{currentInstruction.conditionStarts?'Remove Cndt':'Add condition'}} </button>
         </div>
