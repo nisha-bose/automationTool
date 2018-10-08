@@ -52,8 +52,7 @@ app.controller("myCtrl", function ($scope, $http, $timeout) {
             }
             else {
               alert('No resume data found for ' + $scope.generator.state + '. loading from the beginning...');
-              $scope.response = resp;
-              // $scope.currentInstructionCount = 0;
+              $scope.response = resp;              
             }
             console.log("response from Page: ", resp);
             if (!resp || !resp.length) {
@@ -98,8 +97,7 @@ app.controller("myCtrl", function ($scope, $http, $timeout) {
     return ops;
   }
   $scope.setApiValue = function () {
-    $scope.currentInstruction.value = 'orderdata.' + $scope.api.apiValue.split(" ").join("");
-    // $scope.api.apiString = '';
+    $scope.currentInstruction.value = 'orderdata.' + $scope.api.apiValue.split(" ").join("");    
   }
 
   function getLocator(obj) {
@@ -279,7 +277,7 @@ app.controller("myCtrl", function ($scope, $http, $timeout) {
   };
 
   /**
-   **
+   *
    * Method to get instruction of condition
    *
    * @param object attr
@@ -545,10 +543,16 @@ app.controller("myCtrl", function ($scope, $http, $timeout) {
    */
   $scope.conditionStarts = function () {
 
-    $scope.conditionFlag = true;
-    $scope.currentInstruction.enabled = true;
+    $scope.conditionFlag = false;
+    $scope.currentInstruction.enabled = false;
     
     $scope.currentInstruction.conditionStarts = !$scope.currentInstruction.conditionStarts;       
+
+    if ($scope.currentInstruction.conditionStarts) {
+        $scope.conditionFlag = true;
+        $scope.currentInstruction.enabled = true;
+    }
+    
     $scope.conditionArray[$scope.currentInstructionCount] = {
       conditionStarts: !$scope.currentInstruction.conditionStarts,      
       case: $scope.condition.caseString
