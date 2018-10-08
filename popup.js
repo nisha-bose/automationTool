@@ -30,7 +30,11 @@ app.controller("myCtrl", function ($scope, $http, $timeout) {
     console.log(locator);
   }
 
-  $scope.fetchApi = function (resume) {        
+  $scope.fetchApi = function (resume) {
+
+    $scope.condition.apiValue = "";
+    $scope.condition.caseString = "";
+
     $scope.localState = JSON.parse(localStorage.getItem('automationToolState'));
     $scope.loading = true;
     $http.get("https://atomic.incfile.com/api/webauto/misc-order/" + $scope.generator.state + "/llc?id=" + $scope.generator.order)
