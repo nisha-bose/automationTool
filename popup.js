@@ -22,6 +22,7 @@ app.controller("myCtrl", function ($scope, $http) {
   $scope.generator = {};
   $scope.inputs = {};
   $scope.condition = {};
+  $scope.conditionFlag = false;
   $scope.conditionArray = []; //Keep track opening and closing of condition. 
   $scope.generatePageFlag = true;
   $scope.changeLocator = function (currentInstruction, locator) {
@@ -182,18 +183,9 @@ app.controller("myCtrl", function ($scope, $http) {
     if ($scope.generator.state) {
       console.log('state saved:', oldVal);
       $scope.displayApiValue();
-      let value = ($scope.api.currentApiValue ? $scope.api.currentApiValue : $scope.currentInstruction.value.value || '');      
-      if ($scope.currentInstruction.conditionStarts) {
-          let obj = $scope.currentInstruction.conditionArr[$scope.counter].instructions[0];
-          value = ($scope.api.currentApiValue ? $scope.api.currentApiValue : obj.value.value || '');
-      }
-      debugger;            
-      if ($scope.currentInstruction.conditionStarts) {
-        obj = $scope.currentInstruction.conditionArr[$scope.counter].instructions[0];        
-        setValueToDom(value, getLocator(obj));
-      } else {        
-        setValueToDom(value, getLocator($scope.currentInstruction));
-      }
+      let value = ($scope.api.currentApiValue ? $scope.api.currentApiValue : $scope.currentInstruction.value.value || '');            
+      debugger;                  
+      setValueToDom(value, getLocator($scope.currentInstruction));
       $scope.localState[$scope.generator.state] = {
         annualReport: {
           instructions: $scope.response,
@@ -286,13 +278,11 @@ app.controller("myCtrl", function ($scope, $http) {
    *
    * @return object
    */
-  $scope.getInstructionOfCondition = function(currentInstruction) {
+  $scope.getInstructionOfCondition = function() {
+    
 
-    //$scope.generation = {};
-
-      //var element = $scope.getInstrunctionElement(currentInstruction);
-      
-      /*let condition = { "type"  : "condition",
+      /*var element = $scope.getInstrunctionElement(currentInstruction);      
+      var condition = { "type"  : "condition",
                                 "auto"  : true,
                                 "param" : { "switchValue" : "runtime.companyType",
                                   "branches"    : [
@@ -322,40 +312,38 @@ app.controller("myCtrl", function ($scope, $http) {
                                 ]}  
                             };*/
 
-      var condition = {
+      var condition = { 
                           "type"  : "condition",
                           "auto"  : true,
-                          "param" : { "switchValue" : currentInstruction.conditionVariable,
-                                      "branches"    : [] 
-                                    }                         
-                      },  
-      conditionArr = currentInstruction.conditionArr, 
-      element,
-      caseObj = {};           
-      for (var count = 0; count < conditionArr.length; count++) {        
-        caseObj = {
-          "caseValue" : "",
-          "instructions" : []
-        };
+                          "param" : { "switchValue" : "",
+                                "branches"    : [] }  
+                      }, count = 0, caseObj = {};             
 
-        caseObj.caseValue = { "value" : conditionArr[count].caseValue };  
-        element = $scope.getInstrunctionElement(conditionArr[count].instructions[0])
-        caseObj.instructions.push(element);                
-        condition.param.branches.push(caseObj);
-      }
+      $scope.generation = {};
+      $scope.instructions = $scope.response.filter(currentInstruction => currentInstruction.enabled)
+      .map(currentInstruction => {               
+        
+          if (count == 0) {
+              condition.param.switchValue = currentInstruction.conditionVariable;
+          } 
+          caseObj = {
+              "caseValue" : {"value" : currentInstruction.caseValue},
+              "instructions" : []
+          };
 
-      //alert("CONDITIONAL INSTRUCTION : " + JSON.stringify(condition));
-      
-      //$scope.currentInstruction = condition;
+          caseObj.instructions.push($scope.getInstrunctionElement(currentInstruction));
+          condition.param.branches.push(caseObj);
+          count++;          
+        
+      });
 
-      return condition;
-
-
-      /*console.log($scope.instructions);
-      $scope.generation.instructionsGenerated = true;*/
-
+    $scope.instructions = condition;    
+    console.log($scope.instructions);
+    $scope.generation.instructionsGenerated = true;
+    
       
   };
+  
 
   /**
    *
@@ -365,28 +353,17 @@ app.controller("myCtrl", function ($scope, $http) {
    *
    * @return object
    */
-  $scope.generateInstructions = function () {
-    
+  $scope.generateInstructions = function () { 
 
-    /*if ($scope.currentInstruction.conditionStarts) {             
-            return $scope.getInstructionOfCondition($scope.currentInstruction);
-    }    
-    alert("response : " + JSON.stringify($scope.response));*/
+    if ($scope.conditionFlag) {
+      $scope.getInstructionOfCondition();
+      return;
+    }
 
-    //$scope.instructions = $scope.response.filter(currentInstruction => currentInstruction.enabled);
-
-    //alert("DATA : " + JSON.stringify($scope.instructions));
-    
     $scope.generation = {};
     $scope.instructions = $scope.response.filter(currentInstruction => currentInstruction.enabled)
-      .map(currentInstruction => {        
-
-        //alert("CND : " + JSON.stringify(currentInstruction));
-
-        /*if (currentInstruction.conditionStarts) {             
-            return $scope.getInstructionOfCondition(currentInstruction);
-        }*/
-
+      .map(currentInstruction => {                        
+        
         switch (currentInstruction.type) {
           case 'textInput':
             let textEntry = {
@@ -432,6 +409,7 @@ app.controller("myCtrl", function ($scope, $http) {
             return dropDownClick;          
 
         }
+
       })
 
     console.log($scope.instructions);
@@ -566,8 +544,7 @@ app.controller("myCtrl", function ($scope, $http) {
    */
   $scope.conditionStarts = function () {
 
-    /*var attr = {};
-    $scope.currentInstruction = $scope.getConditionBasedResponse(attr);*/
+    $scope.conditionFlag = true;
     
     $scope.currentInstruction.conditionStarts = !$scope.currentInstruction.conditionStarts;       
     $scope.conditionArray[$scope.currentInstructionCount] = {
@@ -633,62 +610,6 @@ app.controller("myCtrl", function ($scope, $http) {
 
   };
 
-  /**
-   *
-   * Method to handle condition based next operations
-   *
-   * @param void
-   *
-   * @return object
-   */
-  $scope.conditionalNext = function () {
-
-    var obj = $scope.currentInstruction.conditionArr[$scope.counter].instructions[0];
-    makeBorder(false, getLocator(obj));
-    $scope.counter++; 
-    $scope.currentInstructionCount++;    
-    $scope.currentInstruction.conditionArr[$scope.counter] = {"caseValue": $scope.condition.caseString};    
-    $scope.currentInstruction.conditionArr[$scope.counter].instructions = [];
-    $scope.currentInstruction.conditionArr[$scope.counter].instructions.push($scope.response[$scope.currentInstructionCount]);        
-    makeDefaultLocator(obj);
-    obj = $scope.currentInstruction.conditionArr[$scope.counter].instructions[0];
-    if (obj.type == 'dropDownClick' && !obj.dropdownMethod) obj.dropdownMethod = "value";    
-    makeBorder(true, getLocator(obj));
-    debugger;
-    if (typeof (obj.value) !== 'object') {
-      $scope.api.apiValue = obj.value.split('orderdata.')[1];
-      $scope.api.apiString = '';
-    } else {
-      $scope.api.apiString = obj.value.value;
-      $scope.api.apiValue = '';
-    }
-    $scope.api.currentApiValue = null;    
-    
-  };
-
-  /**
-   *
-   * Method to handle conditon based previous operations
-   *
-   * @param void
-   *
-   * @return object
-   */
-  $scope.conditionalPrevious = function () {
-    makeBorder(false, getLocator($scope.currentInstruction));
-    $scope.currentInstruction = $scope.response[--$scope.currentInstructionCount];
-    makeBorder(true, getLocator($scope.currentInstruction));
-    if (typeof ($scope.currentInstruction.value) !== 'object') {
-      $scope.api.apiValue = $scope.currentInstruction.value.split('orderdata.')[1];
-      $scope.api.apiString = '';
-    } else {
-      $scope.api.apiString = $scope.currentInstruction.value.value;
-      $scope.api.apiValue = '';
-    }
-    $scope.api.currentApiValue = null;
-    // $scope.displayApiValue();
-  };
- 
 
   /**
    * Method to get condition status

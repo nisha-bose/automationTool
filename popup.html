@@ -276,7 +276,8 @@
         </div>
       </div>
       <div>
-        <div ng-if="currentInstruction.conditionStarts" style="width: 98%;margin-left: 1%;margin-top: 5px;">
+        <!-- <div ng-if="currentInstruction.conditionStarts" style="width: 98%;margin-left: 1%;margin-top: 5px;"> -->
+        <div ng-if="conditionFlag" style="width: 98%;margin-left: 1%;margin-top: 5px;">
           <input type="text" placeholder="Condition Variable" ng-model="condition.apiValue" ng-change="setConditionalVariable();"
             list="testList" class="form-control">
           <input type="text" placeholder="Case String" ng-model="condition.caseString" ng-change="setCaseString();"
