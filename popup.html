@@ -281,7 +281,7 @@
           <input type="text" placeholder="Condition Variable" ng-model="condition.apiValue" ng-change="setConditionalVariable();"
             list="testList" class="form-control">
           </div>  
-          <input type="text" placeholder="Case String" ng-model="condition.caseString" ng-change="setCaseString();"
+          <input type="text" placeholder="Case String (Eg: value or default)" ng-model="condition.caseString" ng-change="setCaseString();"
             class="form-control">
           <datalist id="testList" ng-init="apiIndex=false">
             <option ng-repeat="apis in apiKeys" value="{{apis.key}}">

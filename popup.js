@@ -322,7 +322,12 @@ app.controller("myCtrl", function ($scope, $http) {
                           "auto"  : true,
                           "param" : { "switchValue" : "",
                                 "branches"    : [] }  
-                      }, count = 0, current = 0, caseObj = {}, element = {};             
+                      }, 
+                      count = 0, 
+                      current = 0,
+                      caseObj = {}, 
+                      element = {},
+                      caseValue = "";
 
       $scope.generation = {};
       $scope.instructions = $scope.response.filter(currentInstruction => currentInstruction.enabled)
@@ -335,12 +340,26 @@ app.controller("myCtrl", function ($scope, $http) {
           element = $scope.getInstrunctionElement(currentInstruction);
           if (currentInstruction.caseValue) {
 
-              caseObj = {
-                "caseValue" : {"value" : currentInstruction.caseValue},
-                "instructions" : []
-              };
+              caseValue = currentInstruction.caseValue.trim();
+              caseValue = caseValue.toLowerCase();
+
+              if (caseValue == "default") {
+
+                caseObj = {
+                  "defaultCase" : true,
+                  "instructions" : []
+                };
+
+              } else {
+                caseObj = {
+                  "caseValue" : {"value" : currentInstruction.caseValue},
+                  "instructions" : []
+                };
+                
+              }
               caseObj.instructions.push(element);
-              condition.param.branches.push(caseObj);              
+              condition.param.branches.push(caseObj);
+
               count++;
 
           } else {
