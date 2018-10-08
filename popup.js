@@ -281,8 +281,8 @@ app.controller("myCtrl", function ($scope, $http) {
   $scope.getInstructionOfCondition = function() {
     
 
-      /*var element = $scope.getInstrunctionElement(currentInstruction);      
-      var condition = { "type"  : "condition",
+           
+      /*var condition = { "type"  : "condition",
                                 "auto"  : true,
                                 "param" : { "switchValue" : "runtime.companyType",
                                   "branches"    : [
@@ -292,7 +292,12 @@ app.controller("myCtrl", function ($scope, $http) {
                                             "optional" : false,
                                             "param"    : { "locator" : { "id" : "ddlPrinciple" },
                                                 "text"   : {"value" : "Member" }},
-                                            "auto"     : true }
+                                            "auto"     : true },
+                                        { "type"     : "dropDownClick",
+                                            "optional" : false,
+                                            "param"    : { "locator" : { "id" : "ddlPrinciple" },
+                                                "text"   : {"value" : "Member" }},
+                                            "auto"     : true },    
                                     ]},
                                     { "caseValue"    : { "value" : "CORP" },
                                       "instructions" : [
@@ -317,7 +322,7 @@ app.controller("myCtrl", function ($scope, $http) {
                           "auto"  : true,
                           "param" : { "switchValue" : "",
                                 "branches"    : [] }  
-                      }, count = 0, caseObj = {};             
+                      }, count = 0, current = 0, caseObj = {}, element = {};             
 
       $scope.generation = {};
       $scope.instructions = $scope.response.filter(currentInstruction => currentInstruction.enabled)
@@ -326,14 +331,23 @@ app.controller("myCtrl", function ($scope, $http) {
           if (count == 0) {
               condition.param.switchValue = currentInstruction.conditionVariable;
           } 
-          caseObj = {
-              "caseValue" : {"value" : currentInstruction.caseValue},
-              "instructions" : []
-          };
 
-          caseObj.instructions.push($scope.getInstrunctionElement(currentInstruction));
-          condition.param.branches.push(caseObj);
-          count++;          
+          element = $scope.getInstrunctionElement(currentInstruction);
+          if (currentInstruction.caseValue) {
+
+              caseObj = {
+                "caseValue" : {"value" : currentInstruction.caseValue},
+                "instructions" : []
+              };
+              caseObj.instructions.push(element);
+              condition.param.branches.push(caseObj);              
+              count++;
+
+          } else {
+              current = count - 1;
+              condition.param.branches[current].instructions.push(element);
+          }                    
+          
         
       });
 
