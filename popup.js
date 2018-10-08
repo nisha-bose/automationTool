@@ -42,9 +42,7 @@ app.controller("myCtrl", function ($scope, $http, $timeout) {
         $scope.loading = false;
         $scope.api = response.data;
         $scope.apiKeys = getNestedJsonKeys(response.data);
-
         $scope.generatePageFlag = false;
-
         chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
           chrome.tabs.sendMessage(tabs[0].id, { type: "getText", elements: $scope.inputs }, function (resp) {
 
