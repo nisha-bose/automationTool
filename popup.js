@@ -464,13 +464,33 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
                         };
 
                     }
+
+                    if (typeof currentInstruction.statusInstruction !== "undefined" 
+                            && currentInstruction.statusInstruction) {
+
+                        let statusInst = {"type" : "status","param" : "Please wait...", "auto": true };
+                        if (currentInstruction.statusMsg) {
+                            statusInst.param = currentInstruction.statusMsg; 
+                        }                                                     
+                        caseObj.instructions.push(statusInst);                            
+                    }
                     caseObj.instructions.push(element);
                     condition.param.branches.push(caseObj);
 
                     count++;
 
                 } else {
+                    
                     current = count - 1;
+                    if (typeof currentInstruction.statusInstruction !== "undefined" 
+                            && currentInstruction.statusInstruction) {
+
+                        let statusInst = {"type" : "status","param" : "Please wait...", "auto": true };
+                        if (currentInstruction.statusMsg) {
+                            statusInst.param = currentInstruction.statusMsg; 
+                        }                                                     
+                        condition.param.branches[current].instructions.push(statusInst);                            
+                    }
                     condition.param.branches[current].instructions.push(element);
                 }
 
