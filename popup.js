@@ -43,6 +43,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
         $scope.condition.apiValue = "";
         $scope.condition.caseString = "";
+        $scope.conditionFlag = false;
 
         $scope.localState = JSON.parse(localStorage.getItem('automationToolState'));
         $scope.loading = true;
@@ -480,7 +481,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
                     count++;
 
                 } else {
-                    
+
                     current = count - 1;
                     if (typeof currentInstruction.statusInstruction !== "undefined" 
                             && currentInstruction.statusInstruction) {
