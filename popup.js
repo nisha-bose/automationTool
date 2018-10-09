@@ -1,11 +1,4 @@
-// chrome.storage.sync.get('color', function(data) {
-//   changeColor.style.backgroundColor = data.color;
-//   changeColor.setAttribute('value', data.color);
-//   codeBox.setAttribute('value', "data.color");
-//   document.getElementById("codeBox").value=""
-// });
-var port = chrome.runtime.connect()
-
+var port = chrome.runtime.connect();
 
 var app = angular.module("myApp", ['jsonFormatter']);
 
@@ -32,12 +25,20 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
     $scope.condition = {};
     $scope.conditionFlag = false;
     $scope.conditionArray = []; //Keep track opening and closing of condition. 
-    $scope.generatePageFlag = true;
+    $scope.generatePageFlag = true;    
     $scope.changeLocator = function(currentInstruction, locator) {
         $scope.response[$scope.currentInstructionCount] = angular.copy($scope.currentInstruction);
         console.log(locator);
     }
 
+    /**
+     * Method to fetch api data
+     *
+     * @param object resume
+     *
+     * @return object
+     *
+     */
     $scope.fetchApi = function(resume) {
 
         $scope.condition.apiValue = "";
@@ -84,7 +85,16 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
                     });
                 });
             });
-    }
+    };
+
+    /**
+     * Method to handle close event
+     *
+     * @param void 
+     *
+     * @return object
+     *
+     */
     $scope.closed = () => {
         chrome.tabs.query({
             active: true,
@@ -97,12 +107,28 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
                 }
             }, function(resp) {})
         })
-    }
+    };
+
+    /**
+     * Method to handle window blur event
+     *
+     * @param void 
+     *
+     * @return object
+     *
+     */
     window.onblur = function() {
         $scope.closed();
-    }
+    };
 
-
+    /**
+     * Method to handle nested json keu
+     *
+     * @param object apiObj
+     *
+     * @return object
+     *
+     */
     function getNestedJsonKeys(apiObj) {
         var ops = [];
 
@@ -121,14 +147,40 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         iterate(apiObj);
         return ops;
     }
+
+    /**
+     * Method to set api value
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
     $scope.setApiValue = function() {
         $scope.currentInstruction.value = 'orderdata.' + $scope.api.apiValue.split(" ").join("");
     }
 
+    /**
+     * Method to get locator
+     *
+     * @param object obj
+     *
+     * @return object
+     *
+     */
     function getLocator(obj) {
         return obj.locator;
     }
 
+    /**
+     * Method to make border
+     *
+     * @param object condition
+     * @param object locator
+     *
+     * @return object
+     *
+     */
     function makeBorder(condition, locator) { // set / reset
         chrome.tabs.query({
             active: true,
@@ -144,6 +196,15 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         });
     }
 
+    /**
+     * Method to set value to dom element
+     *
+     * @param string value
+     * @param object locator
+     *
+     * @return object
+     *
+     */
     function setValueToDom(value, locator) { // set / reset
         chrome.tabs.query({
             active: true,
@@ -160,11 +221,25 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         });
     }
 
-
+    /**
+     * Method to handle go back action
+     *
+     * @param void
+     *           
+     * @return object     
+     */
     $scope.goBack = function() {
         $scope.generatePageFlag = true;
-    }
+    };
 
+    /**
+     * Method to make default locator
+     *
+     * @param object currentInstruction     
+     *
+     * @return object
+     *
+     */
     function makeDefaultLocator(currentInstruction) {
         if (!currentInstruction.selectedLocator) {
             if (!!currentInstruction.locator.id)
@@ -176,6 +251,14 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         }
     }
 
+    /**
+     * Method to handle actions in next step
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
     $scope.next = function() {
 
         $timeout(function(callback) {
@@ -205,6 +288,14 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
     };
 
+    /**
+     * Method to handle actions in previous step
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
     $scope.previous = function() {
         makeBorder(false, getLocator($scope.currentInstruction));
         $scope.currentInstruction = $scope.response[--$scope.currentInstructionCount];
@@ -401,6 +492,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
      */
     $scope.generateInstructions = function() {
 
+        var inst = [];
         if ($scope.conditionFlag) {
             $scope.getInstructionOfCondition();
             return;
@@ -408,10 +500,12 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
         $scope.generation = {};
         $scope.instructions = $scope.response.filter(currentInstruction => currentInstruction.enabled)
-            .map(currentInstruction => {
+            .map(currentInstruction => {                
 
                 switch (currentInstruction.type) {
-                    case 'textInput':
+                    
+                    case 'textInput':                        
+
                         let textEntry = {
                             "type": "textEntry",
                             "optional": false,
@@ -424,10 +518,23 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
                         textEntry.auto = currentInstruction.auto;
                         textEntry.param.locator[currentInstruction.selectedLocator] = currentInstruction.locator[currentInstruction.selectedLocator];
-                        textEntry.param.value = currentInstruction.value;
-                        return textEntry;
+                        textEntry.param.value = currentInstruction.value;                        
+ 
+                        if (typeof currentInstruction.statusInstruction !== "undefined" 
+                            && currentInstruction.statusInstruction) {
+
+                            let statusInst = {"type" : "status","param" : "Please wait...", "auto": true };
+                            if (currentInstruction.statusMsg) {
+                                statusInst.param = currentInstruction.statusMsg; 
+                            }                             
+                            inst.push(statusInst);                            
+                        } 
+                        inst.push(textEntry);                        
+                        break;
+                        
                     case 'elementClick':
-                        elementClick = {
+
+                        let elementClick = {
                             "type": "elementClick",
                             "optional": false,
                             "param": {},
@@ -435,10 +542,22 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
                         }
                         elementClick.auto = currentInstruction.auto;
                         elementClick.param[currentInstruction.selectedLocator] = currentInstruction.locator[currentInstruction.selectedLocator];
-                        return elementClick;
+                        
+                        if (typeof currentInstruction.statusInstruction !== "undefined" 
+                            && currentInstruction.statusInstruction) {
+                            
+                            let statusInst = {"type" : "status","param" : "Please wait...", "auto": true };
+                            if (currentInstruction.statusMsg) {
+                                statusInst.param = currentInstruction.statusMsg; 
+                            }                             
+                            inst.push(statusInst);                            
+                        }
+                        inst.push(elementClick); 
+                        break;
+
                     case 'dropDownClick':
 
-                        dropDownClick = {
+                        let dropDownClick = {
                             "type": "dropDownClick",
                             "optional": false,
                             "param": {
@@ -452,83 +571,38 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
                             dropDownClick.param.value = currentInstruction.value;
                         else
                             dropDownClick.param.text = currentInstruction.value;
-                        return dropDownClick;
+
+                        if (typeof currentInstruction.statusInstruction !== "undefined" 
+                            && currentInstruction.statusInstruction) {
+                            
+                            let statusInst = {"type" : "status","param" : "Please wait...", "auto": true };
+                            if (currentInstruction.statusMsg) {
+                                statusInst.param = currentInstruction.statusMsg; 
+                            }                             
+                            inst.push(statusInst);                            
+                        }
+                        inst.push(dropDownClick); 
+                        break;                        
 
                 }
 
-            })
+            });
 
+
+        $scope.instructions = inst;
         console.log($scope.instructions);
         $scope.generation.instructionsGenerated = true;
 
-    }
+    }    
 
     /**
      *
-     * Method to generate instrunctions
+     * Method to copy to clip board
      *
      * @param void
      *
      * @return object
      */
-    $scope.generateInstructions_bkp = function() {
-
-        $scope.generation = {};
-        $scope.instructions = $scope.response.filter(currentInstruction => currentInstruction.enabled)
-            .map(currentInstruction => {
-                switch (currentInstruction.type) {
-                    case 'textInput':
-                        let textEntry = {
-                            "type": "textEntry",
-                            "optional": false,
-                            "param": {
-                                "locator": {},
-                                "value": {}
-                            },
-                            "auto": true
-                        }
-
-                        textEntry.auto = currentInstruction.auto;
-                        textEntry.param.locator[currentInstruction.selectedLocator] = currentInstruction.locator[currentInstruction.selectedLocator];
-                        textEntry.param.value = currentInstruction.value;
-                        return textEntry;
-                    case 'elementClick':
-                        elementClick = {
-                            "type": "elementClick",
-                            "optional": false,
-                            "param": {},
-                            "auto": false
-                        }
-                        elementClick.auto = currentInstruction.auto;
-                        elementClick.param[currentInstruction.selectedLocator] = currentInstruction.locator[currentInstruction.selectedLocator];
-                        return elementClick;
-                    case 'dropDownClick':
-
-                        dropDownClick = {
-                            "type": "dropDownClick",
-                            "optional": false,
-                            "param": {
-                                "locator": {},
-                            },
-                            "auto": true
-                        }
-                        dropDownClick.auto = currentInstruction.auto;
-                        dropDownClick.param.locator[currentInstruction.selectedLocator] = currentInstruction.locator[currentInstruction.selectedLocator];
-                        if (currentInstruction.dropdownMethod == 'value')
-                            dropDownClick.param.value = currentInstruction.value;
-                        else
-                            dropDownClick.param.text = currentInstruction.value;
-                        return dropDownClick;
-
-
-                }
-            })
-
-        console.log($scope.instructions)
-        $scope.generation.instructionsGenerated = true;
-
-    };
-
     $scope.copyToClipBoard = function() {
         var input = document.createElement("textarea");
         input.setAttribute("style", "width: 0;height: 0;opacity: 0;position: absolute;");
@@ -541,6 +615,14 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         $scope.generation.copied = true;
     };
 
+    /**
+     *
+     * Method to display api value
+     *
+     * @param void
+     *
+     * @return object
+     */
     $scope.displayApiValue = function() {
         var currentApiValue;
         if ($scope.apiKeys.some(e => {
@@ -554,31 +636,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
     }
 
 
-    // Condition functions here...
-
-    /**
-     *
-     * Method to get condition based response
-     *
-     * @param void
-     *
-     * @return object
-     */
-    $scope.getConditionBasedResponse = function(attr) {
-
-        $scope.counter = 0;
-        var instruction = {
-            "conditionStarts": true,
-            "conditionVariable": "",
-            "conditionArr": [{
-                "caseValue": "",
-                "instructions": []
-            }]
-        };
-        instruction.conditionArr[$scope.counter].instructions.push($scope.response[$scope.currentInstructionCount]);
-        return instruction;
-
-    };
+    // Condition functions here...    
 
     /**
      * Method to start conditional operation
@@ -592,14 +650,11 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
         $scope.conditionFlag = false;
         $scope.currentInstruction.enabled = false;
-
         $scope.currentInstruction.conditionStarts = !$scope.currentInstruction.conditionStarts;
-
         if ($scope.currentInstruction.conditionStarts) {
             $scope.conditionFlag = true;
             $scope.currentInstruction.enabled = true;
         }
-
         $scope.conditionArray[$scope.currentInstructionCount] = {
             conditionStarts: !$scope.currentInstruction.conditionStarts,
             case: $scope.condition.caseString
@@ -627,40 +682,9 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
      * @return object
      *
      */
-    $scope.setCaseString = function() {
-        //$scope.currentInstruction.conditionArr[$scope.counter].caseValue = $scope.condition.caseString;
+    $scope.setCaseString = function() {        
         $scope.currentInstruction.caseValue = $scope.condition.caseString;
-    };
-
-    /**
-     * Method to set conditional api value
-     *
-     * @param void
-     *
-     * @return object
-     *
-     */
-    $scope.setConditionalApiValue = function() {
-        $scope.currentInstruction.conditionArr[$scope.counter].instructions[0].value = 'orderdata.' + $scope.api.apiValue.split(" ").join("");
-    }
-
-    /**
-     * Method to set conditional string value
-     *
-     * @param void
-     *
-     * @return object
-     *
-     */
-    $scope.setConditionalStringValue = function() {
-
-        $scope.currentInstruction.conditionArr[$scope.counter].instructions[$scope.currentInstructionCount].value = {
-            "value": $scope.api.apiString
-        };
-        $scope.api.apiValue = "";
-        $scope.api.currentApiValue = false;
-
-    };
+    };    
 
 
     /**
@@ -683,4 +707,30 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         );
     };
 
-})
+    /**
+     * Method to add status instruction
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.addStatusInstruction = function() {                        
+        $scope.currentInstruction.statusInstruction = $scope.currentInstruction.statusInstruction;
+    };
+
+    /**
+     * Method to update status instruction
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateStatusInstruction = function() {                        
+        $scope.currentInstruction.statusMsg = $scope.currentInstruction.statusMsg;
+    };
+
+
+
+});

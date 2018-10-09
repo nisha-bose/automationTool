@@ -149,18 +149,9 @@
   <script src="popup.js"></script>
 
 
-  <div ng-app="myApp" class="custom-container" ng-controller="myCtrl">
-
-    <!-- <input type="checkbox" ng-value="a" ng-model="checks[0]" > a
-          <input type="checkbox" ng-value="'button'" ng-model="checks[1]" ng-checked> button
-          <input type="checkbox" ng-value="'input'" ng-model="checks[2]" ng-checked > input
-          <input type="checkbox" ng-value="'textarea'" ng-model="checks[3]" ng-checked > textarea
-          <input type="checkbox" ng-value="'select'" ng-model="checks[4]" ng-checked > select
-        <hr>
-        {{checks}} -->
+  <div ng-app="myApp" class="custom-container" ng-controller="myCtrl">    
 
     <div class="sizer" ng-if="!currentInstruction || generatePageFlag" style="width: 320px;">
-
       <div class="container container-table">
         <div class="row vertical-center-row">
           <label for="order">Order#</label>
@@ -250,12 +241,7 @@
             <div></div>
           </div>
         </div>
-      </div>
-
-      <!-- <div class="checkbox">
-        <label>
-          <input type="checkbox" value="">&lt;a></label>
-      </div> -->
+      </div>      
       <br>
     </div>
 
@@ -335,11 +321,18 @@
         <div class="clearfix"></div>
       </div>
       <div ng-if="api.currentApiValue" style=" border: 1px dashed #aba8a8;margin: 2px 0;max-width: 300px;overflow: hidden;">
-        <p style="margin: 5px;text-align: center;color: darkred;">{{api.currentApiValue}}</p>
-        <!-- <input type="text" ng-model="api.currentApiValue" disabled> -->
+        <p style="margin: 5px;text-align: center;color: darkred;">{{api.currentApiValue}}</p>        
       </div>
-      <!-- <textarea id="codeBox" ng-model="currentInstructionString"></textarea> -->
-      <!-- <template instruction="currentInstructionString"></template> -->
+
+      <div style="border: 1px dashed #aba8a8;margin: 2px 0;max-width: 300px;overflow: hidden;height:auto;">
+        <p style="margin: 5px;">          
+          <input type="checkbox" id="status-inst" ng-model="currentInstruction.statusInstruction" style="margin: 2px 0px 0px 0px;" ng-click="addStatusInstruction();" /> 
+          <label for="status-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Add Status</label>
+        </p>        
+        <p style="margin: 5px;" ng-if="currentInstruction.statusInstruction">
+          <input type="status-msg" ng-model="currentInstruction.statusMsg" placeholder="Comment..." style="width:290px;height:40px;padding:5px;" ng-change="updateStatusInstruction();" />
+        </p>
+      </div>      
 
       <json-formatter ng-class="{'codeBoxNotActive':!currentInstruction.enabled,'codeBoxActive':currentInstruction.enabled}" class="sizer"
         id="codeBox" json="currentInstruction" open="1"></json-formatter>
