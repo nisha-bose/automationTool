@@ -25,7 +25,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
     $scope.condition = {};
     $scope.conditionFlag = false;
     $scope.conditionArray = []; //Keep track opening and closing of condition. 
-    $scope.generatePageFlag = true;    
+    $scope.generatePageFlag = true;       
     $scope.changeLocator = function(currentInstruction, locator) {
         $scope.response[$scope.currentInstructionCount] = angular.copy($scope.currentInstruction);
         console.log(locator);
@@ -502,6 +502,29 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
     };
 
+    /**
+     *
+     * Method to generate custom instrunction
+     *
+     * @param void
+     *
+     * @return object
+     */
+    $scope.generateCustomInstruction = function() {        
+
+        if ($scope.currentInstruction.enabled) {
+            $scope.generation = {};            
+            $scope.instructions = { 
+                "type"      : "script",
+                "comment"   : $scope.currentInstruction.customComment,
+                "param"     : $scope.currentInstruction.customScript,
+                "auto"      :true 
+            };        
+            $scope.generation.instructionsGenerated = true;        
+        }        
+
+    };
+
 
     /**
      *
@@ -516,6 +539,11 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         var inst = [];
         if ($scope.conditionFlag) {
             $scope.getInstructionOfCondition();
+            return;
+        }
+
+        if ($scope.currentInstruction.custom) {
+            $scope.generateCustomInstruction();
             return;
         }
 
@@ -750,6 +778,46 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
      */
     $scope.updateStatusInstruction = function() {                        
         $scope.currentInstruction.statusMsg = $scope.currentInstruction.statusMsg;
+    };
+
+    /**
+     * Method to add custom script
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.addCustomScript = function() {                        
+        $scope.currentInstruction = {
+            'custom'        : $scope.currentInstruction.custom,
+            'customComment' : "",
+            'customScript'  : ""
+        };
+    };
+
+    /**
+     * Method to update custom comment
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateCustomComment = function() {                        
+        $scope.currentInstruction.customComment = $scope.currentInstruction.customComment;
+    };
+
+    /**
+     * Method to update custom script
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateCustomScript = function() {                        
+        $scope.currentInstruction.customScript = $scope.currentInstruction.customScript;
     };
 
 

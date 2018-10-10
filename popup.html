@@ -261,6 +261,24 @@
             ng-click="conditionStarts()">{{currentInstruction.conditionStarts?'Remove Cndt':'Add condition'}} </button>
         </div>
       </div>
+
+      <div style="border: 1px dashed #aba8a8;margin: 2px 0;max-width: 300px;overflow: hidden;height:auto;">
+        <p style="margin: 5px;">          
+          <input type="checkbox" id="status" ng-model="currentInstruction.status" style="margin: 2px 0px 0px 0px;" ng-click="addStatus();" /> 
+          <label for="status" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Add Status</label>
+          <input type="checkbox" id="custom-inst" ng-model="currentInstruction.custom" style="margin: 2px 0px 0px 0px;" ng-click="addCustomScript();" /> 
+          <label for="custom-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Add Custom</label>
+          <button type="button" class="btn btn-sm btn-success">Reset All</button>
+        </p>        
+        <p style="margin: 5px;" ng-if="currentInstruction.status">
+          <input type="text" ng-model="currentInstruction.statusMsg" placeholder="Add Status Message..." style="width:290px;height:40px;padding:5px;" ng-change="updateStatusInstruction();" />          
+        </p>
+        <p style="margin: 5px;" ng-if="currentInstruction.custom">          
+          <input type="status-msg" ng-model="currentInstruction.customComment" placeholder="Comment.." style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateCustomComment();" />
+          <textarea type="status-msg" ng-model="currentInstruction.customScript" placeholder="Add Custom Script" style="width:290px;height:70px;padding:5px;" ng-change="updateCustomScript();"></textarea>
+        </p>
+      </div>
+
       <div>        
         <div ng-if="conditionFlag" style="width: 98%;margin-left: 1%;margin-top: 5px;">
           <div ng-if="currentInstructionCount == 0">
@@ -330,7 +348,7 @@
           <label for="status-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Add Status</label>
         </p>        
         <p style="margin: 5px;" ng-if="currentInstruction.statusInstruction">
-          <input type="status-msg" ng-model="currentInstruction.statusMsg" placeholder="Comment..." style="width:290px;height:40px;padding:5px;" ng-change="updateStatusInstruction();" />
+          <input type="status-msg" ng-model="currentInstruction.statusMsg" placeholder="Add Status Message..." style="width:290px;height:40px;padding:5px;" ng-change="updateStatusInstruction();" />
         </p>
       </div>      
 
