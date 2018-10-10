@@ -297,7 +297,7 @@
         </div>
       </div>
 
-      <h4 ng-class="{'activeHeader':currentInstruction.enabled,strikeThrough:!currentInstruction.enabled}">
+      <h4 ng-if="(!currentInstruction.status && !currentInstruction.custom)" ng-class="{'activeHeader':currentInstruction.enabled,strikeThrough:!currentInstruction.enabled}">
         <span>
           {{currentInstruction.type|uppercase}}
         </span>
@@ -343,7 +343,7 @@
         </datalist>
         <div class="clearfix"></div>
       </div>
-      <div ng-if="api.currentApiValue" style=" border: 1px dashed #aba8a8;margin: 2px 0;max-width: 300px;overflow: hidden;">
+      <div ng-if="api.currentApiValue && !currentInstruction.status && !currentInstruction.custom" style=" border: 1px dashed #aba8a8;margin: 2px 0;max-width: 300px;overflow: hidden;">
         <p style="margin: 5px;text-align: center;color: darkred;">{{api.currentApiValue}}</p>        
       </div>
 
