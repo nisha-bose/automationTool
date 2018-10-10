@@ -512,18 +512,41 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
      */
     $scope.generateCustomInstruction = function() {        
 
-        if ($scope.currentInstruction.enabled) {
-            $scope.generation = {};            
+        $scope.generation = {};
+        $scope.instructions = [];
+        if ($scope.currentInstruction.enabled) {                        
             $scope.instructions = { 
                 "type"      : "script",
                 "comment"   : $scope.currentInstruction.customComment,
                 "param"     : $scope.currentInstruction.customScript,
                 "auto"      :true 
-            };        
-            $scope.generation.instructionsGenerated = true;        
-        }        
+            };                    
+        }
+        $scope.generation.instructionsGenerated = true;        
 
     };
+
+    /**
+     *
+     * Method to generate status instrunction
+     *
+     * @param void
+     *
+     * @return object
+     */
+    $scope.generateStatusInstruction = function() {        
+
+        $scope.generation = {};
+        $scope.instructions = [];
+        if ($scope.currentInstruction.enabled) {                        
+            $scope.instructions = { 
+                "type"      : "status",                
+                "param"     : $scope.currentInstruction.statusComment                
+            };                    
+        }
+        $scope.generation.instructionsGenerated = true;        
+
+    };    
 
 
     /**
@@ -544,6 +567,11 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
         if ($scope.currentInstruction.custom) {
             $scope.generateCustomInstruction();
+            return;
+        }
+
+        if ($scope.currentInstruction.status) {
+            $scope.generateStatusInstruction();
             return;
         }
 
@@ -781,6 +809,38 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
     };
 
     /**
+     * Method to add status
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.addStatus = function() {                        
+        $scope.currentInstruction = {
+            'status'        : $scope.currentInstruction.status,
+            'statusComment' : ""
+        };
+
+        if (!$scope.currentInstruction.status && !$scope.currentInstruction.custom) {
+            $scope.resetStatusCustom();
+        }
+
+    };
+
+    /**
+     * Method to update status comment
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateStatusComment = function() {                        
+        $scope.currentInstruction.statusComment = $scope.currentInstruction.statusComment;
+    };
+
+    /**
      * Method to add custom script
      *
      * @param void
@@ -794,6 +854,9 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             'customComment' : "",
             'customScript'  : ""
         };
+        if (!$scope.currentInstruction.status && !$scope.currentInstruction.custom) {
+            $scope.resetStatusCustom();
+        }
     };
 
     /**
@@ -820,6 +883,21 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         $scope.currentInstruction.customScript = $scope.currentInstruction.customScript;
     };
 
+    
+
+    /**
+     * Method to reset status and custom instrunction
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.resetStatusCustom = function() {                                
+        $scope.currentInstruction = $scope.response[$scope.currentInstructionCount];
+        $scope.currentInstruction.custom = false;
+        $scope.currentInstruction.status = false;
+    };
 
 
 });
