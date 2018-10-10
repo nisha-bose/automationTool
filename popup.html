@@ -282,7 +282,7 @@
         </p>
       </div>
 
-      <div>        
+      <div ng-if="!currentInstruction.status && !currentInstruction.custom">        
         <div ng-if="conditionFlag" style="width: 98%;margin-left: 1%;margin-top: 5px;">
           <div ng-if="currentInstructionCount == 0">
           <input type="text" placeholder="Condition Variable" ng-model="condition.apiValue" ng-change="setConditionalVariable();"
