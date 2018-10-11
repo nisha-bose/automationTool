@@ -546,6 +546,37 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         }
         $scope.generation.instructionsGenerated = true;        
 
+    };
+
+    /**
+     *
+     * Method to generate wait instrunction
+     *
+     * @param void
+     *
+     * @return object
+     */
+    $scope.generateWaitInstruction = function() { 
+
+        /*
+            { "type"    : "wait",
+            "comment" : "make driver sleep",
+            "param"   : { "timeout":2000  },
+            "auto"      : true}
+        */       
+
+        $scope.generation = {};
+        $scope.instructions = [];
+        if ($scope.currentInstruction.enabled) {                        
+            $scope.instructions = { 
+                "type"      : "wait", 
+                "comment"   : $scope.currentInstruction.waitComment,               
+                "param"     : { "timeout": $scope.currentInstruction.waitTime },
+                "auto"      : true                
+            };                    
+        }
+        $scope.generation.instructionsGenerated = true;        
+
     };    
 
 
@@ -572,6 +603,11 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
         if ($scope.currentInstruction.status) {
             $scope.generateStatusInstruction();
+            return;
+        }
+
+        if ($scope.currentInstruction.wait) {
+            $scope.generateWaitInstruction();
             return;
         }
 
@@ -857,7 +893,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         if (!$scope.currentInstruction.status && !$scope.currentInstruction.custom) {
             $scope.resetStatusCustom();
         }
-    };
+    };    
 
     /**
      * Method to update custom comment
@@ -883,6 +919,109 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         $scope.currentInstruction.customScript = $scope.currentInstruction.customScript;
     };
 
+    /**
+     * Method to add wait
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.addWait = function() {                        
+        $scope.currentInstruction = {
+            'wait'        : $scope.currentInstruction.wait,
+            'waitComment' : "",
+            'waitTime'    : ""
+        };
+        
+        if (!$scope.currentInstruction.status && !$scope.currentInstruction.custom 
+            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitForElement) {
+            $scope.resetStatusCustom();
+        }
+    };
+
+    /**
+     * Method to update wait comment
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateWaitComment = function() {                        
+        $scope.currentInstruction.waitComment = $scope.currentInstruction.waitComment;
+    };
+
+    /**
+     * Method to update wait time
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateWaitTime = function() {                        
+        $scope.currentInstruction.waitTime = $scope.currentInstruction.waitTime;
+    }; 
+
+    /**
+     * Method to add wait for element
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.addWaitForElement = function() {                        
+        $scope.currentInstruction = {
+            'waitElement'           : $scope.currentInstruction.waitElement,
+            'waitElementComment'    : "",
+            'waitElementLocator'    : "",
+            'waitElementIdentifier' : ""
+        };
+        
+        if (!$scope.currentInstruction.status && !$scope.currentInstruction.custom 
+            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitForElement) {
+            $scope.resetStatusCustom();
+        }
+    };
+
+    /**
+     * Method to update wait element comment
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateWaitElementComment = function() {                        
+        $scope.currentInstruction.waitElementComment = $scope.currentInstruction.waitElementComment;
+    };
+
+    /**
+     * Method to update wait time
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateWaitElementLocator = function() {                        
+        $scope.currentInstruction.waitElementLocator = $scope.currentInstruction.waitElementLocator;
+    };
+
+    /**
+     * Method to update wait comment
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateWaitElementIdentifier = function() {                        
+        $scope.currentInstruction.waitElementIdentifier = $scope.currentInstruction.waitElementIdentifier;
+    };
+
     
 
     /**
@@ -897,6 +1036,8 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         $scope.currentInstruction = $scope.response[$scope.currentInstructionCount];
         $scope.currentInstruction.custom = false;
         $scope.currentInstruction.status = false;
+        $scope.currentInstruction.wait = false;
+        $scope.currentInstruction.waitForElement = false;
     };
 
 
