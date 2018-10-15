@@ -637,6 +637,67 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
     }; 
 
+    /**
+     *
+     * Method to generate common instruction set
+     *
+     * @param void
+     *
+     * @return object
+     */
+    $scope.generateCommonInstructionSet = function() {         
+
+        $scope.generation = {};
+        $scope.instructions = [];
+        if ($scope.currentInstruction.enabled) {
+
+            let timeout = $scope.currentInstruction.commonTimeout;
+
+            $scope.instructions = {
+                    "version" : "1.0.0" ,
+                    "binaryURL" : "http://www.google.com" ,
+                    "instructions" :[
+                        { "type" : "status", "param" : "Please wait..." },
+                        { "type"  : "condition",
+                          "auto"  : true,
+                          "param" : { "switchValue" : "_args.ordernum",
+                          "branches"    : [ { "caseValue"    : { "value" : null },
+                                              "instructions" : [{ "type"      : "operatorInput",
+                                                                  "optional"  : false,
+                                                                  "namespace" : "opsInput",
+                                                                  "param"     : [{ "name" : "ordernum",
+                                                                                  "type" : "text" } ],
+                                                                  "auto"      : true } ] },
+                                            { "defaultCase"  : true,
+                                              "instructions" : [{ "type"     : "setVariable",
+                                                                  "optional" : false,
+                                                                  "param"    : {"variable" : "opsInput.ordernum",
+                                                                                "value"    : "_args.ordernum" },
+                                                                  "auto"     : true } ] } ] } },
+                        { "type"      : "datasetCollector",
+                          "namespace" : "orderdata",
+                          "param"     : { "url"    : "_args.dataURL",
+                                          "params" : { "qs" : { "id" : "opsInput.ordernum" } } },
+                                          "auto"      : true },
+                        { "type" : "status", "param" : "Please wait..." },
+                        { "type"    : "script",
+                          "comment" : "test for company type we are using",
+                          "param"   : "_setDatasetValue('runtime.companyType', _resolveDatasetNamespace('orderdata.company_type').search('CORPORATION') != -1 ? 'CORP'  : _resolveDatasetNamespace('orderdata.company_type') ); resolve();",
+                          "auto"    : true },
+                        { "type"      : "script",
+                          "comment"   :"Select the registered agent",
+                          "param"     : "driver.manage().timeouts().pageLoadTimeout(" + timeout + "); resolve();",
+                          "auto"      :true 
+                        }
+                    ]
+            };
+
+        }
+
+        $scope.generation.instructionsGenerated = true;        
+
+    };
+
 
     /**
      *
@@ -676,6 +737,11 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
         if ($scope.currentInstruction.loadURL) {
             $scope.generateLoadURLInstruction();
+            return;
+        }
+
+        if ($scope.currentInstruction.common) {
+            $scope.generateCommonInstructionSet();
             return;
         }
 
@@ -1139,7 +1205,37 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         $scope.currentInstruction.URL = $scope.currentInstruction.URL;
     };
 
-    
+    /**
+     * Method to add common instruction set
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.addCommon = function() {                        
+        $scope.currentInstruction = {
+            'common'    : $scope.currentInstruction.common,
+            'commonTimeout'   : ""            
+        };
+        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
+            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
+            && !$scope.currentInstruction.loadURL && !$scope.currentInstruction.common) {
+            $scope.resetStatusCustom();
+        }
+    };
+
+    /**
+     * Method to update common timeout
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateCommonTimeout = function() {                        
+        $scope.currentInstruction.commonTimeout = $scope.currentInstruction.commonTimeout;
+    };
 
     /**
      * Method to reset status and custom instruction
