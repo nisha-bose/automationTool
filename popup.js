@@ -556,14 +556,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
      *
      * @return object
      */
-    $scope.generateWaitInstruction = function() { 
-
-        /*
-            { "type"    : "wait",
-            "comment" : "make driver sleep",
-            "param"   : { "timeout":2000  },
-            "auto"      : true}
-        */       
+    $scope.generateWaitInstruction = function() {               
 
         $scope.generation = {};
         $scope.instructions = [];
@@ -577,12 +570,68 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         }
         $scope.generation.instructionsGenerated = true;        
 
-    };    
+    };  
+
+    /**
+     *
+     * Method to generate wait for element instrunction
+     *
+     * @param void
+     *
+     * @return object
+     */
+    $scope.generateWaitForElementInstruction = function() { 
+
+        /*
+            { "type" : "waitForElement" ,
+            "comment" : "About to begin",
+            "param"   : { "locator" : { "xpath" : "(//a[@title='SIGN IN'])" }},
+            "auto"    : true},
+
+
+            $scope.currentInstruction = {
+                'waitElement'           : $scope.currentInstruction.waitElement,
+                'waitElementComment'    : "",
+                'waitElementLocator'    : "",
+                'waitElementIdentifier' : ""
+            };
+        */       
+
+        $scope.generation = {};
+        $scope.instructions = [];
+        if ($scope.currentInstruction.enabled) {                        
+            $scope.instructions = { 
+                "type"      : "waitForElement", 
+                "comment"   : $scope.currentInstruction.waitElementComment,
+                "param"     : {"locator" : {}},
+                //"param"     : { "locator": {"'" + $scope.currentInstruction.waitElementLocator + "'" : $scope.currentInstruction.waitElementIdentifier}},
+                "auto"      : true                
+            }; 
+
+            switch ($scope.currentInstruction.waitElementLocator) {
+
+                case "id" :
+                  $scope.instructions.param.locator = {"id" : $scope.currentInstruction.waitElementIdentifier};
+                  break;
+
+                case "name" :
+                  $scope.instructions.param.locator = {"name" : $scope.currentInstruction.waitElementIdentifier};
+                  break;
+                  
+                case "xpath" :
+                  $scope.instructions.param.locator = {"xpath" : $scope.currentInstruction.waitElementIdentifier};
+                  break;    
+            };
+
+        }
+        $scope.generation.instructionsGenerated = true;        
+
+    };  
 
 
     /**
      *
-     * Method to generate instrunctions
+     * Method to generate instructions
      *
      * @param void
      *
@@ -608,6 +657,11 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
         if ($scope.currentInstruction.wait) {
             $scope.generateWaitInstruction();
+            return;
+        }
+
+        if ($scope.currentInstruction.waitElement) {
+            $scope.generateWaitForElementInstruction();
             return;
         }
 
@@ -981,7 +1035,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         };
         
         if (!$scope.currentInstruction.status && !$scope.currentInstruction.custom 
-            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitForElement) {
+            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement) {
             $scope.resetStatusCustom();
         }
     };
@@ -999,7 +1053,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
     };
 
     /**
-     * Method to update wait time
+     * Method to update wait element locator
      *
      * @param void
      *
@@ -1011,7 +1065,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
     };
 
     /**
-     * Method to update wait comment
+     * Method to update wait element identifier
      *
      * @param void
      *
@@ -1037,7 +1091,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         $scope.currentInstruction.custom = false;
         $scope.currentInstruction.status = false;
         $scope.currentInstruction.wait = false;
-        $scope.currentInstruction.waitForElement = false;
+        $scope.currentInstruction.waitElement = false;
     };
 
 
