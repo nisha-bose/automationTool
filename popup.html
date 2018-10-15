@@ -257,7 +257,7 @@
           <p style="text-align: center;">{{currentInstructionCount+1}} out of {{response.length}}</p>
         </div>
         <div class="col-xs-3" style="margin-left: -42px;" 
-        ng-if="(currentInstructionCount == 0 && !currentInstruction.status && !currentInstruction.script && !currentInstruction.wait && !currentInstruction.waitElement)">
+        ng-if="(currentInstructionCount == 0 && !currentInstruction.status && !currentInstruction.script && !currentInstruction.wait && !currentInstruction.waitElement && !currentInstruction.loadURL)">
           <button type="button" class="btn btn-sm" ng-class="{'btn-success':!currentInstruction.conditionStarts,'btn-danger':currentInstruction.conditionStarts}"
             ng-click="conditionStarts()">{{currentInstruction.conditionStarts?'Remove Cndt':'Add condition'}} </button>
         </div>
@@ -269,9 +269,9 @@
           ng-click="addStatus();" /> 
           <label for="status" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Status</label>
 
-          <input type="checkbox" id="custom-inst" ng-model="currentInstruction.script" style="margin: 2px 0px 0px 0px;" 
+          <input type="checkbox" id="script-inst" ng-model="currentInstruction.script" style="margin: 2px 0px 0px 0px;" 
           ng-click="addScript();" /> 
-          <label for="custom-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Script</label>
+          <label for="script-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Script</label>
 
           <input type="checkbox" id="wait-inst" ng-model="currentInstruction.wait" style="margin: 2px 0px 0px 0px;" 
           ng-click="addWait();" /> 
@@ -280,13 +280,16 @@
           <input type="checkbox" id="wait-element-inst" ng-model="currentInstruction.waitElement" style="margin: 2px 0px 0px 0px;" 
           ng-click="addWaitForElement();" /> 
           <label for="wait-element-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Element</label>
-          
+        </p>  
+        <p style="margin: 5px;">
+          <input type="checkbox" id="load-url-inst" ng-model="currentInstruction.loadURL" style="margin: 2px 0px 0px 0px;" 
+          ng-click="addLoadURL();" /> 
+          <label for="load-url-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">URL</label>
+        </p>
+        <p style="margin: 5px;">
           <button type="button" class="btn btn-sm btn-success" ng-click="resetStatusCustom()" 
-          style="float:right;margin:5px 0px 5px 0px;">
-            Reset All
-          </button>
-        </p>        
-
+          style="float:right;margin:5px 0px 5px 0px;">Reset All</button>
+        </p>      
         <p style="margin: 5px;" ng-if="currentInstruction.status">
           <input type="text" ng-model="currentInstruction.statusComment" placeholder="Add Status Message..." style="width:290px;height:40px;padding:5px;" ng-change="updateStatusComment();" />          
         </p>
@@ -298,10 +301,8 @@
           <input type="text" ng-model="currentInstruction.waitComment" placeholder="Comment.." style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateWaitComment();" />
           <input type="number" ng-model="currentInstruction.waitTime" placeholder="Time..." style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateWaitTime();" />          
         </p>
-
         <p style="margin: 5px;" ng-if="currentInstruction.waitElement">          
           <input type="text" ng-model="currentInstruction.waitElementComment" placeholder="Comment.." style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateWaitElementComment();" />
-
           <span>
             <span>
               <label class="radio-inline">
@@ -319,13 +320,15 @@
                 ng-click="updateWaitElementLocator();">NAME</label>
             </span>
           </span>
-
           <input type="text" ng-model="currentInstruction.waitElementIdentifier" placeholder="{{currentInstruction.waitElementLocator}}" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateWaitElementIdentifier();" />          
         </p>
-
+        <p style="margin: 5px;" ng-if="currentInstruction.loadURL">          
+          <input type="text" ng-model="currentInstruction.URLComment" placeholder="Comment.." style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateLoadURLComment();" />
+          <input type="url" ng-model="currentInstruction.URL" placeholder="URL" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateLoadURL();" />          
+        </p>
       </div>
 
-      <div ng-if="(!currentInstruction.status && !currentInstruction.script && !currentInstruction.wait && !currentInstruction.waitElement)">        
+      <div ng-if="(!currentInstruction.status && !currentInstruction.script && !currentInstruction.wait && !currentInstruction.waitElement && !currentInstruction.loadURL)">        
         <div ng-if="conditionFlag" style="width: 98%;margin-left: 1%;margin-top: 5px;">
           <div ng-if="currentInstructionCount == 0">
           <input type="text" placeholder="Condition Variable" ng-model="condition.apiValue" ng-change="setConditionalVariable();"
@@ -340,7 +343,7 @@
         </div>
       </div>
 
-      <h4 ng-if="(!currentInstruction.status && !currentInstruction.script && !currentInstruction.wait && !currentInstruction.waitElement)" ng-class="{'activeHeader':currentInstruction.enabled,strikeThrough:!currentInstruction.enabled}">
+      <h4 ng-if="(!currentInstruction.status && !currentInstruction.script && !currentInstruction.wait && !currentInstruction.waitElement && !currentInstruction.loadURL)" ng-class="{'activeHeader':currentInstruction.enabled,strikeThrough:!currentInstruction.enabled}"> 
         <span>
           {{currentInstruction.type|uppercase}}
         </span>
@@ -354,7 +357,7 @@
               ng-click="changeDropdownMethod(currentInstruction,'value');">VALUE</label>
         </span>
       </h4>
-      <div ng-if="(!currentInstruction.status && !currentInstruction.script && !currentInstruction.wait && !currentInstruction.waitElement)" >
+      <div ng-if="(!currentInstruction.status && !currentInstruction.script && !currentInstruction.wait && !currentInstruction.waitElement && !currentInstruction.loadURL)" >
         <div ng-if="!currentInstruction.conditionStarts || (!!condition.apiValue && !!condition.caseString)" style="padding: 2px;border: 1px dashed #aba8a8;">
           <button class="btn btn-default" ng-disabled="!currentInstructionCount>0" ng-click="previous()">Prev</button>
           <button class="btn btn-default" ng-disabled="!(response.length>(currentInstructionCount+1))" ng-click="next()">Next </button>
@@ -386,7 +389,7 @@
         </datalist>
         <div class="clearfix"></div>
       </div>
-      <div ng-if="(api.currentApiValue && !currentInstruction.status && !currentInstruction.script && !currentInstruction.wait && !currentInstruction.waitElement)" style=" border: 1px dashed #aba8a8;margin: 2px 0;max-width: 300px;overflow: hidden;">
+      <div ng-if="(api.currentApiValue && !currentInstruction.status && !currentInstruction.script && !currentInstruction.wait && !currentInstruction.waitElement && !currentInstruction.loadURL)" style=" border: 1px dashed #aba8a8;margin: 2px 0;max-width: 300px;overflow: hidden;">
         <p style="margin: 5px;text-align: center;color: darkred;">{{api.currentApiValue}}</p>        
       </div>
 

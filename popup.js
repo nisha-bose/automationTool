@@ -349,7 +349,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
      *
      * @return object
      */
-    $scope.getInstrunctionElement = function(attr) {
+    $scope.getInstructionElement = function(attr) {
 
         var element = {};
 
@@ -443,7 +443,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
                     condition.param.switchValue = currentInstruction.conditionVariable;
                 }
 
-                element = $scope.getInstrunctionElement(currentInstruction);
+                element = $scope.getInstructionElement(currentInstruction);
                 if (currentInstruction.caseValue) {
 
                     caseValue = currentInstruction.caseValue.trim();
@@ -504,7 +504,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
     /**
      *
-     * Method to generate script instrunction
+     * Method to generate script instruction
      *
      * @param void
      *
@@ -528,7 +528,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
     /**
      *
-     * Method to generate status instrunction
+     * Method to generate status instruction
      *
      * @param void
      *
@@ -550,7 +550,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
     /**
      *
-     * Method to generate wait instrunction
+     * Method to generate wait instruction
      *
      * @param void
      *
@@ -574,7 +574,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
     /**
      *
-     * Method to generate wait for element instrunction
+     * Method to generate wait for element instruction
      *
      * @param void
      *
@@ -612,6 +612,31 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
     };  
 
+    /**
+     *
+     * Method to generate load URL instruction
+     *
+     * @param void
+     *
+     * @return object
+     */
+    $scope.generateLoadURLInstruction = function() {         
+
+        $scope.generation = {};
+        $scope.instructions = [];
+        if ($scope.currentInstruction.enabled) {                        
+            $scope.instructions = { 
+                "type"      : "loadURL", 
+                "comment"   : $scope.currentInstruction.URLComment,               
+                "optional"  : false,
+                "param"     : $scope.currentInstruction.URL,
+                "auto"      : true                
+            };                    
+        }
+        $scope.generation.instructionsGenerated = true;        
+
+    }; 
+
 
     /**
      *
@@ -646,6 +671,11 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
         if ($scope.currentInstruction.waitElement) {
             $scope.generateWaitForElementInstruction();
+            return;
+        }
+
+        if ($scope.currentInstruction.loadURL) {
+            $scope.generateLoadURLInstruction();
             return;
         }
 
@@ -896,7 +926,8 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             'statusComment' : ""
         };
         if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
-            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement) {
+            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
+            && !$scope.currentInstruction.loadURL) {
             $scope.resetStatusCustom();
         }
 
@@ -929,7 +960,8 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             'customScript'  : ""
         };
         if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
-            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement) {
+            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
+            && !$scope.currentInstruction.loadURL) {
             $scope.resetStatusCustom();
         }
     };    
@@ -974,7 +1006,8 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         };
         
         if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
-            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement) {
+            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
+            && !$scope.currentInstruction.loadURL) {
             $scope.resetStatusCustom();
         }
     };
@@ -1017,10 +1050,10 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             'waitElementComment'    : "",
             'waitElementLocator'    : "",
             'waitElementIdentifier' : ""
-        };
-        
+        };        
         if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
-            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement) {
+            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
+            && !$scope.currentInstruction.loadURL) {
             $scope.resetStatusCustom();
         }
     };
@@ -1061,10 +1094,55 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         $scope.currentInstruction.waitElementIdentifier = $scope.currentInstruction.waitElementIdentifier;
     };
 
+    /**
+     * Method to add load URL
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.addLoadURL = function() {                        
+        $scope.currentInstruction = {
+            'loadURL'    : $scope.currentInstruction.loadURL,
+            'URLComment' : "",
+            'URL'        : ""
+        };
+        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
+            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
+            && !$scope.currentInstruction.loadURL) {
+            $scope.resetStatusCustom();
+        }
+    };
+
+    /**
+     * Method to update load url comment
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateLoadURLComment = function() {                        
+        $scope.currentInstruction.URLComment = $scope.currentInstruction.URLComment;
+    };
+
+    /**
+     * Method to update load URL
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateLoadURL = function() {                        
+        $scope.currentInstruction.URL = $scope.currentInstruction.URL;
+    };
+
     
 
     /**
-     * Method to reset status and custom instrunction
+     * Method to reset status and custom instruction
      *
      * @param void
      *
@@ -1077,6 +1155,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         $scope.currentInstruction.script = false;
         $scope.currentInstruction.wait = false;
         $scope.currentInstruction.waitElement = false;
+        $scope.currentInstruction.loadURL = false;        
     };
 
 
