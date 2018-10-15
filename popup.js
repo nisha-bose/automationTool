@@ -504,20 +504,20 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
     /**
      *
-     * Method to generate custom instrunction
+     * Method to generate script instrunction
      *
      * @param void
      *
      * @return object
      */
-    $scope.generateCustomInstruction = function() {        
+    $scope.generateScriptInstruction = function() {        
 
         $scope.generation = {};
         $scope.instructions = [];
         if ($scope.currentInstruction.enabled) {                        
             $scope.instructions = { 
                 "type"      : "script",
-                "comment"   : $scope.currentInstruction.customComment,
+                "comment"   : $scope.currentInstruction.scriptComment,
                 "param"     : $scope.currentInstruction.customScript,
                 "auto"      :true 
             };                    
@@ -580,22 +580,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
      *
      * @return object
      */
-    $scope.generateWaitForElementInstruction = function() { 
-
-        /*
-            { "type" : "waitForElement" ,
-            "comment" : "About to begin",
-            "param"   : { "locator" : { "xpath" : "(//a[@title='SIGN IN'])" }},
-            "auto"    : true},
-
-
-            $scope.currentInstruction = {
-                'waitElement'           : $scope.currentInstruction.waitElement,
-                'waitElementComment'    : "",
-                'waitElementLocator'    : "",
-                'waitElementIdentifier' : ""
-            };
-        */       
+    $scope.generateWaitForElementInstruction = function() {               
 
         $scope.generation = {};
         $scope.instructions = [];
@@ -603,8 +588,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             $scope.instructions = { 
                 "type"      : "waitForElement", 
                 "comment"   : $scope.currentInstruction.waitElementComment,
-                "param"     : {"locator" : {}},
-                //"param"     : { "locator": {"'" + $scope.currentInstruction.waitElementLocator + "'" : $scope.currentInstruction.waitElementIdentifier}},
+                "param"     : {"locator" : {}},                
                 "auto"      : true                
             }; 
 
@@ -645,13 +629,13 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             return;
         }
 
-        if ($scope.currentInstruction.custom) {
-            $scope.generateCustomInstruction();
+        if ($scope.currentInstruction.status) {
+            $scope.generateStatusInstruction();
             return;
         }
 
-        if ($scope.currentInstruction.status) {
-            $scope.generateStatusInstruction();
+        if ($scope.currentInstruction.script) {
+            $scope.generateScriptInstruction();
             return;
         }
 
@@ -911,8 +895,8 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             'status'        : $scope.currentInstruction.status,
             'statusComment' : ""
         };
-
-        if (!$scope.currentInstruction.status && !$scope.currentInstruction.custom) {
+        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
+            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement) {
             $scope.resetStatusCustom();
         }
 
@@ -938,27 +922,28 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
      * @return object
      *
      */
-    $scope.addCustomScript = function() {                        
+    $scope.addScript = function() {                        
         $scope.currentInstruction = {
-            'custom'        : $scope.currentInstruction.custom,
-            'customComment' : "",
+            'script'        : $scope.currentInstruction.script,
+            'scriptComment' : "",
             'customScript'  : ""
         };
-        if (!$scope.currentInstruction.status && !$scope.currentInstruction.custom) {
+        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
+            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement) {
             $scope.resetStatusCustom();
         }
     };    
 
     /**
-     * Method to update custom comment
+     * Method to update script comment
      *
      * @param void
      *
      * @return object
      *
      */
-    $scope.updateCustomComment = function() {                        
-        $scope.currentInstruction.customComment = $scope.currentInstruction.customComment;
+    $scope.updateScriptComment = function() {                        
+        $scope.currentInstruction.scriptComment = $scope.currentInstruction.scriptComment;
     };
 
     /**
@@ -988,8 +973,8 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             'waitTime'    : ""
         };
         
-        if (!$scope.currentInstruction.status && !$scope.currentInstruction.custom 
-            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitForElement) {
+        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
+            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement) {
             $scope.resetStatusCustom();
         }
     };
@@ -1034,7 +1019,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             'waitElementIdentifier' : ""
         };
         
-        if (!$scope.currentInstruction.status && !$scope.currentInstruction.custom 
+        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
             && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement) {
             $scope.resetStatusCustom();
         }
@@ -1087,9 +1072,9 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
      *
      */
     $scope.resetStatusCustom = function() {                                
-        $scope.currentInstruction = $scope.response[$scope.currentInstructionCount];
-        $scope.currentInstruction.custom = false;
+        $scope.currentInstruction = $scope.response[$scope.currentInstructionCount];        
         $scope.currentInstruction.status = false;
+        $scope.currentInstruction.script = false;
         $scope.currentInstruction.wait = false;
         $scope.currentInstruction.waitElement = false;
     };
