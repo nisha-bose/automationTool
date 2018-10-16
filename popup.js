@@ -706,23 +706,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
      *
      * @return object
      */
-    $scope.generateReadLocalFileInstruction = function() { 
-
-        /*
-            {  "type" : "readLocalFile",
-        "comment" : "Load local file into buffer. Default file path is downloads",
-        "param" : { "filename" : "AnnualReport.pdf",
-        "variable" : {"value" : "runtime.pdffile"}},
-        "auto"    : true }
-
-            $scope.currentInstruction = {
-            'localFile'        : $scope.currentInstruction.localFile,
-            'localFileComment' : "",
-            'localFileName'    : "",
-            'localFileValue'   : ""
-        };
-
-        */        
+    $scope.generateReadLocalFileInstruction = function() {                 
 
         $scope.generation = {};
         $scope.instructions = [];
@@ -732,6 +716,33 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
                 "comment"   : $scope.currentInstruction.localFileComment,                               
                 "param"     : { "filename" : $scope.currentInstruction.localFileName,
                 "variable"  : {"value" : $scope.currentInstruction.localFileValue}},
+                "auto"      : true                
+            };                    
+        }
+        $scope.generation.instructionsGenerated = true;        
+
+    };
+
+    /**
+     *
+     * Method to generate file upload instruction
+     *
+     * @param void
+     *
+     * @return object
+     */
+    $scope.generateFileUploadInstruction = function() {                        
+
+        $scope.generation = {};
+        $scope.instructions = [];
+        if ($scope.currentInstruction.enabled) {                        
+            $scope.instructions = { 
+                "type"      : "fileUpload", 
+                "comment"   : $scope.currentInstruction.fileUploadComment,                               
+                "param"     : { 
+                                "url" : $scope.currentInstruction.fileUploadURL,
+                                "variable" : $scope.currentInstruction.fileUploadVariable
+                              },
                 "auto"      : true                
             };                    
         }
@@ -788,6 +799,11 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
         if ($scope.currentInstruction.localFile) {
             $scope.generateReadLocalFileInstruction();
+            return;
+        }
+
+        if ($scope.currentInstruction.fileUpload) {
+            $scope.generateFileUploadInstruction();
             return;
         }
 
@@ -1344,6 +1360,66 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
     };
 
     /**
+     * Method to handle file upload
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.addFileUpload = function() {                        
+        $scope.currentInstruction = {
+            'fileUpload'         : $scope.currentInstruction.fileUpload,
+            'fileUploadComment'  : "",
+            'fileUploadURL'      : "",
+            'fileUploadVariable' : ""
+        };
+        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
+            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
+            && !$scope.currentInstruction.loadURL && !$scope.currentInstruction.common 
+            && !$scope.currentInstruction.localFile && !$scope.currentInstruction.fileUpload ) {
+
+            $scope.resetStatusCustom();
+        }
+    };
+
+    /**
+     * Method to update comment of file upload
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateFileUploadComment = function() {                        
+        $scope.currentInstruction.fileUploadComment = $scope.currentInstruction.fileUploadComment;
+    };
+
+    /**
+     * Method to update URL of file upload
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateFileUploadURL = function() {                        
+        $scope.currentInstruction.fileUploadURL = $scope.currentInstruction.fileUploadURL;
+    };
+
+    /**
+     * Method to update variable of file upload
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateFileUploadVariable = function() {                        
+        $scope.currentInstruction.fileUploadVariable = $scope.currentInstruction.fileUploadVariable;
+    };
+
+    /**
      * Method to reset status and custom instruction
      *
      * @param void
@@ -1360,6 +1436,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         $scope.currentInstruction.loadURL = false;
         $scope.currentInstruction.common = false;
         $scope.currentInstruction.localFile = false;
+        $scope.currentInstruction.fileUpload = false;
     };
 
 
