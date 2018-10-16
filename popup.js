@@ -750,6 +750,46 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
     };
 
+    /**
+     *
+     * Method to generate change file name instruction
+     *
+     * @param void
+     *
+     * @return object
+     */
+    $scope.generateChangeFileNameInstruction = function() { 
+
+        /*
+            { "type" : "changeFileName",
+        "comment" : "Change the file name with date",
+        "param" : { "filename" : "AnnualReport.pdf"},
+        "auto"    : true }
+
+        $scope.currentInstruction = {
+            'changeFileName'         : $scope.currentInstruction.changeFileName,
+            'changeFileNameComment'  : "",            
+            'changeFileNameOfFileName' : ""
+        };
+
+        */                       
+
+        $scope.generation = {};
+        $scope.instructions = [];
+        if ($scope.currentInstruction.enabled) {                        
+            $scope.instructions = { 
+                "type"      : "changeFileName", 
+                "comment"   : $scope.currentInstruction.changeFileNameComment,                               
+                "param"     : {                                 
+                                "filename" : $scope.currentInstruction.changeFileNameOfFileName
+                              },
+                "auto"      : true                
+            };                    
+        }
+        $scope.generation.instructionsGenerated = true;        
+
+    };
+
 
     /**
      *
@@ -804,6 +844,11 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
         if ($scope.currentInstruction.fileUpload) {
             $scope.generateFileUploadInstruction();
+            return;
+        }
+
+        if ($scope.currentInstruction.changeFileName) {
+            $scope.generateChangeFileNameInstruction();
             return;
         }
 
@@ -1417,6 +1462,54 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
      */
     $scope.updateFileUploadVariable = function() {                        
         $scope.currentInstruction.fileUploadVariable = $scope.currentInstruction.fileUploadVariable;
+    };
+
+    /**
+     * Method to handle the instruction change file name
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.addChangeFileName = function() {                        
+        $scope.currentInstruction = {
+            'changeFileName'         : $scope.currentInstruction.changeFileName,
+            'changeFileNameComment'  : "",            
+            'changeFileNameOfFileName' : ""
+        };
+        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
+            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
+            && !$scope.currentInstruction.loadURL && !$scope.currentInstruction.common 
+            && !$scope.currentInstruction.localFile && !$scope.currentInstruction.fileUpload 
+            && !$scope.currentInstruction.changeFileName) {
+
+            $scope.resetStatusCustom();
+        }
+    };
+
+    /**
+     * Method to update comment of change file name instruction
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateChangeFileNameComment = function() {                        
+        $scope.currentInstruction.changeFileNameComment = $scope.currentInstruction.changeFileNameComment;
+    };
+
+    /**
+     * Method to update file name of change file name instruction
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateChangeFileNameOfFileName = function() {                        
+        $scope.currentInstruction.changeFileNameOfFileName = $scope.currentInstruction.changeFileNameOfFileName;
     };
 
     /**

@@ -296,6 +296,9 @@
           <input type="checkbox" id="fileupload-inst" ng-model="currentInstruction.fileUpload" style="margin: 2px 0px 0px 0px;" 
           ng-click="addFileUpload();" /> 
           <label for="fileupload-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">File Upload</label>
+          <input type="checkbox" id="changefilename-inst" ng-model="currentInstruction.changeFileName" style="margin: 2px 0px 0px 0px;" 
+          ng-click="addChangeFileName();" /> 
+          <label for="changefilename-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Change File Name</label>
         </p>  
         <p style="margin: 5px;">
           <button type="button" class="btn btn-sm btn-success" ng-click="resetStatusCustom()" 
@@ -349,6 +352,10 @@
           <input type="text" ng-model="currentInstruction.fileUploadComment" placeholder="Comment.." style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateFileUploadComment();" />
           <input type="text" ng-model="currentInstruction.fileUploadURL" placeholder="URL" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateFileUploadURL();" />
           <input type="text" ng-model="currentInstruction.fileUploadVariable" placeholder="Variable" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateFileUploadVariable();" />          
+        </p>
+        <p style="margin: 5px;" ng-if="currentInstruction.changeFileName">          
+          <input type="text" ng-model="currentInstruction.changeFileNameComment" placeholder="Comment.." style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateChangeFileNameComment();" />
+          <input type="text" ng-model="currentInstruction.changeFileNameOfFileName" placeholder="File Name" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateChangeFileNameOfFileName();" />                    
         </p>
       </div>
 
