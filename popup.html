@@ -288,6 +288,9 @@
           <input type="checkbox" id="common-inst" ng-model="currentInstruction.common" style="margin: 2px 0px 0px 0px;" 
           ng-click="addCommon();" /> 
           <label for="common-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Common</label>
+          <input type="checkbox" id="localfile-inst" ng-model="currentInstruction.localFile" style="margin: 2px 0px 0px 0px;" 
+          ng-click="readLocalFile();" /> 
+          <label for="localfile-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Read Local File</label>
         </p>
         <p style="margin: 5px;">
           <button type="button" class="btn btn-sm btn-success" ng-click="resetStatusCustom()" 
@@ -331,6 +334,11 @@
         </p>
         <p style="margin: 5px;" ng-if="currentInstruction.common">          
           <input type="number" ng-model="currentInstruction.commonTimeout" placeholder="Comment.." style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateCommonTimeout();" />          
+        </p>
+        <p style="margin: 5px;" ng-if="currentInstruction.localFile">          
+          <input type="text" ng-model="currentInstruction.localFileComment" placeholder="Comment.." style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateLocalFileComment();" />
+          <input type="text" ng-model="currentInstruction.localFileName" placeholder="File name" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateLocalFileName();" />
+          <input type="text" ng-model="currentInstruction.localFileValue" placeholder="Value" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateLocalFileValue();" />          
         </p>
       </div>
 

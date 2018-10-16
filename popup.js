@@ -698,6 +698,47 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
     };
 
+    /**
+     *
+     * Method to generate read local file instruction
+     *
+     * @param void
+     *
+     * @return object
+     */
+    $scope.generateReadLocalFileInstruction = function() { 
+
+        /*
+            {  "type" : "readLocalFile",
+        "comment" : "Load local file into buffer. Default file path is downloads",
+        "param" : { "filename" : "AnnualReport.pdf",
+        "variable" : {"value" : "runtime.pdffile"}},
+        "auto"    : true }
+
+            $scope.currentInstruction = {
+            'localFile'        : $scope.currentInstruction.localFile,
+            'localFileComment' : "",
+            'localFileName'    : "",
+            'localFileValue'   : ""
+        };
+
+        */        
+
+        $scope.generation = {};
+        $scope.instructions = [];
+        if ($scope.currentInstruction.enabled) {                        
+            $scope.instructions = { 
+                "type"      : "readLocalFile", 
+                "comment"   : $scope.currentInstruction.localFileComment,                               
+                "param"     : { "filename" : $scope.currentInstruction.localFileName,
+                "variable"  : {"value" : $scope.currentInstruction.localFileValue}},
+                "auto"      : true                
+            };                    
+        }
+        $scope.generation.instructionsGenerated = true;        
+
+    };
+
 
     /**
      *
@@ -742,6 +783,11 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
         if ($scope.currentInstruction.common) {
             $scope.generateCommonInstructionSet();
+            return;
+        }
+
+        if ($scope.currentInstruction.localFile) {
+            $scope.generateReadLocalFileInstruction();
             return;
         }
 
@@ -1238,6 +1284,66 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
     };
 
     /**
+     * Method to read local file
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.readLocalFile = function() {                        
+        $scope.currentInstruction = {
+            'localFile'        : $scope.currentInstruction.localFile,
+            'localFileComment' : "",
+            'localFileName'    : "",
+            'localFileValue'   : ""
+        };
+        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
+            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
+            && !$scope.currentInstruction.loadURL && !$scope.currentInstruction.common 
+            && !$scope.currentInstruction.localFile) {
+
+            $scope.resetStatusCustom();
+        }
+    };
+
+    /**
+     * Method to update local file comment
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateLocalFileComment = function() {                        
+        $scope.currentInstruction.localFileComment = $scope.currentInstruction.localFileComment;
+    };
+
+    /**
+     * Method to update local file name
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateLocalFileName = function() {                        
+        $scope.currentInstruction.localFileName = $scope.currentInstruction.localFileName;
+    };
+
+    /**
+     * Method to update local file value
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateLocalFileValue = function() {                        
+        $scope.currentInstruction.localFileValue = $scope.currentInstruction.localFileValue;
+    };
+
+    /**
      * Method to reset status and custom instruction
      *
      * @param void
@@ -1251,7 +1357,9 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         $scope.currentInstruction.script = false;
         $scope.currentInstruction.wait = false;
         $scope.currentInstruction.waitElement = false;
-        $scope.currentInstruction.loadURL = false;        
+        $scope.currentInstruction.loadURL = false;
+        $scope.currentInstruction.common = false;
+        $scope.currentInstruction.localFile = false;
     };
 
 
