@@ -758,21 +758,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
      *
      * @return object
      */
-    $scope.generateChangeFileNameInstruction = function() { 
-
-        /*
-            { "type" : "changeFileName",
-        "comment" : "Change the file name with date",
-        "param" : { "filename" : "AnnualReport.pdf"},
-        "auto"    : true }
-
-        $scope.currentInstruction = {
-            'changeFileName'         : $scope.currentInstruction.changeFileName,
-            'changeFileNameComment'  : "",            
-            'changeFileNameOfFileName' : ""
-        };
-
-        */                       
+    $scope.generateChangeFileNameInstruction = function() {                                
 
         $scope.generation = {};
         $scope.instructions = [];
@@ -785,6 +771,50 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
                               },
                 "auto"      : true                
             };                    
+        }
+        $scope.generation.instructionsGenerated = true;        
+
+    };
+
+    /**
+     *
+     * Method to generate instruction - GetElementAttribute
+     *
+     * @param void
+     *
+     * @return object
+     */
+    $scope.generateGetElementAttributeInstruction = function() {                       
+
+        $scope.generation = {};
+        $scope.instructions = [];
+        if ($scope.currentInstruction.enabled) {                        
+            $scope.instructions = { 
+                "type"      : "getElementAttribute", 
+                "comment"   : $scope.currentInstruction.getElementAttributeComment,
+                "param"     : {
+                                "locator"   : {},
+                                "attribute" : "value",
+                                "variable"  : $scope.currentInstruction.getElementAttributeVariable
+                              },
+                "auto"      : true                
+            }; 
+
+            switch ($scope.currentInstruction.getElementAttributeLocator) {
+
+                case "id" :
+                  $scope.instructions.param.locator = {"id" : $scope.currentInstruction.getElementAttributeIdentifier};
+                  break;
+
+                case "name" :
+                  $scope.instructions.param.locator = {"name" : $scope.currentInstruction.getElementAttributeIdentifier};
+                  break;
+                  
+                case "xpath" :
+                  $scope.instructions.param.locator = {"xpath" : $scope.currentInstruction.getElementAttributeIdentifier};
+                  break;    
+            };
+
         }
         $scope.generation.instructionsGenerated = true;        
 
@@ -851,6 +881,11 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             $scope.generateChangeFileNameInstruction();
             return;
         }
+
+        if ($scope.currentInstruction.getElementAttribute) {
+            $scope.generateGetElementAttributeInstruction();
+            return;
+        }        
 
         $scope.generation = {};
         $scope.instructions = $scope.response.filter(currentInstruction => currentInstruction.enabled)
@@ -1513,6 +1548,83 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
     };
 
     /**
+     * Method to add instruction - getElementAttribute
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.addGetElementAttribute = function() {                        
+        $scope.currentInstruction = {
+            'getElementAttribute'           : $scope.currentInstruction.getElementAttribute,
+            'getElementAttributeComment'    : "",
+            'getElementAttributeLocator'    : "",
+            'getElementAttributeIdentifier' : "",
+            'getElementAttributeVariable'   : ""
+        }; 
+
+        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
+            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
+            && !$scope.currentInstruction.loadURL && !$scope.currentInstruction.common 
+            && !$scope.currentInstruction.localFile && !$scope.currentInstruction.fileUpload 
+            && !$scope.currentInstruction.changeFileName && !$scope.currentInstruction.getElementAttribute) {
+
+            $scope.resetStatusCustom();
+        }
+    };
+
+    /**
+     * Method to update comment of instruction - getElementAttribute
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateGetElementAttributeComment = function() {                        
+        $scope.currentInstruction.getElementAttributeComment = $scope.currentInstruction.getElementAttributeComment;
+    };
+
+    /**
+     * Method to update locator of instruction - getElementAttribute
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateGetElementAttributeLocator = function() {                        
+        $scope.currentInstruction.getElementAttributeLocator = $scope.currentInstruction.getElementAttributeLocator;
+    };
+
+    /**
+     * Method to update identifier of instruction - getElementAttribute
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateElementAttributeIdentifier = function() {                        
+        $scope.currentInstruction.getElementAttributeIdentifier = $scope.currentInstruction.getElementAttributeIdentifier;
+    };
+
+    /**
+     * Method to update variable of instruction - getElementAttribute
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateGetElementAttributeVariable = function() {                        
+        $scope.currentInstruction.getElementAttributeVariable = $scope.currentInstruction.getElementAttributeVariable;
+    };
+
+
+
+    /**
      * Method to reset status and custom instruction
      *
      * @param void
@@ -1530,6 +1642,8 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         $scope.currentInstruction.common = false;
         $scope.currentInstruction.localFile = false;
         $scope.currentInstruction.fileUpload = false;
+        $scope.currentInstruction.changeFileName = false;
+        $scope.currentInstruction.getElementAttribute = false;
     };
 
 

@@ -299,6 +299,11 @@
           <input type="checkbox" id="changefilename-inst" ng-model="currentInstruction.changeFileName" style="margin: 2px 0px 0px 0px;" 
           ng-click="addChangeFileName();" /> 
           <label for="changefilename-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Change File Name</label>
+        </p>
+        <p style="margin: 5px;">
+          <input type="checkbox" id="getElementAttribute-inst" ng-model="currentInstruction.getElementAttribute" style="margin: 2px 0px 0px 0px;" 
+          ng-click="addGetElementAttribute();" /> 
+          <label for="getElementAttribute-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">getElementAttribute</label>
         </p>  
         <p style="margin: 5px;">
           <button type="button" class="btn btn-sm btn-success" ng-click="resetStatusCustom()" 
@@ -357,6 +362,32 @@
           <input type="text" ng-model="currentInstruction.changeFileNameComment" placeholder="Comment.." style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateChangeFileNameComment();" />
           <input type="text" ng-model="currentInstruction.changeFileNameOfFileName" placeholder="File Name" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateChangeFileNameOfFileName();" />                    
         </p>
+
+        <!-- getElementAttribute start-->
+        <p style="margin: 5px;" ng-if="currentInstruction.getElementAttribute">          
+          <input type="text" ng-model="currentInstruction.getElementAttributeComment" placeholder="Comment.." style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateGetElementAttributeComment();" />
+          <span>
+            <span>
+              <label class="radio-inline">
+                <input type="radio" name="optGetElementAttribute" value="id" ng-model="currentInstruction.getElementAttributeLocator" 
+                ng-click="updateGetElementAttributeLocator();">ID</label>
+            </span>
+            <span>
+              <label class="radio-inline">
+                <input type="radio" name="optGetElementAttribute" value="xpath" ng-model="currentInstruction.getElementAttributeLocator" 
+                ng-click="updateGetElementAttributeLocator();">XPATH</label>
+            </span>
+            <span>
+              <label class="radio-inline">
+                <input type="radio" name="optGetElementAttribute" value="name" ng-model="currentInstruction.getElementAttributeLocator" 
+                ng-click="updateGetElementAttributeLocator();">NAME</label>
+            </span>
+          </span>
+          <input type="text" ng-model="currentInstruction.getElementAttributeIdentifier" placeholder="{{currentInstruction.getElementAttributeLocator}}" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateElementAttributeIdentifier();" />
+          <input type="text" ng-model="currentInstruction.getElementAttributeVariable" placeholder="Variable" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateGetElementAttributeVariable();" />
+        </p>
+        <!-- getElementAttribute stop-->
+
       </div>
 
       <div ng-if="(!currentInstruction.status && !currentInstruction.script && !currentInstruction.wait && !currentInstruction.waitElement && !currentInstruction.loadURL)">        
