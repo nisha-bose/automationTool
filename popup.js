@@ -820,6 +820,61 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
     };
 
+    /**
+     *
+     * Method to generate instruction - scroll to element
+     *
+     * @param void
+     *
+     * @return object
+     */
+    $scope.generateScrollToElementInstruction = function() {  
+
+        /*
+            { "type"     : "scroll",
+                                                        "optional" : false,
+                                                       "param"    : { "id" :"btnLogin" },
+                                                       "auto"    :  true }
+
+            $scope.currentInstruction = {
+            'scrollToElement'           : $scope.currentInstruction.scrollToElement,
+            'scrollToElementLocator'    : "",
+            'scrollToElementIdentifier' : ""
+        };                                           
+
+
+        */                     
+
+        $scope.generation = {};
+        $scope.instructions = [];
+        if ($scope.currentInstruction.enabled) {                        
+            $scope.instructions = { 
+                "type"      : "scroll", 
+                "optional"  : false,
+                "param"     : {},
+                "auto"      : true                
+            }; 
+
+            switch ($scope.currentInstruction.scrollToElementLocator) {
+
+                case "id" :
+                  $scope.instructions.param = {"id" : $scope.currentInstruction.scrollToElementIdentifier};
+                  break;
+
+                case "name" :
+                  $scope.instructions.param = {"name" : $scope.currentInstruction.scrollToElementIdentifier};
+                  break;
+                  
+                case "xpath" :
+                  $scope.instructions.param = {"xpath" : $scope.currentInstruction.scrollToElementIdentifier};
+                  break;    
+            };
+
+        }
+        $scope.generation.instructionsGenerated = true;        
+
+    };
+
 
     /**
      *
@@ -884,6 +939,11 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
         if ($scope.currentInstruction.getElementAttribute) {
             $scope.generateGetElementAttributeInstruction();
+            return;
+        }                
+
+        if ($scope.currentInstruction.scrollToElement) {
+            $scope.generateScrollToElementInstruction();
             return;
         }        
 
@@ -1622,6 +1682,55 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         $scope.currentInstruction.getElementAttributeVariable = $scope.currentInstruction.getElementAttributeVariable;
     };
 
+    /**
+     * Method to add instruction - scroll to element
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.addScrollToElement = function() {                        
+        $scope.currentInstruction = {
+            'scrollToElement'           : $scope.currentInstruction.scrollToElement,
+            'scrollToElementLocator'    : "",
+            'scrollToElementIdentifier' : ""
+        }; 
+
+        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
+            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
+            && !$scope.currentInstruction.loadURL && !$scope.currentInstruction.common 
+            && !$scope.currentInstruction.localFile && !$scope.currentInstruction.fileUpload 
+            && !$scope.currentInstruction.changeFileName && !$scope.currentInstruction.getElementAttribute  
+            && !$scope.currentInstruction.scrollToElement) {
+
+            $scope.resetStatusCustom();
+        }
+    };
+
+    /**
+     * Method to update locator of instruction - scroll to element
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateScrollToElementLocator = function() {                        
+        $scope.currentInstruction.scrollToElementLocator = $scope.currentInstruction.scrollToElementLocator;
+    };
+
+    /**
+     * Method to update identifier of instruction - scroll to element
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateScrollToElementIdentifier = function() {                        
+        $scope.currentInstruction.scrollToElementIdentifier = $scope.currentInstruction.scrollToElementIdentifier;
+    };
 
 
     /**
@@ -1644,6 +1753,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         $scope.currentInstruction.fileUpload = false;
         $scope.currentInstruction.changeFileName = false;
         $scope.currentInstruction.getElementAttribute = false;
+        $scope.currentInstruction.scrollToElement = false;
     };
 
 
