@@ -930,7 +930,48 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         }
         $scope.generation.instructionsGenerated = true;        
 
-    };
+    };    
+
+    /**
+     *
+     * Method to generate instruction - radioButton
+     *
+     * @param void
+     *
+     * @return object
+     */
+    $scope.generateRadioButtonInstruction = function() {                
+
+        $scope.generation = {};
+        $scope.instructions = [];
+        if ($scope.currentInstruction.enabled) {                        
+            $scope.instructions = { 
+                "type"     : "radioBtnClick", 
+                "optional" : true,
+                "param"    : {},
+                "idx"      : $scope.currentInstruction.radioButtonIdx,
+                "auto"     : true                
+            }; 
+
+            switch ($scope.currentInstruction.radioButtonLocator) {
+
+                case "id" :
+                  $scope.instructions.param = {"id" : $scope.currentInstruction.radioButtonIdentifier};
+                  break;
+
+                case "name" :
+                  $scope.instructions.param = {"name" : $scope.currentInstruction.radioButtonIdentifier};
+                  break;
+                  
+                case "xpath" :
+                  $scope.instructions.param = {"xpath" : $scope.currentInstruction.radioButtonIdentifier};
+                  break;    
+            };
+
+        }
+        $scope.generation.instructionsGenerated = true;        
+
+    };    
 
 
     /**
@@ -1012,7 +1053,14 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         if ($scope.currentInstruction.elementToPDF) {
             $scope.generateElementToPDFInstruction();
             return;
-        }        
+        }
+
+        if ($scope.currentInstruction.radioButton) {
+            $scope.generateRadioButtonInstruction();
+            return;
+        }    
+
+            
 
         $scope.generation = {};
         $scope.instructions = $scope.response.filter(currentInstruction => currentInstruction.enabled)
@@ -1926,6 +1974,70 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         $scope.currentInstruction.elementToPDFValue = $scope.currentInstruction.elementToPDFValue;
     };
 
+    /**
+     * Method to add instruction - RadioButton
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.addRadioButton = function() {                        
+        $scope.currentInstruction = {
+            'radioButton'           : $scope.currentInstruction.radioButton,
+            'radioButtonLocator'    : "",
+            'radioButtonIdentifier' : "",
+            'radioButtonIdx'        : ""
+        }; 
+
+        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
+            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
+            && !$scope.currentInstruction.loadURL && !$scope.currentInstruction.common 
+            && !$scope.currentInstruction.localFile && !$scope.currentInstruction.fileUpload 
+            && !$scope.currentInstruction.changeFileName && !$scope.currentInstruction.getElementAttribute  
+            && !$scope.currentInstruction.scrollToElement && !$scope.currentInstruction.scrollToPosition 
+            && !$scope.currentInstruction.elementToPDF && !$scope.currentInstruction.radioButton ) {
+
+            $scope.resetStatusCustom();
+        }
+    };
+
+    /**
+     * Method to update locator of instruction - RadioButton
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateRadioButtonLocator = function() {                        
+        $scope.currentInstruction.radioButtonLocator = $scope.currentInstruction.radioButtonLocator;
+    };
+
+    /**
+     * Method to update identifier of instruction - RadioButton
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateRadioButtonIdentifier = function() {                        
+        $scope.currentInstruction.radioButtonIdentifier = $scope.currentInstruction.radioButtonIdentifier;
+    };
+
+    /**
+     * Method to update idx of instruction - RadioButton
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateRadioButtonIdx = function() {                        
+        $scope.currentInstruction.radioButtonIdx = $scope.currentInstruction.radioButtonIdx;
+    };
+
 
     /**
      * Method to reset status and custom instruction
@@ -1949,7 +2061,10 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         $scope.currentInstruction.getElementAttribute = false;
         $scope.currentInstruction.scrollToElement = false;
         $scope.currentInstruction.scrollToPosition = false;
-        $scope.currentInstruction.elementToPDF = false;        
+        $scope.currentInstruction.elementToPDF = false; 
+        $scope.currentInstruction.radioButton = false;
+
+        
     };
 
 

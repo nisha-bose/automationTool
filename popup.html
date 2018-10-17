@@ -317,6 +317,9 @@
           <input type="checkbox" id="elementToPDF-inst" ng-model="currentInstruction.elementToPDF"  
           style="margin: 2px 0px 0px 0px;" ng-click="addElementToPDF();" /> 
           <label for="elementToPDF-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">elementToPDF</label>
+          <input type="checkbox" id="radioButton-inst" ng-model="currentInstruction.radioButton"  
+          style="margin: 2px 0px 0px 0px;" ng-click="addRadioButton();" /> 
+          <label for="radioButton-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Radio Button</label>
         </p>  
         <p style="margin: 5px;">
           <button type="button" class="btn btn-sm btn-success" ng-click="resetStatusCustom()" 
@@ -406,17 +409,17 @@
           <span>
             <span>
               <label class="radio-inline">
-                <input type="radio" name="optScrollToElemen" value="id" ng-model="currentInstruction.scrollToElementLocator" 
+                <input type="radio" name="optScrollToElement" value="id" ng-model="currentInstruction.scrollToElementLocator" 
                 ng-click="updateScrollToElementLocator();">ID</label>
             </span>
             <span>
               <label class="radio-inline">
-                <input type="radio" name="optScrollToElemen" value="xpath" ng-model="currentInstruction.scrollToElementLocator" 
+                <input type="radio" name="optScrollToElement" value="xpath" ng-model="currentInstruction.scrollToElementLocator" 
                 ng-click="updateScrollToElementLocator();">XPATH</label>
             </span>
             <span>
               <label class="radio-inline">
-                <input type="radio" name="optScrollToElemen" value="name" ng-model="currentInstruction.scrollToElementLocator" 
+                <input type="radio" name="optScrollToElement" value="name" ng-model="currentInstruction.scrollToElementLocator" 
                 ng-click="updateScrollToElementLocator();">NAME</label>
             </span>
           </span>
@@ -426,8 +429,8 @@
 
         <!-- Scroll to position start-->
         <p style="margin: 5px;" ng-if="currentInstruction.scrollToPosition">                    
-          <input type="text" ng-model="currentInstruction.scrollToPositionTop" placeholder="Top" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateScrollToPositionTop();" />
-          <input type="text" ng-model="currentInstruction.scrollToPositionBottom" placeholder="Bottom" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateScrollToPositionBottom();" />          
+          <input type="number" ng-model="currentInstruction.scrollToPositionTop" placeholder="Top" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateScrollToPositionTop();" />
+          <input type="number" ng-model="currentInstruction.scrollToPositionBottom" placeholder="Bottom" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateScrollToPositionBottom();" />          
         </p>
         <!-- Scroll to position stop-->
 
@@ -437,17 +440,17 @@
           <span>
             <span>
               <label class="radio-inline">
-                <input type="radio" name="optScrollToElemen" value="id" ng-model="currentInstruction.elementToPDFLocator" 
+                <input type="radio" name="optElementToPDF" value="id" ng-model="currentInstruction.elementToPDFLocator" 
                 ng-click="updateElementToPDFLocator();">ID</label>
             </span>
             <span>
               <label class="radio-inline">
-                <input type="radio" name="optScrollToElemen" value="xpath" ng-model="currentInstruction.elementToPDFLocator" 
+                <input type="radio" name="optElementToPDF" value="xpath" ng-model="currentInstruction.elementToPDFLocator" 
                 ng-click="updateElementToPDFLocator();">XPATH</label>
             </span>
             <span>
               <label class="radio-inline">
-                <input type="radio" name="optScrollToElemen" value="name" ng-model="currentInstruction.elementToPDFLocator" 
+                <input type="radio" name="optElementToPDF" value="name" ng-model="currentInstruction.elementToPDFLocator" 
                 ng-click="updateElementToPDFLocator();">NAME</label>
             </span>
           </span>
@@ -457,6 +460,33 @@
           <input type="text" ng-model="currentInstruction.elementToPDFValue" placeholder="Value" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateElementToPDFValue();" />     
         </p>
         <!-- Element to PDF stop-->
+
+        <!-- Radio button start-->
+        <p style="margin: 5px;" ng-if="currentInstruction.radioButton">
+          <input type="number" ng-model="currentInstruction.radioButtonIdx" placeholder="Idx Number" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateRadioButtonIdx);" />                              
+          <span>
+            <span>
+              <label class="radio-inline">
+                <input type="radio" name="optRadioButton" value="id" ng-model="currentInstruction.radioButtonLocator" 
+                ng-click="updateRadioButtonLocator();">ID</label>
+            </span>
+            <span>
+              <label class="radio-inline">
+                <input type="radio" name="optRadioButton" value="xpath" ng-model="currentInstruction.radioButtonLocator" 
+                ng-click="updateRadioButtonLocator();">XPATH</label>
+            </span>
+            <span>
+              <label class="radio-inline">
+                <input type="radio" name="optRadioButton" value="name" ng-model="currentInstruction.radioButtonLocator" 
+                ng-click="updateRadioButtonLocator();">NAME</label>
+            </span>
+          </span>
+          <input type="text" ng-model="currentInstruction.radioButtonIdentifier" 
+          placeholder="{{currentInstruction.radioButtonLocator}}" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" 
+          ng-change="updateRadioButtonIdentifier();" />      
+              
+        </p>
+        <!-- Radio button stop-->
 
       </div>
 
