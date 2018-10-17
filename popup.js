@@ -24,6 +24,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
     $scope.inputs = {};
     $scope.condition = {};
     $scope.conditionFlag = false;
+    $scope.loopFlag = false;
     $scope.conditionArray = []; //Keep track opening and closing of condition. 
     $scope.generatePageFlag = true;       
     $scope.changeLocator = function(currentInstruction, locator) {
@@ -44,6 +45,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         $scope.condition.apiValue = "";
         $scope.condition.caseString = "";
         $scope.conditionFlag = false;
+        $scope.loopFlag = false;
 
         $scope.localState = JSON.parse(localStorage.getItem('automationToolState'));
         $scope.loading = true;
@@ -497,6 +499,53 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
             });
         $scope.instructions = condition;
+        console.log($scope.instructions);
+        $scope.generation.instructionsGenerated = true;
+
+    };
+
+
+    /**
+     *
+     * Method to get instruction of Loop
+     *
+     * @param object attr
+     *
+     * @return object
+     */
+    $scope.getInstructionOfLoop = function() {
+
+        var loop = {
+                "type": "foreach",
+                "auto": true,
+                "param": {
+                    "instanceName" : "",
+                    "collection"   : "",
+                    "instructions" : []
+                }
+            },
+            count = 0,            
+            element = {};            
+
+        $scope.generation = {};
+        $scope.instructions = $scope.response.filter(currentInstruction => currentInstruction.enabled)
+            .map(currentInstruction => { 
+
+                if (count == 0) {
+                    loop.param.instanceName = currentInstruction.loopInstanceName;
+                    loop.param.collection = currentInstruction.loopCollection;
+
+                    console.log("LOOP INSTANCE " + currentInstruction.loopInstanceName);
+                    console.log("LOOP COLLECTION " + currentInstruction.loopCollection);
+
+                    console.log("LOOP INSTRUCTION : " + JSON.stringify(loop));
+                }
+                element = $scope.getInstructionElement(currentInstruction);
+                loop.param.instructions.push(element);
+                count++;
+
+            });
+        $scope.instructions = loop;
         console.log($scope.instructions);
         $scope.generation.instructionsGenerated = true;
 
@@ -990,6 +1039,11 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             return;
         }
 
+        if ($scope.loopFlag) {
+            $scope.getInstructionOfLoop();
+            return;
+        }
+
         if ($scope.currentInstruction.status) {
             $scope.generateStatusInstruction();
             return;
@@ -1059,8 +1113,6 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             $scope.generateRadioButtonInstruction();
             return;
         }    
-
-            
 
         $scope.generation = {};
         $scope.instructions = $scope.response.filter(currentInstruction => currentInstruction.enabled)
@@ -1198,9 +1250,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             $scope.api.currentApiValue = currentApiValue;
         else $scope.api.currentApiValue = false;
     }
-
-
-    // Condition functions here...    
+       
 
     /**
      * Method to start conditional operation
@@ -2062,9 +2112,50 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         $scope.currentInstruction.scrollToElement = false;
         $scope.currentInstruction.scrollToPosition = false;
         $scope.currentInstruction.elementToPDF = false; 
-        $scope.currentInstruction.radioButton = false;
+        $scope.currentInstruction.radioButton = false;        
+    };
 
-        
+    /**
+     * Method to start loop
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.addLoop = function() {
+
+        $scope.loopFlag = false;        
+        $scope.currentInstruction.loop = !$scope.currentInstruction.loop;
+        if ($scope.currentInstruction.loop) {
+            $scope.loopFlag = true;
+            $scope.currentInstruction.enabled = true;
+        }        
+
+    };
+
+    /**
+     * Method to update loop instance name
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateLoopInstanceName = function() {        
+        $scope.currentInstruction.loopInstanceName = $scope.currentInstruction.loopInstanceName;
+    };
+
+    /**
+     * Method to update loop collection
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateLoopCollection = function() {        
+        $scope.currentInstruction.loopCollection = $scope.currentInstruction.loopCollection;
     };
 
 
