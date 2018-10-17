@@ -138,6 +138,12 @@
     .strikeThrough {
       text-decoration: line-through;
     }
+    .inst-panel {
+      border: 1px dashed #aba8a8;
+      margin: 2px 0;max-width: 300px;
+      overflow: hidden;
+      height:auto;
+    }
   </style>
 </head>
 
@@ -263,7 +269,7 @@
         </div>
       </div>
 
-      <div style="border: 1px dashed #aba8a8;margin: 2px 0;max-width: 300px;overflow: hidden;height:auto;">
+      <div class="inst-panel">
         <p style="margin: 5px;">          
           <input type="checkbox" id="status" ng-model="currentInstruction.status" style="margin: 2px 0px 0px 0px;" 
           ng-click="addStatus();" /> 
@@ -324,7 +330,7 @@
         <p style="margin: 5px;">
           <button type="button" class="btn btn-sm btn-success" ng-click="resetStatusCustom()" 
           style="float:right;margin:5px 0px 5px 0px;">Reset All</button>
-        </p>      
+        </p>              
         <p style="margin: 5px;" ng-if="currentInstruction.status">
           <input type="text" ng-model="currentInstruction.statusComment" placeholder="Add Status Message..." style="width:290px;height:40px;padding:5px;" ng-change="updateStatusComment();" />          
         </p>
