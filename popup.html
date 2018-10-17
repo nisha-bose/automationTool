@@ -309,6 +309,9 @@
           <input type="checkbox" id="scrollToElement-inst" ng-model="currentInstruction.scrollToElement"  
           style="margin: 2px 0px 0px 0px;" ng-click="addScrollToElement();" /> 
           <label for="scrollToElement-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Scroll To Element</label>
+          <input type="checkbox" id="scrollToPosition-inst" ng-model="currentInstruction.scrollToPosition"  
+          style="margin: 2px 0px 0px 0px;" ng-click="addScrollToPosition();" /> 
+          <label for="scrollToPosition-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Scroll To Position</label>
         </p>  
         <p style="margin: 5px;">
           <button type="button" class="btn btn-sm btn-success" ng-click="resetStatusCustom()" 
@@ -415,6 +418,13 @@
           <input type="text" ng-model="currentInstruction.scrollToElementIdentifier" placeholder="{{currentInstruction.scrollToElementLocator}}" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateScrollToElementIdentifier();" />          
         </p>
         <!-- Scroll to element stop-->
+
+        <!-- Scroll to position start-->
+        <p style="margin: 5px;" ng-if="currentInstruction.scrollToPosition">                    
+          <input type="text" ng-model="currentInstruction.scrollToPositionTop" placeholder="Top" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateScrollToPositionTop();" />
+          <input type="text" ng-model="currentInstruction.scrollToPositionBottom" placeholder="Bottom" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateScrollToPositionBottom();" />          
+        </p>
+        <!-- Scroll to position stop-->
 
       </div>
 

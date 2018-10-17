@@ -830,21 +830,6 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
      */
     $scope.generateScrollToElementInstruction = function() {  
 
-        /*
-            { "type"     : "scroll",
-                                                        "optional" : false,
-                                                       "param"    : { "id" :"btnLogin" },
-                                                       "auto"    :  true }
-
-            $scope.currentInstruction = {
-            'scrollToElement'           : $scope.currentInstruction.scrollToElement,
-            'scrollToElementLocator'    : "",
-            'scrollToElementIdentifier' : ""
-        };                                           
-
-
-        */                     
-
         $scope.generation = {};
         $scope.instructions = [];
         if ($scope.currentInstruction.enabled) {                        
@@ -870,6 +855,33 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
                   break;    
             };
 
+        }
+        $scope.generation.instructionsGenerated = true;        
+
+    };
+
+    /**
+     *
+     * Method to generate instruction - scroll to position
+     *
+     * @param void
+     *
+     * @return object
+     */
+    $scope.generateScrollToPositionInstruction = function() { 
+
+        $scope.generation = {};
+        $scope.instructions = [];
+        if ($scope.currentInstruction.enabled) {                        
+            $scope.instructions = { 
+                "type"      : "scroll", 
+                "optional"  : false,
+                "param"     : { 
+                                "top" : $scope.currentInstruction.scrollToPositionTop,
+                                "bottom" : $scope.currentInstruction.scrollToPositionBottom
+                              },
+                "auto"      : true                
+            };                    
         }
         $scope.generation.instructionsGenerated = true;        
 
@@ -944,6 +956,11 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
         if ($scope.currentInstruction.scrollToElement) {
             $scope.generateScrollToElementInstruction();
+            return;
+        }
+
+        if ($scope.currentInstruction.scrollToPosition) {
+            $scope.generateScrollToPositionInstruction();
             return;
         }        
 
@@ -1732,6 +1749,56 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         $scope.currentInstruction.scrollToElementIdentifier = $scope.currentInstruction.scrollToElementIdentifier;
     };
 
+    /**
+     * Method to add instruction - scroll to position
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.addScrollToPosition = function() {                        
+        $scope.currentInstruction = {
+            'scrollToPosition'           : $scope.currentInstruction.scrollToPosition,
+            'scrollToPositionTop'    : "",
+            'scrollToPositionBottom' : ""
+        }; 
+
+        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
+            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
+            && !$scope.currentInstruction.loadURL && !$scope.currentInstruction.common 
+            && !$scope.currentInstruction.localFile && !$scope.currentInstruction.fileUpload 
+            && !$scope.currentInstruction.changeFileName && !$scope.currentInstruction.getElementAttribute  
+            && !$scope.currentInstruction.scrollToElement && !$scope.currentInstruction.scrollToPosition) {
+
+            $scope.resetStatusCustom();
+        }
+    };
+
+    /**
+     * Method to update top position of instruction - scroll to position
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateScrollToPositionTop = function() {                        
+        $scope.currentInstruction.scrollToPositionTop = $scope.currentInstruction.scrollToPositionTop;
+    };
+
+    /**
+     * Method to update bottom position of instruction - scroll to position
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateScrollToPositionBottom = function() {                        
+        $scope.currentInstruction.scrollToPositionBottom = $scope.currentInstruction.scrollToPositionBottom;
+    };
+
 
     /**
      * Method to reset status and custom instruction
@@ -1754,6 +1821,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         $scope.currentInstruction.changeFileName = false;
         $scope.currentInstruction.getElementAttribute = false;
         $scope.currentInstruction.scrollToElement = false;
+        $scope.currentInstruction.scrollToPosition = false;
     };
 
 
