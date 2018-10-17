@@ -589,8 +589,9 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         $scope.instructions = [];
         if ($scope.currentInstruction.enabled) {                        
             $scope.instructions = { 
-                "type"      : "status",                
-                "param"     : $scope.currentInstruction.statusComment                
+                "type"      : "status", 
+                "comment"   : $scope.currentInstruction.statusComment,            
+                "param"     : $scope.currentInstruction.statusParam                
             };                    
         }
         $scope.generation.instructionsGenerated = true;        
@@ -1359,7 +1360,8 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
     $scope.addStatus = function() {                        
         $scope.currentInstruction = {
             'status'        : $scope.currentInstruction.status,
-            'statusComment' : ""
+            'statusComment' : "",
+            'statusParam'   : ""
         };
         $scope.initiateResetCustom();
     };
@@ -1374,6 +1376,18 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
      */
     $scope.updateStatusComment = function() {                        
         $scope.currentInstruction.statusComment = $scope.currentInstruction.statusComment;
+    };
+
+    /**
+     * Method to update status param
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateStatusParam = function() {                        
+        $scope.currentInstruction.statusParam = $scope.currentInstruction.statusParam;
     };
 
     /**

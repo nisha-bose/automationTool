@@ -165,7 +165,7 @@
       height:40px;
       padding:5px;
       margin-bottom:10px;
-    }
+    }    
   </style>
 </head>
 
@@ -350,7 +350,10 @@
           <button type="button" class="btn btn-sm btn-success btn-cst" ng-click="resetStatusCustom()">Reset All</button>
         </p>              
         <p ng-if="currentInstruction.status">
-          <input type="text" ng-model="currentInstruction.statusComment" placeholder="Add Status Message..." style="width:290px;height:40px;padding:5px;" ng-change="updateStatusComment();" />          
+          <input type="text" ng-model="currentInstruction.statusComment" placeholder="Comment..." 
+          class="optElement" ng-change="updateStatusComment();" />          
+          <input type="text" ng-model="currentInstruction.statusParam" placeholder="Add Status Message..." 
+          class="optElement" ng-change="updateStatusParam();" />          
         </p>
         <p ng-if="currentInstruction.script">          
           <input type="text" ng-model="currentInstruction.scriptComment" placeholder="Comment.." style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateScriptComment();" />
