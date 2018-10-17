@@ -312,6 +312,11 @@
           <input type="checkbox" id="scrollToPosition-inst" ng-model="currentInstruction.scrollToPosition"  
           style="margin: 2px 0px 0px 0px;" ng-click="addScrollToPosition();" /> 
           <label for="scrollToPosition-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Scroll To Position</label>
+        </p>
+        <p style="margin: 5px;">
+          <input type="checkbox" id="elementToPDF-inst" ng-model="currentInstruction.elementToPDF"  
+          style="margin: 2px 0px 0px 0px;" ng-click="addElementToPDF();" /> 
+          <label for="elementToPDF-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">elementToPDF</label>
         </p>  
         <p style="margin: 5px;">
           <button type="button" class="btn btn-sm btn-success" ng-click="resetStatusCustom()" 
@@ -425,6 +430,33 @@
           <input type="text" ng-model="currentInstruction.scrollToPositionBottom" placeholder="Bottom" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateScrollToPositionBottom();" />          
         </p>
         <!-- Scroll to position stop-->
+
+        <!-- Element to PDF start-->
+        <p style="margin: 5px;" ng-if="currentInstruction.elementToPDF">
+          <input type="text" ng-model="currentInstruction.elementToPDFComment" placeholder="Comment" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateElementToPDFComment();" />                    
+          <span>
+            <span>
+              <label class="radio-inline">
+                <input type="radio" name="optScrollToElemen" value="id" ng-model="currentInstruction.elementToPDFLocator" 
+                ng-click="updateElementToPDFLocator();">ID</label>
+            </span>
+            <span>
+              <label class="radio-inline">
+                <input type="radio" name="optScrollToElemen" value="xpath" ng-model="currentInstruction.elementToPDFLocator" 
+                ng-click="updateElementToPDFLocator();">XPATH</label>
+            </span>
+            <span>
+              <label class="radio-inline">
+                <input type="radio" name="optScrollToElemen" value="name" ng-model="currentInstruction.elementToPDFLocator" 
+                ng-click="updateElementToPDFLocator();">NAME</label>
+            </span>
+          </span>
+          <input type="text" ng-model="currentInstruction.elementToPDFIdentifier" 
+          placeholder="{{currentInstruction.elementToPDFLocator}}" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" 
+          ng-change="updateElementToPDFIdentifier();" />      
+          <input type="text" ng-model="currentInstruction.elementToPDFValue" placeholder="Value" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateElementToPDFValue();" />     
+        </p>
+        <!-- Element to PDF stop-->
 
       </div>
 

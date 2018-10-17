@@ -890,6 +890,51 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
     /**
      *
+     * Method to generate instruction - elementToPDF
+     *
+     * @param void
+     *
+     * @return object
+     */
+    $scope.generateElementToPDFInstruction = function() {
+
+        $scope.generation = {};
+        $scope.instructions = [];
+        if ($scope.currentInstruction.enabled) {                        
+            $scope.instructions = { 
+                "type"      : "elementToPDF", 
+                "comment"   : $scope.currentInstruction.elementToPDFComment,
+                "param"     : {
+                                "locator"   : {},
+                                "variable" : { "value" : $scope.currentInstruction.elementToPDFValue },
+                                "encoding" : "base64"
+                              },
+                "auto"      : true                
+            }; 
+
+            switch ($scope.currentInstruction.elementToPDFLocator) {
+
+                case "id" :
+                  $scope.instructions.param.locator = {"id" : $scope.currentInstruction.elementToPDFIdentifier};
+                  break;
+
+                case "name" :
+                  $scope.instructions.param.locator = {"name" : $scope.currentInstruction.elementToPDFIdentifier};
+                  break;
+                  
+                case "xpath" :
+                  $scope.instructions.param.locator = {"xpath" : $scope.currentInstruction.elementToPDFIdentifier};
+                  break;    
+            };
+
+        }
+        $scope.generation.instructionsGenerated = true;        
+
+    };
+
+
+    /**
+     *
      * Method to generate instructions
      *
      * @param void
@@ -961,6 +1006,11 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
         if ($scope.currentInstruction.scrollToPosition) {
             $scope.generateScrollToPositionInstruction();
+            return;
+        }
+
+        if ($scope.currentInstruction.elementToPDF) {
+            $scope.generateElementToPDFInstruction();
             return;
         }        
 
@@ -1799,6 +1849,83 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         $scope.currentInstruction.scrollToPositionBottom = $scope.currentInstruction.scrollToPositionBottom;
     };
 
+    /**
+     * Method to add instruction - ElementToPDF
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.addElementToPDF = function() {                        
+        $scope.currentInstruction = {
+            'elementToPDF'           : $scope.currentInstruction.elementToPDF,
+            'elementToPDFComment'    : "",
+            'elementToPDFLocator'    : "",
+            'elementToPDFIdentifier' : "",
+            'elementToPDFValue'      : ""
+        }; 
+
+        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
+            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
+            && !$scope.currentInstruction.loadURL && !$scope.currentInstruction.common 
+            && !$scope.currentInstruction.localFile && !$scope.currentInstruction.fileUpload 
+            && !$scope.currentInstruction.changeFileName && !$scope.currentInstruction.getElementAttribute  
+            && !$scope.currentInstruction.scrollToElement && !$scope.currentInstruction.scrollToPosition 
+            && !$scope.currentInstruction.elementToPDF) {
+
+            $scope.resetStatusCustom();
+        }
+    };
+
+    /**
+     * Method to update comment of instruction - ElementToPDF
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateElementToPDFComment = function() {                        
+        $scope.currentInstruction.elementToPDFComment = $scope.currentInstruction.elementToPDFComment;
+    };
+
+    /**
+     * Method to update locator of instruction - ElementToPDF
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateElementToPDFLocator = function() {                        
+        $scope.currentInstruction.elementToPDFLocator = $scope.currentInstruction.elementToPDFLocator;
+    };
+
+    /**
+     * Method to update identifier of instruction - ElementToPDF
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateElementToPDFIdentifier = function() {                        
+        $scope.currentInstruction.elementToPDFIdentifier = $scope.currentInstruction.elementToPDFIdentifier;
+    };
+
+    /**
+     * Method to update value of instruction - ElementToPDF
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.updateElementToPDFValue = function() {                        
+        $scope.currentInstruction.elementToPDFValue = $scope.currentInstruction.elementToPDFValue;
+    };
+
 
     /**
      * Method to reset status and custom instruction
@@ -1822,6 +1949,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         $scope.currentInstruction.getElementAttribute = false;
         $scope.currentInstruction.scrollToElement = false;
         $scope.currentInstruction.scrollToPosition = false;
+        $scope.currentInstruction.elementToPDF = false;        
     };
 
 
