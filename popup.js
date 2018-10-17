@@ -1262,6 +1262,8 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
      */
     $scope.conditionStarts = function() {
 
+        $scope.loopFlag = false;        
+        $scope.currentInstruction.loop = false;
         $scope.conditionFlag = false;
         $scope.currentInstruction.enabled = false;
         $scope.currentInstruction.conditionStarts = !$scope.currentInstruction.conditionStarts;
@@ -1269,10 +1271,11 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             $scope.conditionFlag = true;
             $scope.currentInstruction.enabled = true;
         }
-        $scope.conditionArray[$scope.currentInstructionCount] = {
+
+        /*$scope.conditionArray[$scope.currentInstructionCount] = {
             conditionStarts: !$scope.currentInstruction.conditionStarts,
             case: $scope.condition.caseString
-        };
+        };*/
 
     };
 
@@ -1358,12 +1361,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             'status'        : $scope.currentInstruction.status,
             'statusComment' : ""
         };
-        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
-            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
-            && !$scope.currentInstruction.loadURL) {
-            $scope.resetStatusCustom();
-        }
-
+        $scope.initiateResetCustom();
     };
 
     /**
@@ -1392,11 +1390,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             'scriptComment' : "",
             'customScript'  : ""
         };
-        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
-            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
-            && !$scope.currentInstruction.loadURL) {
-            $scope.resetStatusCustom();
-        }
+        $scope.initiateResetCustom();
     };    
 
     /**
@@ -1436,13 +1430,8 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             'wait'        : $scope.currentInstruction.wait,
             'waitComment' : "",
             'waitTime'    : ""
-        };
-        
-        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
-            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
-            && !$scope.currentInstruction.loadURL) {
-            $scope.resetStatusCustom();
-        }
+        };        
+        $scope.initiateResetCustom();
     };
 
     /**
@@ -1484,11 +1473,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             'waitElementLocator'    : "",
             'waitElementIdentifier' : ""
         };        
-        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
-            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
-            && !$scope.currentInstruction.loadURL) {
-            $scope.resetStatusCustom();
-        }
+        $scope.initiateResetCustom();
     };
 
     /**
@@ -1541,11 +1526,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             'URLComment' : "",
             'URL'        : ""
         };
-        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
-            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
-            && !$scope.currentInstruction.loadURL) {
-            $scope.resetStatusCustom();
-        }
+        $scope.initiateResetCustom();
     };
 
     /**
@@ -1585,11 +1566,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             'common'    : $scope.currentInstruction.common,
             'commonTimeout'   : ""            
         };
-        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
-            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
-            && !$scope.currentInstruction.loadURL && !$scope.currentInstruction.common) {
-            $scope.resetStatusCustom();
-        }
+        $scope.initiateResetCustom();
     };
 
     /**
@@ -1619,13 +1596,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             'localFileName'    : "",
             'localFileValue'   : ""
         };
-        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
-            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
-            && !$scope.currentInstruction.loadURL && !$scope.currentInstruction.common 
-            && !$scope.currentInstruction.localFile) {
-
-            $scope.resetStatusCustom();
-        }
+        $scope.initiateResetCustom();
     };
 
     /**
@@ -1679,13 +1650,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             'fileUploadURL'      : "",
             'fileUploadVariable' : ""
         };
-        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
-            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
-            && !$scope.currentInstruction.loadURL && !$scope.currentInstruction.common 
-            && !$scope.currentInstruction.localFile && !$scope.currentInstruction.fileUpload ) {
-
-            $scope.resetStatusCustom();
-        }
+        $scope.initiateResetCustom();
     };
 
     /**
@@ -1738,14 +1703,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             'changeFileNameComment'  : "",            
             'changeFileNameOfFileName' : ""
         };
-        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
-            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
-            && !$scope.currentInstruction.loadURL && !$scope.currentInstruction.common 
-            && !$scope.currentInstruction.localFile && !$scope.currentInstruction.fileUpload 
-            && !$scope.currentInstruction.changeFileName) {
-
-            $scope.resetStatusCustom();
-        }
+        $scope.initiateResetCustom();
     };
 
     /**
@@ -1788,15 +1746,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             'getElementAttributeIdentifier' : "",
             'getElementAttributeVariable'   : ""
         }; 
-
-        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
-            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
-            && !$scope.currentInstruction.loadURL && !$scope.currentInstruction.common 
-            && !$scope.currentInstruction.localFile && !$scope.currentInstruction.fileUpload 
-            && !$scope.currentInstruction.changeFileName && !$scope.currentInstruction.getElementAttribute) {
-
-            $scope.resetStatusCustom();
-        }
+        $scope.initiateResetCustom();
     };
 
     /**
@@ -1861,16 +1811,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             'scrollToElementLocator'    : "",
             'scrollToElementIdentifier' : ""
         }; 
-
-        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
-            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
-            && !$scope.currentInstruction.loadURL && !$scope.currentInstruction.common 
-            && !$scope.currentInstruction.localFile && !$scope.currentInstruction.fileUpload 
-            && !$scope.currentInstruction.changeFileName && !$scope.currentInstruction.getElementAttribute  
-            && !$scope.currentInstruction.scrollToElement) {
-
-            $scope.resetStatusCustom();
-        }
+        $scope.initiateResetCustom();
     };
 
     /**
@@ -1911,16 +1852,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             'scrollToPositionTop'    : "",
             'scrollToPositionBottom' : ""
         }; 
-
-        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
-            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
-            && !$scope.currentInstruction.loadURL && !$scope.currentInstruction.common 
-            && !$scope.currentInstruction.localFile && !$scope.currentInstruction.fileUpload 
-            && !$scope.currentInstruction.changeFileName && !$scope.currentInstruction.getElementAttribute  
-            && !$scope.currentInstruction.scrollToElement && !$scope.currentInstruction.scrollToPosition) {
-
-            $scope.resetStatusCustom();
-        }
+        $scope.initiateResetCustom();
     };
 
     /**
@@ -1963,17 +1895,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             'elementToPDFIdentifier' : "",
             'elementToPDFValue'      : ""
         }; 
-
-        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
-            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
-            && !$scope.currentInstruction.loadURL && !$scope.currentInstruction.common 
-            && !$scope.currentInstruction.localFile && !$scope.currentInstruction.fileUpload 
-            && !$scope.currentInstruction.changeFileName && !$scope.currentInstruction.getElementAttribute  
-            && !$scope.currentInstruction.scrollToElement && !$scope.currentInstruction.scrollToPosition 
-            && !$scope.currentInstruction.elementToPDF) {
-
-            $scope.resetStatusCustom();
-        }
+        $scope.initiateResetCustom();
     };
 
     /**
@@ -2039,17 +1961,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
             'radioButtonIdentifier' : "",
             'radioButtonIdx'        : ""
         }; 
-
-        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
-            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
-            && !$scope.currentInstruction.loadURL && !$scope.currentInstruction.common 
-            && !$scope.currentInstruction.localFile && !$scope.currentInstruction.fileUpload 
-            && !$scope.currentInstruction.changeFileName && !$scope.currentInstruction.getElementAttribute  
-            && !$scope.currentInstruction.scrollToElement && !$scope.currentInstruction.scrollToPosition 
-            && !$scope.currentInstruction.elementToPDF && !$scope.currentInstruction.radioButton ) {
-
-            $scope.resetStatusCustom();
-        }
+        $scope.initiateResetCustom();
     };
 
     /**
@@ -2086,6 +1998,34 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
      */
     $scope.updateRadioButtonIdx = function() {                        
         $scope.currentInstruction.radioButtonIdx = $scope.currentInstruction.radioButtonIdx;
+    };
+
+    /**
+     * Method to initiate to reset custom instructions
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.initiateResetCustom = function() {
+
+        $scope.loopFlag = false;        
+        $scope.currentInstruction.loop = false;
+        $scope.conditionFlag = false;        
+        $scope.currentInstruction.conditionStarts = false;        
+
+        if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
+            && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
+            && !$scope.currentInstruction.loadURL && !$scope.currentInstruction.common 
+            && !$scope.currentInstruction.localFile && !$scope.currentInstruction.fileUpload 
+            && !$scope.currentInstruction.changeFileName && !$scope.currentInstruction.getElementAttribute  
+            && !$scope.currentInstruction.scrollToElement && !$scope.currentInstruction.scrollToPosition 
+            && !$scope.currentInstruction.elementToPDF && !$scope.currentInstruction.radioButton ) {
+
+            $scope.resetStatusCustom();
+        }
+
     };
 
 
@@ -2125,6 +2065,8 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
      */
     $scope.addLoop = function() {
 
+        $scope.conditionFlag = false;
+        $scope.currentInstruction.conditionStarts = false;
         $scope.loopFlag = false;        
         $scope.currentInstruction.loop = !$scope.currentInstruction.loop;
         if ($scope.currentInstruction.loop) {
