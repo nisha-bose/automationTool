@@ -552,11 +552,6 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
                 if (count == 0) {
                     loop.param.instanceName = currentInstruction.loopInstanceName;
                     loop.param.collection = currentInstruction.loopCollection;
-
-                    console.log("LOOP INSTANCE " + currentInstruction.loopInstanceName);
-                    console.log("LOOP COLLECTION " + currentInstruction.loopCollection);
-
-                    console.log("LOOP INSTRUCTION : " + JSON.stringify(loop));
                 }
                 element = $scope.getInstructionElement(currentInstruction);
                 loop.param.instructions.push(element);
@@ -2071,7 +2066,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
      *
      */
     $scope.resetStatusCustom = function() {                                
-        $scope.currentInstruction = $scope.response[$scope.currentInstructionCount]; 
+        $scope.currentInstruction = $scope.response[$scope.currentInstructionCount];         
         $scope.currentInstruction.custom = false;
         $scope.currentInstruction.status = false;
         $scope.currentInstruction.script = false;

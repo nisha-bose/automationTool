@@ -298,66 +298,14 @@
         <span>
           <label>Select Custom Instruction Type</label>          
           <select ng-model="selectedCustomInstruction" ng-change="selectInstructionType(selectedCustomInstruction);">            
-            <option ng-repeat="item in customInstructions" ng-selected="" value="{{item.value}}">
+            <option ng-repeat="item in customInstructions" value="{{item.value}}">
               {{item.type}}
             </option>
           </select>  
-          <button type="button" class="btn btn-sm btn-success btn-cst" ng-click="resetStatusCustom()">Reset All</button>
-        </span>  
-        <!-- <p>          
-          <input type="checkbox" id="status" ng-model="currentInstruction.status" class="inptElement" ng-click="addStatus();" /> 
-          <label for="status" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Status</label>
-
-          <input type="checkbox" id="script-inst" ng-model="currentInstruction.script" class="inptElement" ng-click="addScript();" /> 
-          <label for="script-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Script</label>
-
-          <input type="checkbox" id="wait-inst" ng-model="currentInstruction.wait" class="inptElement" ng-click="addWait();" /> 
-          <label for="wait-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Wait</label>
-
-          <input type="checkbox" id="wait-element-inst" ng-model="currentInstruction.waitElement" class="inptElement" 
-          ng-click="addWaitForElement();" /> 
-          <label for="wait-element-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Element</label>
-        </p>  
-        <p>
-          <input type="checkbox" id="load-url-inst" ng-model="currentInstruction.loadURL" class="inptElement" 
-          ng-click="addLoadURL();" /> 
-          <label for="load-url-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">URL</label>
-          <input type="checkbox" id="common-inst" ng-model="currentInstruction.common" class="inptElement" 
-          ng-click="addCommon();" /> 
-          <label for="common-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Common</label>
-          <input type="checkbox" id="localfile-inst" ng-model="currentInstruction.localFile" class="inptElement" 
-          ng-click="readLocalFile();" /> 
-          <label for="localfile-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Read Local File</label>
-        </p>
-        <p>
-          <input type="checkbox" id="fileupload-inst" ng-model="currentInstruction.fileUpload" class="inptElement" 
-          ng-click="addFileUpload();" /> 
-          <label for="fileupload-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">File Upload</label>
-          <input type="checkbox" id="changefilename-inst" ng-model="currentInstruction.changeFileName" class="inptElement" 
-          ng-click="addChangeFileName();" /> 
-          <label for="changefilename-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Change File Name</label>
-        </p>
-        <p>
-          <input type="checkbox" id="getElementAttribute-inst" ng-model="currentInstruction.getElementAttribute" class="inptElement" 
-          ng-click="addGetElementAttribute();" /> 
-          <label for="getElementAttribute-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">getElementAttribute</label>
-        </p>
-        <p>
-          <input type="checkbox" id="scrollToElement-inst" ng-model="currentInstruction.scrollToElement"  
-          class="inptElement" ng-click="addScrollToElement();" /> 
-          <label for="scrollToElement-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Scroll To Element</label>
-          <input type="checkbox" id="scrollToPosition-inst" ng-model="currentInstruction.scrollToPosition"  
-          class="inptElement" ng-click="addScrollToPosition();" /> 
-          <label for="scrollToPosition-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Scroll To Position</label>
-        </p>
-        <p>
-          <input type="checkbox" id="elementToPDF-inst" ng-model="currentInstruction.elementToPDF"  
-          class="inptElement" ng-click="addElementToPDF();" /> 
-          <label for="elementToPDF-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">elementToPDF</label>
-          <input type="checkbox" id="radioButton-inst" ng-model="currentInstruction.radioButton"  
-          class="inptElement" ng-click="addRadioButton();" /> 
-          <label for="radioButton-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Radio Button</label>
-        </p> -->          
+          <button type="button" class="btn btn-sm btn-success btn-cst" ng-click="resetStatusCustom()">
+            Reset All
+          </button>
+        </span>                    
         <p ng-if="currentInstruction.status">
           <input type="text" ng-model="currentInstruction.statusComment" placeholder="Comment..." 
           class="optElement" ng-change="updateStatusComment();" />          
@@ -459,20 +407,20 @@
                 ng-click="updateScrollToElementLocator();">NAME</label>
             </span>
           </span>
-          <input type="text" ng-model="currentInstruction.scrollToElementIdentifier" placeholder="{{currentInstruction.scrollToElementLocator}}" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateScrollToElementIdentifier();" />          
+          <input type="text" ng-model="currentInstruction.scrollToElementIdentifier" placeholder="{{currentInstruction.scrollToElementLocator}}" class="optElement" ng-change="updateScrollToElementIdentifier();" />          
         </p>
         <!-- Scroll to element stop-->
 
         <!-- Scroll to position start-->
         <p ng-if="currentInstruction.scrollToPosition">                    
-          <input type="number" ng-model="currentInstruction.scrollToPositionTop" placeholder="Top" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateScrollToPositionTop();" />
-          <input type="number" ng-model="currentInstruction.scrollToPositionBottom" placeholder="Bottom" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateScrollToPositionBottom();" />          
+          <input type="number" ng-model="currentInstruction.scrollToPositionTop" placeholder="Top" class="optElement" ng-change="updateScrollToPositionTop();" />
+          <input type="number" ng-model="currentInstruction.scrollToPositionBottom" placeholder="Bottom" class="optElement" ng-change="updateScrollToPositionBottom();" />          
         </p>
         <!-- Scroll to position stop-->
 
         <!-- Element to PDF start-->
         <p ng-if="currentInstruction.elementToPDF">
-          <input type="text" ng-model="currentInstruction.elementToPDFComment" placeholder="Comment" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateElementToPDFComment();" />                    
+          <input type="text" ng-model="currentInstruction.elementToPDFComment" placeholder="Comment" class="optElement" ng-change="updateElementToPDFComment();" />                    
           <span>
             <span>
               <label class="radio-inline">
@@ -491,15 +439,15 @@
             </span>
           </span>
           <input type="text" ng-model="currentInstruction.elementToPDFIdentifier" 
-          placeholder="{{currentInstruction.elementToPDFLocator}}" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" 
+          placeholder="{{currentInstruction.elementToPDFLocator}}" class="optElement" 
           ng-change="updateElementToPDFIdentifier();" />      
-          <input type="text" ng-model="currentInstruction.elementToPDFValue" placeholder="Value" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateElementToPDFValue();" />     
+          <input type="text" ng-model="currentInstruction.elementToPDFValue" placeholder="Value" class="optElement" ng-change="updateElementToPDFValue();" />     
         </p>
         <!-- Element to PDF stop-->
 
         <!-- Radio button start-->
         <p ng-if="currentInstruction.radioButton">
-          <input type="number" ng-model="currentInstruction.radioButtonIdx" placeholder="Idx Number" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateRadioButtonIdx);" />                              
+          <input type="number" ng-model="currentInstruction.radioButtonIdx" placeholder="Idx Number" class="optElement" ng-change="updateRadioButtonIdx);" />                              
           <span>
             <span>
               <label class="radio-inline">
@@ -518,7 +466,7 @@
             </span>
           </span>
           <input type="text" ng-model="currentInstruction.radioButtonIdentifier" 
-          placeholder="{{currentInstruction.radioButtonLocator}}" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" 
+          placeholder="{{currentInstruction.radioButtonLocator}}" class="optElement" 
           ng-change="updateRadioButtonIdentifier();" />      
               
         </p>
