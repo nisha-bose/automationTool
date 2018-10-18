@@ -162,11 +162,11 @@
       padding-right: 5px;
     }
     .inst-panel .optElement {
-      width:290px;
+      width:280px;
       height:40px;
       padding:5px;
       margin-bottom:10px;
-    }
+    }    
     .inst-panel select {
       border: 1px solid #D3D3D3;
       background-color: #FFF;
@@ -365,15 +365,15 @@
           class="optElement" ng-change="updateStatusParam();" />          
         </p>
         <p ng-if="currentInstruction.script">          
-          <input type="text" ng-model="currentInstruction.scriptComment" placeholder="Comment.." style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateScriptComment();" />
-          <textarea type="status-msg" ng-model="currentInstruction.customScript" placeholder="Add Custom Script" style="width:290px;height:70px;padding:5px;" ng-change="updateCustomScript();"></textarea>
+          <input type="text" ng-model="currentInstruction.scriptComment" placeholder="Comment.." class="optElement" ng-change="updateScriptComment();" />
+          <textarea type="status-msg" ng-model="currentInstruction.customScript" placeholder="Add Custom Script" class="optElement" ng-change="updateCustomScript();"></textarea>
         </p>
         <p ng-if="currentInstruction.wait">          
-          <input type="text" ng-model="currentInstruction.waitComment" placeholder="Comment.." style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateWaitComment();" />
-          <input type="number" ng-model="currentInstruction.waitTime" placeholder="Time..." style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateWaitTime();" />          
+          <input type="text" ng-model="currentInstruction.waitComment" placeholder="Comment.." class="optElement" ng-change="updateWaitComment();" />
+          <input type="number" ng-model="currentInstruction.waitTime" placeholder="Time..." class="optElement" ng-change="updateWaitTime();" />          
         </p>
         <p ng-if="currentInstruction.waitElement">          
-          <input type="text" ng-model="currentInstruction.waitElementComment" placeholder="Comment.." style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateWaitElementComment();" />
+          <input type="text" ng-model="currentInstruction.waitElementComment" placeholder="Comment.." class="optElement" ng-change="updateWaitElementComment();" />
           <span>
             <span>
               <label class="radio-inline">
@@ -391,33 +391,33 @@
                 ng-click="updateWaitElementLocator();">NAME</label>
             </span>
           </span>
-          <input type="text" ng-model="currentInstruction.waitElementIdentifier" placeholder="{{currentInstruction.waitElementLocator}}" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateWaitElementIdentifier();" />          
+          <input type="text" ng-model="currentInstruction.waitElementIdentifier" placeholder="{{currentInstruction.waitElementLocator}}" class="optElement" ng-change="updateWaitElementIdentifier();" />          
         </p>
         <p ng-if="currentInstruction.loadURL">          
-          <input type="text" ng-model="currentInstruction.URLComment" placeholder="Comment.." style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateLoadURLComment();" />
+          <input type="text" ng-model="currentInstruction.URLComment" placeholder="Comment.." class="optElement" ng-change="updateLoadURLComment();" />
           <input type="url" ng-model="currentInstruction.URL" placeholder="URL" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateLoadURL();" />          
         </p>
         <p ng-if="currentInstruction.common">          
-          <input type="number" ng-model="currentInstruction.commonTimeout" placeholder="Comment.." style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateCommonTimeout();" />          
+          <input type="number" ng-model="currentInstruction.commonTimeout" placeholder="Comment.." class="optElement" ng-change="updateCommonTimeout();" />          
         </p>
         <p ng-if="currentInstruction.localFile">          
-          <input type="text" ng-model="currentInstruction.localFileComment" placeholder="Comment.." style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateLocalFileComment();" />
-          <input type="text" ng-model="currentInstruction.localFileName" placeholder="File name" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateLocalFileName();" />
-          <input type="text" ng-model="currentInstruction.localFileValue" placeholder="Value" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateLocalFileValue();" />          
+          <input type="text" ng-model="currentInstruction.localFileComment" placeholder="Comment.." class="optElement" ng-change="updateLocalFileComment();" />
+          <input type="text" ng-model="currentInstruction.localFileName" placeholder="File name" class="optElement" ng-change="updateLocalFileName();" />
+          <input type="text" ng-model="currentInstruction.localFileValue" placeholder="Value" class="optElement" ng-change="updateLocalFileValue();" />          
         </p>
         <p ng-if="currentInstruction.fileUpload">          
-          <input type="text" ng-model="currentInstruction.fileUploadComment" placeholder="Comment.." style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateFileUploadComment();" />
-          <input type="text" ng-model="currentInstruction.fileUploadURL" placeholder="URL" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateFileUploadURL();" />
-          <input type="text" ng-model="currentInstruction.fileUploadVariable" placeholder="Variable" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateFileUploadVariable();" />          
+          <input type="text" ng-model="currentInstruction.fileUploadComment" placeholder="Comment.." class="optElement" ng-change="updateFileUploadComment();" />
+          <input type="text" ng-model="currentInstruction.fileUploadURL" placeholder="URL" class="optElement" ng-change="updateFileUploadURL();" />
+          <input type="text" ng-model="currentInstruction.fileUploadVariable" placeholder="Variable" class="optElement" ng-change="updateFileUploadVariable();" />          
         </p>
         <p ng-if="currentInstruction.changeFileName">          
-          <input type="text" ng-model="currentInstruction.changeFileNameComment" placeholder="Comment.." style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateChangeFileNameComment();" />
-          <input type="text" ng-model="currentInstruction.changeFileNameOfFileName" placeholder="File Name" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateChangeFileNameOfFileName();" />                    
+          <input type="text" ng-model="currentInstruction.changeFileNameComment" placeholder="Comment.." class="optElement" ng-change="updateChangeFileNameComment();" />
+          <input type="text" ng-model="currentInstruction.changeFileNameOfFileName" placeholder="File Name" class="optElement" ng-change="updateChangeFileNameOfFileName();" />                    
         </p>
 
         <!-- getElementAttribute start-->
         <p ng-if="currentInstruction.getElementAttribute">          
-          <input type="text" ng-model="currentInstruction.getElementAttributeComment" placeholder="Comment.." style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateGetElementAttributeComment();" />
+          <input type="text" ng-model="currentInstruction.getElementAttributeComment" placeholder="Comment.." class="optElement" ng-change="updateGetElementAttributeComment();" />
           <span>
             <span>
               <label class="radio-inline">
@@ -435,8 +435,8 @@
                 ng-click="updateGetElementAttributeLocator();">NAME</label>
             </span>
           </span>
-          <input type="text" ng-model="currentInstruction.getElementAttributeIdentifier" placeholder="{{currentInstruction.getElementAttributeLocator}}" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateElementAttributeIdentifier();" />
-          <input type="text" ng-model="currentInstruction.getElementAttributeVariable" placeholder="Variable" style="width:290px;height:40px;padding:5px;margin-bottom:10px;" ng-change="updateGetElementAttributeVariable();" />
+          <input type="text" ng-model="currentInstruction.getElementAttributeIdentifier" placeholder="{{currentInstruction.getElementAttributeLocator}}" class="optElement" ng-change="updateElementAttributeIdentifier();" />
+          <input type="text" ng-model="currentInstruction.getElementAttributeVariable" placeholder="Variable" class="optElement" ng-change="updateGetElementAttributeVariable();" />
         </p>
         <!-- getElementAttribute stop-->
 
