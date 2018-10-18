@@ -145,7 +145,7 @@
       height:auto;
     }
     .inst-panel p {
-      margin: 5px;
+      margin: 5px;            
     }
     .inst-panel .inptElement {
       margin: 2px 0px 0px 0px;
@@ -292,6 +292,15 @@
       </div>
 
       <div class="inst-panel">
+        <p>
+          <label>Select Instruction Type</label>          
+          <select ng-model="selectedCustomInstruction" ng-change="selectInstructionType(selectedCustomInstruction);">            
+            <option ng-repeat="item in customInstructions" ng-selected="" value="{{item.value}}">
+              {{item.type}}
+            </option>
+          </select>          
+          <h1>You selected: {{selectedCustomInstruction}}</h1>
+        </p>  
         <p>          
           <input type="checkbox" id="status" ng-model="currentInstruction.status" class="inptElement" ng-click="addStatus();" /> 
           <label for="status" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Status</label>
@@ -587,7 +596,7 @@
           list="testList" class="form-control">
         <input type="text" style="width:50%;float:left" placeholder="String Value" ng-model="api.apiString" ng-change="currentInstruction.value = {'value':api.apiString};api.apiValue='';api.currentApiValue=false"
           class="form-control">
-        <datalist id="testList" ng-init="apiIndex=false">
+        <datalist id="testList" ng-init="apiIndex=false" style="overflow-y:scroll;">
           <option ng-repeat="apis in apiKeys" value="{{apis.key}}">
         </datalist>
         <div class="clearfix"></div>

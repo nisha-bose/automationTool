@@ -19,6 +19,24 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
     $scope.checks = [];
     $scope.localState = {};
     $scope.currentInstructionCount = 0;
+    $scope.selectedCustomInstruction = 0;        
+    $scope.customInstructions = [
+                                    {"type" : "Select custom instruction", "value" : 0},
+                                    {"type" : "Status", "value" : 1},
+                                    {"type" : "Script", "value" : 2},
+                                    {"type" : "Wait", "value" : 3},
+                                    {"type" : "Wait For Element", "value" : 4},
+                                    {"type" : "Load URL", "value" : 5},
+                                    {"type" : "Common", "value" : 6},
+                                    {"type" : "Read Local File", "value" : 7},
+                                    {"type" : "File Upload", "value" : 8},
+                                    {"type" : "Change File Name", "value" : 9},
+                                    {"type" : "GetElementAttribute", "value" : 10},
+                                    {"type" : "Scroll To Element", "value" : 11},
+                                    {"type" : "Scroll To Position", "value" : 12},
+                                    {"type" : "Element To PDF", "value" : 13},
+                                    {"type" : "Radio Button", "value" : 14}                                    
+                                ];    
     $scope.locator = 'id';
     $scope.generator = {};
     $scope.inputs = {};
@@ -2113,6 +2131,99 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
     $scope.updateLoopCollection = function() {        
         $scope.currentInstruction.loopCollection = $scope.currentInstruction.loopCollection;
     };
+
+    /**
+     * Method to select instruction type
+     *
+     * @param void
+     *
+     * @return object
+     *
+     */
+    $scope.selectInstructionType = function(value) {                 
+
+        $scope.selectedCustomInstruction = parseInt(value);
+        switch ($scope.selectedCustomInstruction) {
+
+            case 0:
+                   $scope.resetStatusCustom();
+                   break;
+
+            case 1:
+                   $scope.currentInstruction.status = true; 
+                   $scope.addStatus();
+                   break;
+
+            case 2:
+                   $scope.currentInstruction.script = true; 
+                   $scope.addScript();
+                   break;
+                   
+            case 3:
+                   $scope.currentInstruction.wait = true; 
+                   $scope.addWait();
+                   break;
+                   
+            case 4:
+                   $scope.currentInstruction.waitElement = true; 
+                   $scope.addWaitForElement();
+                   break;
+                   
+            case 5:
+                   $scope.currentInstruction.loadURL = true; 
+                   $scope.addLoadURL();
+                   break;
+
+            case 6:
+                   $scope.currentInstruction.common = true; 
+                   $scope.addCommon();
+                   break;
+                   
+            case 7:
+                   $scope.currentInstruction.localFile = true; 
+                   $scope.readLocalFile();
+                   break;
+                   
+            case 8:
+                   $scope.currentInstruction.fileUpload = true; 
+                   $scope.addFileUpload();
+                   break;
+                   
+            case 9:
+                   $scope.currentInstruction.changeFileName = true; 
+                   $scope.addChangeFileName();
+                   break;
+
+            case 10:
+                   $scope.currentInstruction.getElementAttribute = true; 
+                   $scope.addGetElementAttribute();
+                   break;
+                   
+            case 11:
+                   $scope.currentInstruction.scrollToElement = true; 
+                   $scope.addScrollToElement();
+                   break;
+                   
+            case 12:
+                   $scope.currentInstruction.scrollToPosition = true; 
+                   $scope.addScrollToPosition();
+                   break;                                   
+
+            case 13:
+                   $scope.currentInstruction.elementToPDF = true; 
+                   $scope.addElementToPDF();
+                   break;                                          
+
+            case 14:
+                   $scope.currentInstruction.radioButton = true; 
+                   $scope.addRadioButton();
+                   break;                                                 
+
+        }
+
+    };
+
+
 
 
 });
