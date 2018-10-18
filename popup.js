@@ -2046,6 +2046,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         $scope.currentInstruction.loop = false;
         $scope.conditionFlag = false;        
         $scope.currentInstruction.conditionStarts = false;        
+        $scope.currentInstruction.custom = true;
 
         if (!$scope.currentInstruction.status && !$scope.currentInstruction.script 
             && !$scope.currentInstruction.wait && !$scope.currentInstruction.waitElement 
@@ -2070,7 +2071,8 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
      *
      */
     $scope.resetStatusCustom = function() {                                
-        $scope.currentInstruction = $scope.response[$scope.currentInstructionCount];        
+        $scope.currentInstruction = $scope.response[$scope.currentInstructionCount]; 
+        $scope.currentInstruction.custom = false;
         $scope.currentInstruction.status = false;
         $scope.currentInstruction.script = false;
         $scope.currentInstruction.wait = false;

@@ -143,9 +143,10 @@
       margin: 2px 0;max-width: 300px;
       overflow: hidden;
       height:auto;
+      padding: 5px;
     }
     .inst-panel p {
-      margin: 5px;            
+      margin: 5px;                  
     }
     .inst-panel .inptElement {
       margin: 2px 0px 0px 0px;
@@ -165,7 +166,12 @@
       height:40px;
       padding:5px;
       margin-bottom:10px;
-    }    
+    }
+    .inst-panel select {
+      border: 1px solid #D3D3D3;
+      background-color: #FFF;
+      height: 30px;
+    }   
   </style>
 </head>
 
@@ -273,35 +279,32 @@
       <br>
     </div>
 
-    <div ng-if="(!(!currentInstruction || generatePageFlag)) && !generation.instructionsGenerated">
-      <!-- <button class="btn btn-success" ng-click="goBack();">&lt; Back</button> -->
+    <div ng-if="(!(!currentInstruction || generatePageFlag)) && !generation.instructionsGenerated">      
       <div class="row">
         <div class="col-xs-3">
-          <button type="button" class="btn btn-default btn-sm" ng-click="goBack();">Back</button>
-          <!-- <button type="button" class="btn btn-default btn-sm" ng-click="closed();">close</button> -->
-          
+          <button type="button" class="btn btn-default btn-sm" ng-click="goBack();">Back</button>                    
         </div>
         <div class="col-xs-6">
           <p style="text-align: center;">{{currentInstructionCount+1}} out of {{response.length}}</p>
         </div>
         <div class="col-xs-3" style="margin-left: -42px;" 
-        ng-if="(currentInstructionCount == 0 && !currentInstruction.status && !currentInstruction.script && !currentInstruction.wait && !currentInstruction.waitElement && !currentInstruction.loadURL && !currentInstruction.common && !currentInstruction.localFile && !currentInstruction.fileUpload && !currentInstruction.changeFileName && !currentInstruction.getElementAttribute && !currentInstruction.scrollToElement && !currentInstruction.scrollToPosition && !currentInstruction.elementToPDF && !currentInstruction.radioButton)">
+        ng-if="(currentInstructionCount == 0 && !currentInstruction.custom)">
           <button type="button" class="btn btn-sm" ng-class="{'btn-success':!currentInstruction.conditionStarts,'btn-danger':currentInstruction.conditionStarts}"
             ng-click="conditionStarts()">{{currentInstruction.conditionStarts?'Remove Cndt':'Add condition'}} </button>
         </div>
       </div>
 
-      <div class="inst-panel">
-        <p>
-          <label>Select Instruction Type</label>          
+      <div class="inst-panel" ng-if="(!loopFlag && !conditionFlag)">
+        <span>
+          <label>Select Custom Instruction Type</label>          
           <select ng-model="selectedCustomInstruction" ng-change="selectInstructionType(selectedCustomInstruction);">            
             <option ng-repeat="item in customInstructions" ng-selected="" value="{{item.value}}">
               {{item.type}}
             </option>
-          </select>          
-          <h1>You selected: {{selectedCustomInstruction}}</h1>
-        </p>  
-        <p>          
+          </select>  
+          <button type="button" class="btn btn-sm btn-success btn-cst" ng-click="resetStatusCustom()">Reset All</button>
+        </span>  
+        <!-- <p>          
           <input type="checkbox" id="status" ng-model="currentInstruction.status" class="inptElement" ng-click="addStatus();" /> 
           <label for="status" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Status</label>
 
@@ -354,10 +357,7 @@
           <input type="checkbox" id="radioButton-inst" ng-model="currentInstruction.radioButton"  
           class="inptElement" ng-click="addRadioButton();" /> 
           <label for="radioButton-inst" style="margin: 2px 0px 0px 5px;color:#333;font-weight:bold;">Radio Button</label>
-        </p>  
-        <p class="b1">
-          <button type="button" class="btn btn-sm btn-success btn-cst" ng-click="resetStatusCustom()">Reset All</button>
-        </p>              
+        </p> -->          
         <p ng-if="currentInstruction.status">
           <input type="text" ng-model="currentInstruction.statusComment" placeholder="Comment..." 
           class="optElement" ng-change="updateStatusComment();" />          
@@ -524,23 +524,21 @@
         </p>
         <!-- Radio button stop-->
 
-      </div>
-
-      <div class="inst-panel" ng-if="(currentInstructionCount == 0 && !currentInstruction.status && !currentInstruction.script && !currentInstruction.wait && !currentInstruction.waitElement && !currentInstruction.loadURL && !currentInstruction.common && !currentInstruction.localFile && !currentInstruction.fileUpload && !currentInstruction.changeFileName && !currentInstruction.getElementAttribute && !currentInstruction.scrollToElement && !currentInstruction.scrollToPosition && !currentInstruction.elementToPDF && !currentInstruction.radioButton)">
+      </div>      
+      <div class="inst-panel" ng-if="(currentInstructionCount == 0 && !currentInstruction.custom)">
         <p>
           <button type="button" class="btn btn-sm btn-success btn-cst" ng-click="addLoop()">            
             {{currentInstruction.loop?'Remove Loop':'Add Loop'}} 
           </button>
-        </p>
-        <p ng-if="currentInstruction.loop">
-          <input type="text" class="optElement" ng-model="currentInstruction.loopInstanceName" placeholder="Instance name" 
-          ng-change="updateLoopInstanceName();" /> 
-          <input type="text" class="optElement" ng-model="currentInstruction.loopCollection" placeholder="Collection" 
-          ng-change="updateLoopCollection();" /> 
-        <p>  
+        </p>        
       </div>
-
-      <div ng-if="(!currentInstruction.status && !currentInstruction.script && !currentInstruction.wait && !currentInstruction.waitElement && !currentInstruction.loadURL && !currentInstruction.common && !currentInstruction.localFile && !currentInstruction.fileUpload && !currentInstruction.changeFileName && !currentInstruction.getElementAttribute && !currentInstruction.scrollToElement && !currentInstruction.scrollToPosition && !currentInstruction.elementToPDF && !currentInstruction.radioButton)">        
+      <div ng-if="currentInstruction.loop" style="width: 98%;margin-left: 1%;margin-top: 5px;">
+          <input type="text" class="optElement1 form-control" ng-model="currentInstruction.loopInstanceName" placeholder="Instance name" 
+          ng-change="updateLoopInstanceName();" /> 
+          <input type="text" class="optElement1 form-control" ng-model="currentInstruction.loopCollection" placeholder="Collection" 
+          ng-change="updateLoopCollection();" />           
+      </div>
+      <div ng-if="(!currentInstruction.custom)">        
         <div ng-if="conditionFlag" style="width: 98%;margin-left: 1%;margin-top: 5px;">
           <div ng-if="currentInstructionCount == 0">
           <input type="text" placeholder="Condition Variable" ng-model="condition.apiValue" ng-change="setConditionalVariable();"
@@ -555,7 +553,7 @@
         </div>
       </div>
 
-      <h4 ng-if="(!currentInstruction.status && !currentInstruction.script && !currentInstruction.wait && !currentInstruction.waitElement && !currentInstruction.loadURL && !currentInstruction.common && !currentInstruction.localFile && !currentInstruction.fileUpload && !currentInstruction.changeFileName && !currentInstruction.getElementAttribute && !currentInstruction.scrollToElement && !currentInstruction.scrollToPosition && !currentInstruction.elementToPDF && !currentInstruction.radioButton)" ng-class="{'activeHeader':currentInstruction.enabled,strikeThrough:!currentInstruction.enabled}"> 
+      <h4 ng-if="(!currentInstruction.custom)" ng-class="{'activeHeader':currentInstruction.enabled,strikeThrough:!currentInstruction.enabled}"> 
         <span>
           {{currentInstruction.type|uppercase}}
         </span>
@@ -569,7 +567,7 @@
               ng-click="changeDropdownMethod(currentInstruction,'value');">VALUE</label>
         </span>
       </h4>
-      <div ng-if="(!currentInstruction.status && !currentInstruction.script && !currentInstruction.wait && !currentInstruction.waitElement && !currentInstruction.loadURL && !currentInstruction.common && !currentInstruction.localFile && !currentInstruction.fileUpload && !currentInstruction.changeFileName && !currentInstruction.getElementAttribute && !currentInstruction.scrollToElement && !currentInstruction.scrollToPosition && !currentInstruction.elementToPDF && !currentInstruction.radioButton)" >
+      <div ng-if="(!currentInstruction.custom)" >
         <div ng-if="!currentInstruction.conditionStarts || (!!condition.apiValue && !!condition.caseString)" style="padding: 2px;border: 1px dashed #aba8a8;">
           <button class="btn btn-default" ng-disabled="!currentInstructionCount>0" ng-click="previous()">Prev</button>
           <button class="btn btn-default" ng-disabled="!(response.length>(currentInstructionCount+1))" ng-click="next()">Next </button>
@@ -601,7 +599,7 @@
         </datalist>
         <div class="clearfix"></div>
       </div>
-      <div ng-if="(api.currentApiValue && !currentInstruction.status && !currentInstruction.script && !currentInstruction.wait && !currentInstruction.waitElement && !currentInstruction.loadURL && !currentInstruction.common && !currentInstruction.localFile && !currentInstruction.fileUpload && !currentInstruction.changeFileName && !currentInstruction.getElementAttribute && !currentInstruction.scrollToElement && !currentInstruction.scrollToPosition && !currentInstruction.elementToPDF && !currentInstruction.radioButton)" style=" border: 1px dashed #aba8a8;margin: 2px 0;max-width: 300px;overflow: hidden;">
+      <div ng-if="(api.currentApiValue && !currentInstruction.custom)" style=" border: 1px dashed #aba8a8;margin: 2px 0;max-width: 300px;overflow: hidden;">
         <p style="margin: 5px;text-align: center;color: darkred;">{{api.currentApiValue}}</p>        
       </div>
 
