@@ -2,7 +2,7 @@
     "name": "Automation Extension",
     "version": "1.0",
     "description": "MAVA Partners",
-    "permissions": ["declarativeContent","activeTab", "storage","activeTab","tabs","<all_urls>"],
+    "permissions": ["declarativeContent","activeTab", "storage","activeTab","tabs","<all_urls>", "cookies"],
     "background": {
       "scripts": ["background.js"],
       "persistent": false

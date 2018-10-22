@@ -1,6 +1,5 @@
-var port = chrome.runtime.connect();
-
-var app = angular.module("myApp", ['jsonFormatter', 'ngCookies']);
+var port = chrome.runtime.connect(),
+app = angular.module("myApp", ['jsonFormatter', 'ngCookies']);
 
 app.service('orderService', function($cookies) {
 
@@ -19,7 +18,7 @@ app.service('orderService', function($cookies) {
         $cookies.put('order', orderObj.order);
         $cookies.put('state', orderObj.state);
         $cookies.put('orderType', orderObj.orderType);
-        $cookies.put('companyType', orderObj.companyType);
+        $cookies.put('companyType', orderObj.companyType);        
 
     };
 
@@ -34,7 +33,7 @@ app.service('orderService', function($cookies) {
     orderServiceObj.readFromCookie = function() {          
 
         var api = "https://atomic.incfile.com/api/webauto/", 
-        data = {};
+        data = {};        
 
         data = {
             order : (typeof $cookies.get('order') !== "undefined" && $cookies.get('order').trim()) ? $cookies.get('order').trim() : "2180731409",
@@ -48,41 +47,15 @@ app.service('orderService', function($cookies) {
 
         return data;
 
-    };
-
-    /**
-     * Method to read settings
-     *
-     * @param void
-     *
-     * @return read
-     *
-     */
-    orderServiceObj.readSettings = function(data) {        
-
-        var _self = this,        
-        orderObj = {
-            "order" : data.order,
-            "state" : data.state,
-            "orderType" : data.orderType,
-            "companyType" : data.companyType
-
-        }, getOrder = {};
-
-        _self.storeInCookie(orderObj);
-        getOrder = _self.readFromCookie();
-
-        return getOrder;
-
-    };
+    };    
 
     return orderServiceObj;
     
 
 });
 
-app.controller("myCtrl", ['$scope', '$http', '$timeout', 'orderService',  
-    function($scope, $http, $timeout, orderService) {    
+app.controller("myCtrl", ['$scope', '$http', '$timeout', '$cookies', 'orderService',  
+    function($scope, $http, $timeout, $cookies, orderService) {    
     
     $scope.response = [{
         "type": "textInput",
@@ -143,10 +116,7 @@ app.controller("myCtrl", ['$scope', '$http', '$timeout', 'orderService',
         state : $scope.generator.state,
         orderType : $scope.generator.orderType,
         companyType : $scope.generator.companyType
-    };
-
-    orderService.readSettings(data);
-
+    };    
 
     /**
      * Method to fetch api data
@@ -157,6 +127,15 @@ app.controller("myCtrl", ['$scope', '$http', '$timeout', 'orderService',
      *
      */
     $scope.fetchApi = function(resume) {
+
+        var data = {
+            order : $scope.generator.order,
+            state : $scope.generator.state,
+            orderType : $scope.generator.orderType,
+            companyType : $scope.generator.companyType
+        }, getData = {};        
+
+        orderService.storeInCookie(data);  
 
         $scope.condition.apiValue = "";
         $scope.condition.caseString = "";
@@ -174,12 +153,6 @@ app.controller("myCtrl", ['$scope', '$http', '$timeout', 'orderService',
             "order" : $scope.generator.order,
             "state" : $scope.generator.state
         }, getOrder = {};        
-
-        
-
-
-        /*$http.get(orderType.order + $scope.generator.state + "/llc?id=" + $scope.generator.order)
-            .then(function(response) {*/
 
         $http.get($scope.generator.apiURL).then(function(response) {
 
@@ -2260,7 +2233,7 @@ app.controller("myCtrl", ['$scope', '$http', '$timeout', 'orderService',
                    $scope.resetStatusCustom();
                    break;
 
-            case 1:
+            case 1: 
                    $scope.currentInstruction.status = true; 
                    $scope.addStatus();
                    break;
