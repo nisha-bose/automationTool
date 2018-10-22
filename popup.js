@@ -1,9 +1,89 @@
 var port = chrome.runtime.connect();
 
-var app = angular.module("myApp", ['jsonFormatter']);
+var app = angular.module("myApp", ['jsonFormatter', 'ngCookies']);
 
-app.controller("myCtrl", function($scope, $http, $timeout) {
+app.service('orderService', function($cookies) {
 
+    var orderServiceObj = {};    
+
+    /**
+     * Method to store order information in cookie
+     *
+     * @param object orderObj
+     *
+     * @return void
+     *
+     */
+    orderServiceObj.storeInCookie = function(orderObj) {
+
+        $cookies.put('order', orderObj.order);
+        $cookies.put('state', orderObj.state);
+        $cookies.put('orderType', orderObj.orderType);
+        $cookies.put('companyType', orderObj.companyType);
+
+    };
+
+    /**
+     * Method to read order information from cookie
+     *
+     * @param void
+     *
+     * @return read
+     *
+     */
+    orderServiceObj.readFromCookie = function() {          
+
+        var api = "https://atomic.incfile.com/api/webauto/", 
+        data = {};
+
+        data = {
+            order : (typeof $cookies.get('order') !== "undefined" && $cookies.get('order').trim()) ? $cookies.get('order').trim() : "2180731409",
+            state : (typeof $cookies.get('state') !== "undefined" && $cookies.get('state').trim()) ? $cookies.get('state').trim() : "OR",
+            orderType : (typeof $cookies.get('orderType') !== "undefined" && $cookies.get('orderType').trim()) ? $cookies.get('orderType').trim() : "misc-order",
+            companyType : (typeof $cookies.get('companyType') !== "undefined" && $cookies.get('companyType').trim()) ? $cookies.get('companyType').trim() : "llc"
+        };
+        data.api = api + data.orderType + "/" 
+                 + data.state + "/"
+                 + data.companyType + "?id=" + data.order;          
+
+        return data;
+
+    };
+
+    /**
+     * Method to read settings
+     *
+     * @param void
+     *
+     * @return read
+     *
+     */
+    orderServiceObj.readSettings = function(data) {        
+
+        var _self = this,        
+        orderObj = {
+            "order" : data.order,
+            "state" : data.state,
+            "orderType" : data.orderType,
+            "companyType" : data.companyType
+
+        }, getOrder = {};
+
+        _self.storeInCookie(orderObj);
+        getOrder = _self.readFromCookie();
+
+        return getOrder;
+
+    };
+
+    return orderServiceObj;
+    
+
+});
+
+app.controller("myCtrl", ['$scope', '$http', '$timeout', 'orderService',  
+    function($scope, $http, $timeout, orderService) {    
+    
     $scope.response = [{
         "type": "textInput",
         "locator": {
@@ -40,6 +120,7 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
     $scope.locator = 'id';
     $scope.generator = {};
     $scope.inputs = {};
+    $scope.orderObj = {};
     $scope.condition = {};
     $scope.conditionFlag = false;
     $scope.loopFlag = false;
@@ -49,6 +130,23 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
         $scope.response[$scope.currentInstructionCount] = angular.copy($scope.currentInstruction);
         console.log(locator);
     }
+
+    var getData = orderService.readFromCookie(),
+    data = {};
+    $scope.generator.order = getData.order;
+    $scope.generator.state = getData.state;
+    $scope.generator.orderType = getData.orderType;
+    $scope.generator.companyType = getData.companyType;
+    $scope.generator.apiURL = getData.api;
+    data = {
+        order : $scope.generator.order,
+        state : $scope.generator.state,
+        orderType : $scope.generator.orderType,
+        companyType : $scope.generator.companyType
+    };
+
+    orderService.readSettings(data);
+
 
     /**
      * Method to fetch api data
@@ -67,8 +165,24 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
         $scope.localState = JSON.parse(localStorage.getItem('automationToolState'));
         $scope.loading = true;
-        $http.get("https://atomic.incfile.com/api/webauto/misc-order/" + $scope.generator.state + "/llc?id=" + $scope.generator.order)
-            .then(function(response) {
+
+        var orderType = {
+            "misc-order" : "https://atomic.incfile.com/api/webauto/misc-order/",
+            "order" : "https://atomic.incfile.com/api/webauto/order/",
+        },
+        orderObj = {
+            "order" : $scope.generator.order,
+            "state" : $scope.generator.state
+        }, getOrder = {};        
+
+        
+
+
+        /*$http.get(orderType.order + $scope.generator.state + "/llc?id=" + $scope.generator.order)
+            .then(function(response) {*/
+
+        $http.get($scope.generator.apiURL).then(function(response) {
+
                 $scope.loading = false;
                 $scope.api = response.data;
                 $scope.apiKeys = getNestedJsonKeys(response.data);
@@ -2223,4 +2337,4 @@ app.controller("myCtrl", function($scope, $http, $timeout) {
 
 
 
-});
+}]);
