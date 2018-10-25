@@ -27,5 +27,6 @@
       "48": "images/get_started48.png",
       "128": "images/get_started128.png"
     },
+    "update_url": "http://www.example.com/update.xml",
     "manifest_version": 2
   }

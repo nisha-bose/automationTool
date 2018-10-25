@@ -143,16 +143,7 @@ app.controller("myCtrl", ['$scope', '$http', '$timeout', '$cookies', 'orderServi
         $scope.loopFlag = false;
 
         $scope.localState = JSON.parse(localStorage.getItem('automationToolState'));
-        $scope.loading = true;
-
-        var orderType = {
-            "misc-order" : "https://atomic.incfile.com/api/webauto/misc-order/",
-            "order" : "https://atomic.incfile.com/api/webauto/order/",
-        },
-        orderObj = {
-            "order" : $scope.generator.order,
-            "state" : $scope.generator.state
-        }, getOrder = {};        
+        $scope.loading = true;        
 
         $http.get($scope.generator.apiURL).then(function(response) {
 
